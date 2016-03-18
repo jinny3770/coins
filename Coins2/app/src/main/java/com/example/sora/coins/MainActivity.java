@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         actionBar = getSupportActionBar();
         actionBar.setBackgroundDrawable(new ColorDrawable(0xFFFF8080));
         actionBar.setHomeButtonEnabled(true);
@@ -42,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
         actionBar.setCustomView(customView);
         actionBar.setDisplayShowCustomEnabled(true);
 
-        //mapView = (MapView)findViewById(R.id.mapView);
         mapLayout = (LinearLayout) findViewById(R.id.mapView);
 
         mapView = new MapView(this);
