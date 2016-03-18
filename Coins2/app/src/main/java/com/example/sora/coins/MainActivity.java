@@ -34,13 +34,12 @@ public class MainActivity extends AppCompatActivity {
 
         actionBar = getSupportActionBar();
         actionBar.setBackgroundDrawable(new ColorDrawable(0xFFFF8080));
-        //actionBar.setIcon(R.drawable.chat);
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayShowTitleEnabled(false);
 
         LayoutInflater actionBarInflater = LayoutInflater.from(this);
-        //View customView = actionBarInflater.inflate(R.layout.actionbar_layout, null);
-        //actionBar.setCustomView(customView);
+        View customView = actionBarInflater.inflate(R.layout.actionbar_layout, null);
+        actionBar.setCustomView(customView);
         actionBar.setDisplayShowCustomEnabled(true);
 
         //mapView = (MapView)findViewById(R.id.mapView);
@@ -64,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
                 super.onDrawerOpened(drawerView);
             }
         };
-
 
         sideMenuLayout.setDrawerListener(drawerToggle);
         actionBar.setDisplayHomeAsUpEnabled(true);

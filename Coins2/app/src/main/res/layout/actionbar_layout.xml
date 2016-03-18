@@ -1,33 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:stretchColumns="0,3,6">
 
+
+    <TableRow>
     <ImageButton
         android:id="@+id/menuButton"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="5dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_column="2"
         android:src="@drawable/chat" />
 
     <ImageButton
         android:id="@+id/shareButton"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_column="5"
         android:src="@drawable/chat"/>
 
     <ImageButton
-        android:id="@+id/cahtButton"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="5dp"
+        android:id="@+id/chatButton"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_column="8"
         android:src="@drawable/chat"/>
 
+    </TableRow>
 
-</RelativeLayout>
+</TableLayout>
