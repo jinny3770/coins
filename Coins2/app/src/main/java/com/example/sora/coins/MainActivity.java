@@ -1,7 +1,9 @@
 package com.example.sora.coins;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.ColorDrawable;
+import android.media.Image;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -25,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout mapLayout;
     DrawerLayout sideMenuLayout;
     ActionBarDrawerToggle drawerToggle;
+
+    ImageButton chatButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +69,16 @@ public class MainActivity extends AppCompatActivity {
         sideMenuLayout.setDrawerListener(drawerToggle);
         actionBar.setDisplayHomeAsUpEnabled(true);
         drawerToggle.syncState();
+
+
+        chatButton = (ImageButton) findViewById(R.id.chatButton);
+        chatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
+                startActivity(intent);
+            }
+        });
 
     }
 
