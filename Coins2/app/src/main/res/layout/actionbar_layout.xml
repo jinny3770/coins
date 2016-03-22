@@ -7,12 +7,12 @@
 
     <TableRow>
     <ImageButton
-        android:id="@+id/menuButton"
+        android:id="@+id/locaButton"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_column="2"
         android:background="#00000000"
-        android:src="@drawable/chat" />
+        android:src="@drawable/ic_action_location_found" />
 
     <ImageButton
         android:id="@+id/shareButton"
@@ -20,7 +20,7 @@
         android:layout_height="32dp"
         android:layout_column="5"
         android:background="#00000000"
-        android:src="@drawable/share"/>
+        android:src="@drawable/ic_action_send_now"/>
 
     <ImageButton
         android:id="@+id/chatButton"
@@ -28,7 +28,7 @@
         android:layout_height="32dp"
         android:layout_column="8"
         android:background="#00000000"
-        android:src="@drawable/chat"/>
+        android:src="@drawable/ic_action_chat"/>
 
     </TableRow>
 
