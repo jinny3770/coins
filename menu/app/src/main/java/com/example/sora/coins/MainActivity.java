@@ -1,6 +1,5 @@
 package com.example.sora.coins;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.ColorDrawable;
@@ -39,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     ListView sideList;
     FrameLayout sideContainer;
     CustomMapViewEventListener mapViewListener;
-    CustomOnclickListener clickListener;
+    //boolean trackingMode = false;
 
     // 하단 가족 리스트뷰
     ListView familyList;
@@ -68,16 +67,42 @@ public class MainActivity extends AppCompatActivity {
         actionBar.setDisplayShowCustomEnabled(true);
 
         // 액션바 리스너
-        clickListener = new CustomOnclickListener();
-
         chatButton = (ImageButton) findViewById(R.id.chatButton);
+        chatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.fade, R.anim.hold);
+            }
+        });
+
         shareButton = (ImageButton) findViewById(R.id.shareButton);
+        shareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this, Integer.toString(mapView.getZoomLevel()), Toast.LENGTH_LONG).show();
+            }
+        });
+
         locaButton = (ImageButton) findViewById(R.id.locaButton);
+        locaButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
 
-        chatButton.setOnClickListener(clickListener);
-        shareButton.setOnClickListener(clickListener);
-        locaButton.setOnClickListener(clickListener);
-
+                /*
+                if (!trackingMode) {
+                    mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
+                    //mapView.setCustomCurrentLocationMarkerTrackingImage(R.drawable.ic_action_place, new MapPOIItem.ImageOffset(20, 0));
+                    trackingMode = true;
+                } else {
+                    mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOff);
+                    trackingMode = false;
+                }
+                */
+            }
+        });
 
         // GPS 지도 및 관련 리스너
         mapLayout = (LinearLayout) findViewById(R.id.mapView);
@@ -134,9 +159,6 @@ public class MainActivity extends AppCompatActivity {
         mapLayout.addView(mapView);
     }
 
-
-
-
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -156,31 +178,4 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-
-    class CustomOnclickListener implements View.OnClickListener{
-
-        @Override
-        public void onClick(View v) {
-            switch(v.getId()) {
-                case R.id.chatButton:
-                    Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.fade, R.anim.hold);
-                    break;
-
-                case R.id.shareButton:
-                    Toast.makeText(MainActivity.this, Integer.toString(mapView.getZoomLevel()), Toast.LENGTH_LONG).show();
-                    break;
-
-                case R.id.locaButton:
-                    mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
-                    break;
-            }
-        }
-    }
-
 }
-
-
-

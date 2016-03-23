@@ -5,10 +5,8 @@ import java.util.Date;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-public class ChatActivity extends AppCompatActivity {
+public class ChatActivity extends Activity{
 
     private final String TAG = this.getClass().getSimpleName();
     private final static String TAB_TAG_CHAT = "tChat";
@@ -41,7 +39,7 @@ public class ChatActivity extends AppCompatActivity {
     private final static int COLOR_ORANGE = Color.parseColor("#f4aa0b");
 
 
-    ActionBar actionBar;
+    //ActionBar actionBar;
 
 
     EditText inputChatMessage;
@@ -56,13 +54,6 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chatting);
-
-        actionBar = getSupportActionBar();
-        actionBar.setBackgroundDrawable(new ColorDrawable(0xFFFF8080));
-        //actionBar.setHomeButtonEnabled(true);
-        actionBar.setDisplayShowHomeEnabled(true);
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setHomeAsUpIndicator(R.drawable.ic_action_back);
 
         initUI();
     }
@@ -124,14 +115,9 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
-    /*
     @Override
     public void onBackPressed() {
         overridePendingTransition(R.anim.fade, R.anim.hold);
         super.onBackPressed();
     }
-    */
-
-
-
 }
