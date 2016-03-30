@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -23,11 +24,13 @@ import android.widget.Toast;
 import net.daum.mf.map.api.*;
 
 public class MainActivity extends AppCompatActivity {
-    private static final int defaultZoomLevel = 3;
+    private static final int defaultZoomLevel = 2;
 
     // 상단 액션바 관련 변수
     ActionBar actionBar;
     ImageButton chatButton, locaButton, shareButton;
+    Button btnLockOn, btnLockOff;
+
 
     // GPS 지도 관련 변수
     MapView mapView;
@@ -73,6 +76,13 @@ public class MainActivity extends AppCompatActivity {
         chatButton = (ImageButton) findViewById(R.id.chatButton);
         shareButton = (ImageButton) findViewById(R.id.shareButton);
         locaButton = (ImageButton) findViewById(R.id.locaButton);
+
+        // Test => 잠금화면 변경
+        btnLockOn = (Button) findViewById(R.id.on);
+        btnLockOff = (Button) findViewById(R.id.off);
+
+        btnLockOn.setOnClickListener(clickListener);
+        btnLockOff.setOnClickListener(clickListener);
 
         chatButton.setOnClickListener(clickListener);
         shareButton.setOnClickListener(clickListener);
@@ -159,12 +169,13 @@ public class MainActivity extends AppCompatActivity {
 
 
     class CustomOnclickListener implements View.OnClickListener{
-
         @Override
         public void onClick(View v) {
+            Intent intent;
+
             switch(v.getId()) {
                 case R.id.chatButton:
-                    Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
+                    intent = new Intent(getApplicationContext(), ChatActivity.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.fade, R.anim.hold);
                     break;
@@ -175,6 +186,16 @@ public class MainActivity extends AppCompatActivity {
 
                 case R.id.locaButton:
                     mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
+                    break;
+
+                case R.id.on:
+                    intent = new Intent(getApplicationContext(), LockScreenService.class);
+                    startService(intent);
+                    break;
+
+                case R.id.off:
+                    intent = new Intent(getApplicationContext(), LockScreenService.class);
+                    startService(intent);
                     break;
             }
         }
