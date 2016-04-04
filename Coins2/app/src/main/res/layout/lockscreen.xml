@@ -1,14 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/lockscreen">
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/warning"
-        android:id="@+id/alarm"
-        android:layout_gravity="center"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_gravity="center_vertical"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_margin="50dp"
+        android:background="@drawable/alert"
+        android:id="@+id/alert"/>
+    s
+    <Button
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_gravity="bottom"
+        android:layout_below="@+id/alert"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/lock"
+        android:id="@+id/unlock"/>
 </RelativeLayout>
