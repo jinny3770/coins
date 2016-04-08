@@ -7,19 +7,30 @@
     <Button
         android:layout_width="72dp"
         android:layout_height="72dp"
-        android:layout_gravity="center_vertical"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="50dp"
         android:background="@drawable/alert"
-        android:id="@+id/alert"/>
-    s
+        android:id="@+id/alert"
+        android:layout_alignTop="@+id/select"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+    </Button>
+
     <Button
         android:layout_width="72dp"
         android:layout_height="72dp"
-        android:layout_gravity="bottom"
-        android:layout_below="@+id/alert"
-        android:layout_centerHorizontal="true"
+        android:background="@drawable/ic_action_place"
+        android:id="@+id/select"
+        android:layout_marginBottom="70dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true">
+    </Button>
+
+    <Button
+        android:layout_width="72dp"
+        android:layout_height="72dp"
         android:background="@drawable/lock"
-        android:id="@+id/unlock"/>
+        android:id="@+id/unlock"
+        android:layout_alignTop="@+id/select"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
+    </Button>
 </RelativeLayout>

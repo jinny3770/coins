@@ -35,13 +35,5 @@
             android:layout_column="11"
             android:id="@+id/on"
             android:text="ON"/>
-
-        <Button
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_column="14"
-            android:id="@+id/off"
-            android:text="OFF"/>
-
     </TableRow>
 </TableLayout>

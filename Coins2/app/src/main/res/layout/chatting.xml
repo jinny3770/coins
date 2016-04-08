@@ -4,18 +4,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical" >
 
-
-
         <FrameLayout
             android:id="@android:id/tabcontent"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:id="@+id/tab1"
@@ -43,19 +40,16 @@
                         android:layout_marginRight="10dp"
                         android:layout_weight="1"
                         android:ems="10" >
-
                     </EditText>
 
                     <Button
                         android:id="@+id/button_chat_send"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/send" />
-
+                        android:text="@string/send">
+                    </Button>
                 </LinearLayout>
             </LinearLayout>
-
         </FrameLayout>
     </LinearLayout>
-
 </LinearLayout>

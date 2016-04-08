@@ -1,13 +1,14 @@
 package com.example.sora.coins;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+import android.location.Location;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -25,20 +26,32 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.skp.Tmap.TMapGpsManager;
+import com.skp.Tmap.TMapMarkerItem;
+import com.skp.Tmap.TMapMarkerItem2;
+import com.skp.Tmap.TMapPoint;
+import com.skp.Tmap.TMapView;
+
 import net.daum.mf.map.api.*;
 
-public class MainActivity extends AppCompatActivity {
-    private static final int defaultZoomLevel = 2;
+public class MainActivity extends AppCompatActivity implements TMapGpsManager.onLocationChangedCallback
+{
+    private static final int defaultZoomLevel = 17;
 
     // 상단 액션바 관련 변수
     ActionBar actionBar;
     ImageButton chatButton, locaButton, shareButton;
-    Button btnLockOn, btnLockOff;
-
+    Button btnLockOn;
 
     // GPS 지도 관련 변수
-    MapView mapView;
+    TMapView mapView;
     LinearLayout mapLayout;
+
+    TMapPoint curLoca;
+    TMapMarkerItem myLoca;
+    TMapGpsManager tMapGpsManager;
+
+    Bitmap bitmap, bitmap2;
 
     // 사이드바 관련 변수
     DrawerLayout sideDrawer;
@@ -52,7 +65,10 @@ public class MainActivity extends AppCompatActivity {
     ListView familyList;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -81,33 +97,54 @@ public class MainActivity extends AppCompatActivity {
         shareButton = (ImageButton) findViewById(R.id.shareButton);
         locaButton = (ImageButton) findViewById(R.id.locaButton);
 
-        // Test => 잠금화면 변경
-        btnLockOn = (Button) findViewById(R.id.on);
-        btnLockOff = (Button) findViewById(R.id.off);
-
-        btnLockOn.setOnClickListener(clickListener);
-        btnLockOff.setOnClickListener(clickListener);
-
         chatButton.setOnClickListener(clickListener);
         shareButton.setOnClickListener(clickListener);
         locaButton.setOnClickListener(clickListener);
 
+        // 잠금화면 변경
+        btnLockOn = (Button) findViewById(R.id.on);
+        btnLockOn.setOnClickListener(clickListener);
 
-        // GPS 지도 및 관련 리스너
+        // GPS 지도 setting 및 관련 리스너
         mapLayout = (LinearLayout) findViewById(R.id.mapView);
-        mapView = new MapView(this);
-        mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
-        mapView.setDaumMapApiKey(APIKey.ApiKey);
-        mapView.setZoomLevel(defaultZoomLevel, true);
-        mapViewListener = new CustomMapViewEventListener();
-        mapView.setMapViewEventListener(mapViewListener);
+        //mapView = new TMapView(this, 위도, 경도, defaultZoomLevel);
+
+        tMapGpsManager = new TMapGpsManager(this);
+        tMapGpsManager.setProvider(TMapGpsManager.NETWORK_PROVIDER);
+        tMapGpsManager.setMinTime(1000);
+        tMapGpsManager.setMinDistance(10);
+        tMapGpsManager.OpenGps();
+
+
+        mapView = new TMapView(this);
+        mapView.setTrackingMode(true);
+        mapView.setSKPMapApiKey(APIKey.ApiKey);
+        mapView.setZoomLevel(defaultZoomLevel);
+        mapView.setMapPosition(TMapView.POSITION_DEFAULT);
+        //mapViewListener = new CustomMapViewEventListener();
+        //mapView.setMapViewEventListener(mapViewListener);
+
+        // 현재 위치 설정
+        curLoca = tMapGpsManager.getLocation();
+
+        // 현재 위치 marker 설정
+        myLoca = new TMapMarkerItem();
+        myLoca.setTMapPoint(curLoca);
+        bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_action_place);
+        myLoca.setIcon(bitmap);
+
+        myLoca.setVisible(myLoca.VISIBLE);
+        myLoca.setPosition((float) 0.5, (float) 1.0);
+        mapView.addMarkerItem("myLocation", myLoca);
+
 
         // 드로어 & 사이드바 리스너
         sideList = (ListView) findViewById(R.id.list_activity_main);
         sideContainer = (FrameLayout) findViewById(R.id.frame_activity_main);
         sideDrawer = (DrawerLayout) findViewById(R.id.drawer_activity_main);
+
         String sideItems[] = {"그룹 설정", "비상연락망 설정", "환경 설정"};
-        sideList.setAdapter(new ArrayAdapter <String> (this, android.R.layout.simple_list_item_1, sideItems));
+        sideList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, sideItems));
 
         sideList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -137,8 +174,15 @@ public class MainActivity extends AppCompatActivity {
         // 드로어 -> 액션바 토글
         sideToggle = new ActionBarDrawerToggle(this, sideDrawer, R.string.app_name, R.string.app_name)
         {
-            public void onDrawerClosed(View view)           { super.onDrawerClosed(view); }
-            public void onDrawerOpened(View drawerView)     { super.onDrawerOpened(drawerView); }
+            public void onDrawerClosed(View view)
+            {
+                super.onDrawerClosed(view);
+            }
+
+            public void onDrawerOpened(View drawerView)
+            {
+                super.onDrawerOpened(drawerView);
+            }
         };
 
         sideDrawer.setDrawerListener(sideToggle);
@@ -146,10 +190,8 @@ public class MainActivity extends AppCompatActivity {
         sideToggle.syncState();
 
         mapLayout.addView(mapView);
+
     }
-
-
-
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -166,18 +208,40 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (sideToggle.onOptionsItemSelected(item))
+        {
             return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }
 
+    protected void showMyLocation() {
 
-    class CustomOnclickListener implements View.OnClickListener{
+    }
+
+    @Override
+    public void onLocationChange(Location location) {
+
+        TMapPoint tmappoint = new TMapPoint(location.getLongitude(), location.getLatitude());
+        curLoca = tmappoint;
+        mapView.setLocationPoint(location.getLongitude(), location.getLatitude());
+        myLoca.setTMapPoint(curLoca);
+        Toast.makeText(MainActivity.this, myLoca.getTMapPoint().getLongitude() + ", " + myLoca.getTMapPoint().getLatitude(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        tMapGpsManager.CloseGps();
+        super.onDestroy();
+    }
+
+    class CustomOnclickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
             Intent intent;
 
-            switch(v.getId()) {
+            switch(v.getId())
+            {
                 case R.id.chatButton:
                     intent = new Intent(getApplicationContext(), ChatActivity.class);
                     startActivity(intent);
@@ -189,15 +253,10 @@ public class MainActivity extends AppCompatActivity {
                     break;
 
                 case R.id.locaButton:
-                    mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
+                    mapView.setTrackingMode(true);
                     break;
 
                 case R.id.on:
-                    intent = new Intent(getApplicationContext(), LockScreenService.class);
-                    startService(intent);
-                    break;
-
-                case R.id.off:
                     intent = new Intent(getApplicationContext(), LockScreenService.class);
                     startService(intent);
                     break;
@@ -206,6 +265,3 @@ public class MainActivity extends AppCompatActivity {
     }
 
 }
-
-
-

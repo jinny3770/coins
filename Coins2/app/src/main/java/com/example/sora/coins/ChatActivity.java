@@ -26,8 +26,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-public class ChatActivity extends AppCompatActivity {
-
+public class ChatActivity extends AppCompatActivity
+{
     private final String TAG = this.getClass().getSimpleName();
     private final static String TAB_TAG_CHAT = "tChat";
     private final static String TAB_TAG_USERS = "tUsers";

@@ -49,10 +49,6 @@ public class LockScreenService extends Service
     public void onDestroy()
     {
         super.onDestroy();
-
-        if (myReceiver != null)
-        {
-            unregisterReceiver(myReceiver);
-        }
+        unregisterReceiver(myReceiver);
     }
 }

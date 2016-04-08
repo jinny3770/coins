@@ -20,7 +20,16 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.1'
+    compile files('src/main/jniLibs/smack/gson-2.2.4.jar')
+    compile files('src/main/jniLibs/smack/smack-android-extensions-4.1.0-rc4.jar')
+    compile files('src/main/jniLibs/libDaumMapAndroid.jar')
+    compile files('src/main/jniLibs/smack/smack-core-4.1.0-rc4.jar')
+    compile files('src/main/jniLibs/smack/smack-extensions-4.1.0-rc4.jar')
+    compile files('src/main/jniLibs/smack/smack-im-4.1.0-rc4.jar')
+    compile files('src/main/jniLibs/smack/smack-resolver-dnsjava-4.1.0-rc4.jar')
+    compile files('src/main/jniLibs/smack/smack-tcp-4.1.0-rc4.jar')
+    compile project(':com.skp.Tmap_1.0.37')
 }
