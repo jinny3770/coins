@@ -37,6 +37,8 @@ import net.daum.mf.map.api.*;
 public class MainActivity extends AppCompatActivity implements TMapGpsManager.onLocationChangedCallback
 {
     private static final int defaultZoomLevel = 17;
+    private static final int defaultMinDistance = 3;    // 단위 : m
+    private static final int defaultMinTime = 1000;     // 단위 : 1/1000s
 
     // 상단 액션바 관련 변수
     ActionBar actionBar;
@@ -51,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
     TMapMarkerItem myLoca;
     TMapGpsManager tMapGpsManager;
 
-    Bitmap bitmap, bitmap2;
+    Bitmap bitmap;
 
     // 사이드바 관련 변수
     DrawerLayout sideDrawer;
@@ -65,10 +67,17 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
     ListView familyList;
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        // 현재 위치 설정
+        curLoca = tMapGpsManager.getLocation();
+        showMyLocation();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -111,10 +120,11 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
 
         tMapGpsManager = new TMapGpsManager(this);
         tMapGpsManager.setProvider(TMapGpsManager.NETWORK_PROVIDER);
-        tMapGpsManager.setMinTime(1000);
-        tMapGpsManager.setMinDistance(10);
+        tMapGpsManager.setMinTime(defaultMinTime);
+        tMapGpsManager.setMinDistance(defaultMinDistance);
         tMapGpsManager.OpenGps();
 
+        curLoca = tMapGpsManager.getLocation();
 
         mapView = new TMapView(this);
         mapView.setTrackingMode(true);
@@ -124,18 +134,8 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
         //mapViewListener = new CustomMapViewEventListener();
         //mapView.setMapViewEventListener(mapViewListener);
 
-        // 현재 위치 설정
-        curLoca = tMapGpsManager.getLocation();
-
-        // 현재 위치 marker 설정
-        myLoca = new TMapMarkerItem();
-        myLoca.setTMapPoint(curLoca);
         bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_action_place);
-        myLoca.setIcon(bitmap);
 
-        myLoca.setVisible(myLoca.VISIBLE);
-        myLoca.setPosition((float) 0.5, (float) 1.0);
-        mapView.addMarkerItem("myLocation", myLoca);
 
 
         // 드로어 & 사이드바 리스너
@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
         sideContainer = (FrameLayout) findViewById(R.id.frame_activity_main);
         sideDrawer = (DrawerLayout) findViewById(R.id.drawer_activity_main);
 
-        String sideItems[] = {"그룹 설정", "비상연락망 설정", "환경 설정"};
+        String sideItems[] = {"login", "그룹 설정", "비상연락망 설정", "환경 설정"};
         sideList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, sideItems));
 
         sideList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -153,17 +153,22 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
                 sideDrawer.closeDrawer(sideList);
 
                 switch (position) {
-                    case 0: // 그룹 설정
+                    case 0:
+                        intent = new Intent(getApplicationContext(), LoginActivity.class);
+                        startActivity(intent);
+                        break;
+
+                    case 1: // 그룹 설정
                         intent = new Intent(getApplicationContext(), SideGroup.class);
                         startActivity(intent);
                         break;
 
-                    case 1: // 비상연락망 설정
+                    case 2: // 비상연락망 설정
                         intent = new Intent(getApplicationContext(), SideWarning.class);
                         startActivity(intent);
                         break;
 
-                    case 2: // 환경 설정
+                    case 3: // 환경 설정
                         intent = new Intent(getApplicationContext(), SideSetting.class);
                         startActivity(intent);
                         break;
@@ -215,16 +220,23 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
         return super.onOptionsItemSelected(item);
     }
 
+
+    // 현재 위치 marker 설정
     protected void showMyLocation() {
 
+        myLoca = new TMapMarkerItem();
+        myLoca.setVisible(myLoca.VISIBLE);
+
+        myLoca.setTMapPoint(curLoca);
+        myLoca.setIcon(bitmap);
+        myLoca.setPosition((float) 0.5, (float) 1.0);
+        mapView.addMarkerItem("myLocation", myLoca);
     }
 
     @Override
     public void onLocationChange(Location location) {
-
-        TMapPoint tmappoint = new TMapPoint(location.getLongitude(), location.getLatitude());
-        curLoca = tmappoint;
-        mapView.setLocationPoint(location.getLongitude(), location.getLatitude());
+        curLoca = tMapGpsManager.getLocation();
+        mapView.setLocationPoint(curLoca.getLongitude(), curLoca.getLatitude());
         myLoca.setTMapPoint(curLoca);
         Toast.makeText(MainActivity.this, myLoca.getTMapPoint().getLongitude() + ", " + myLoca.getTMapPoint().getLatitude(), Toast.LENGTH_SHORT).show();
     }
