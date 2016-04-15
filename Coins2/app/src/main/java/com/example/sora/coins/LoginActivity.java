@@ -27,6 +27,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     EditText id, pw;
     Button signup, login;
+    MyInfo myInfo;
 
     LoginTask loginTask;
 
@@ -35,7 +36,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
 
-        loginTask = new LoginTask();
+        myInfo = MyInfo.getInstance();
 
         id = (EditText) findViewById(R.id.IDEdit);
         pw = (EditText) findViewById(R.id.PWEdit);
@@ -57,8 +58,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             case R.id.login:
 
+                loginTask = new LoginTask();
                 loginTask.execute(id.getText().toString(), pw.getText().toString());
-                //Toast.makeText(Login.this, "Login click", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -68,11 +69,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         String data;
         BufferedReader reader = null;
+        String ID;
 
         @Override
         protected String doInBackground(String... params) {
-            String ID = (String) params[0];
+
             String PW = (String) params[1];
+            ID = (String) params[0];
 
             try {
                 URL url = new URL(loginURL);
@@ -109,12 +112,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         @Override
         protected void onPostExecute(String s) {
-            if (s.equals("success")) {
-                Toast.makeText(LoginActivity.this, "접속 성공", Toast.LENGTH_LONG).show();
-            } else if (s.equals("fail")) {
+
+            myInfo.setID("LoginSuccess");
+
+            if (s.equals("fail")) {
                 Toast.makeText(LoginActivity.this, "비밀번호가 다릅니다.", Toast.LENGTH_LONG).show();
-            } else {
+            } else if (s.equals("not exist")){
                 Toast.makeText(LoginActivity.this, "존재하지 않습니다.", Toast.LENGTH_LONG).show();
+            } else {
+                // 이름, group_code 받아와야함.
+                myInfo.setID("LoginSuccess");
+                Toast.makeText(LoginActivity.this, "cool", Toast.LENGTH_LONG).show();
+                Settings.Login = true;
+                finish();
             }
         }
 

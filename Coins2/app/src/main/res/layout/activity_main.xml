@@ -18,7 +18,7 @@
         <!-- GPS 지도 레이아웃-->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="480dp"
             android:orientation="horizontal"
             android:id="@+id/mapView">
         </LinearLayout>
@@ -26,9 +26,9 @@
         <!-- 가족 리스트 -->
         <ListView
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="200dp"
             android:layout_gravity="center_horizontal|bottom"
-            android:background="@color/colorPrimary"
+            android:background="@color/familyList"
             android:id="@+id/familyList">
         </ListView>
     </FrameLayout>

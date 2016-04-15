@@ -1,55 +1,75 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    tools:context=".ChatActivity"
+    >
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/sendbird_img_bg_default"
+        android:scaleType="centerCrop"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" >
-
-        <FrameLayout
-            android:id="@android:id/tabcontent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+        <EditText
+            android:id="@+id/etxt_nickname"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:minWidth="200dp"
+            android:text=""
+            android:hint="Nickname"
+            android:singleLine="true"
+            android:textColor="@android:color/darker_gray"
+            android:gravity="center"
+            />
 
-            <LinearLayout
-                android:id="@+id/tab1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical" >
-
-                <ListView
-                    android:id="@+id/list_chat"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dip"
-                    android:divider="@null"
-                    android:layout_weight="1" >
-                </ListView>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/colorPrimary">
-
-                    <EditText
-                        android:id="@+id/input_chat_message"
-                        android:layout_width="0dip"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"
-                        android:layout_weight="1"
-                        android:ems="10" >
-                    </EditText>
-
-                    <Button
-                        android:id="@+id/button_chat_send"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/send">
-                    </Button>
-                </LinearLayout>
-            </LinearLayout>
-        </FrameLayout>
     </LinearLayout>
-</LinearLayout>
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/sendbird_img_logo"
+        android:layout_marginTop="60dp"
+        android:layout_centerHorizontal="true"
+        />
+
+
+
+    <LinearLayout
+        android:id="@+id/messaging_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical"
+        >
+        <Button
+            android:id="@+id/btn_select_member"
+            android:layout_below="@+id/btn_start_messaging"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:minWidth="220dp"
+            android:layout_height="wrap_content"
+            android:text="유저 리스트"
+            android:textColor="#ffffff"
+            android:background="#ff8080"
+            />
+
+        <Button
+            android:id="@+id/btn_start_messaging_list"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:minWidth="220dp"
+            android:layout_height="wrap_content"
+            android:text="채팅방 리스트"
+            android:textColor="#ffffff"
+            android:background="#ff8080"
+            />
+
+    </LinearLayout>
+
+</RelativeLayout>

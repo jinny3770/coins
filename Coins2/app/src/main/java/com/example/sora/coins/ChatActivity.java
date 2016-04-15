@@ -1,137 +1,167 @@
 package com.example.sora.coins;
 
-import java.util.ArrayList;
-import java.util.Date;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.LayoutInflater;
+import android.support.v4.app.FragmentActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TabHost;
-import android.widget.TabHost.TabSpec;
-import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.sora.coins.gcm.RegistrationIntentService;
 
-public class ChatActivity extends AppCompatActivity
-{
-    private final String TAG = this.getClass().getSimpleName();
-    private final static String TAB_TAG_CHAT = "tChat";
-    private final static String TAB_TAG_USERS = "tUsers";
+/**
+ * SendBird Prebuilt UI
+ */
+public class ChatActivity extends FragmentActivity {
+    private static final int REQUEST_SENDBIRD_CHAT_ACTIVITY = 100;
+    private static final int REQUEST_SENDBIRD_CHANNEL_LIST_ACTIVITY = 101;
+    private static final int REQUEST_SENDBIRD_MESSAGING_ACTIVITY = 200;
+    private static final int REQUEST_SENDBIRD_MESSAGING_CHANNEL_LIST_ACTIVITY = 201;
+    private static final int REQUEST_SENDBIRD_USER_LIST_ACTIVITY = 300;
 
-    private final static boolean VERBOSE_MODE = true;
+    public static String VERSION = "2.0.9.1";
 
-    private final static int COLOR_GREEN = Color.parseColor("#99FF99");
-    private final static int COLOR_BLUE = Color.parseColor("#99CCFF");
-    private final static int COLOR_GRAY = Color.parseColor("#cccccc");
-    private final static int COLOR_RED = Color.parseColor("#FF0000");
-    private final static int COLOR_ORANGE = Color.parseColor("#f4aa0b");
-
-
-    ActionBar actionBar;
-
-
-    EditText inputChatMessage;
-    View  buttonChatSend, layoutConnector, layoutLogin, layoutChat;
-    TextView labelStatus, labelTagUsers;
-    ListView listUsers, listMessages;
-    ArrayAdapter<String> adapterUsers;
-    MessagesAdapter adapterMessages;
-    TabHost mTabHost;
+    /**
+     To test push notifications with your own appId, you should replace google-services.json with yours.
+     Also you need to set Server API Token and Sender ID in SendBird dashboard.
+     Please carefully read "Push notifications" section in SendBird Android documentation
+     */
+    final String appId = "65502478-E77E-41D0-A636-4D5DEE969EEA"; /* Sample SendBird Application */
+    String userId = SendBirdChatActivity.Helper.generateDeviceUUID(ChatActivity.this); /* Generate Device UUID */
+    String userName = "최귷"; /* Generate User Nickname  + userId.substring(0, 5)*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chatting);
 
-        actionBar = getSupportActionBar();
-        actionBar.setBackgroundDrawable(new ColorDrawable(0xFFFF8080));
-        //actionBar.setHomeButtonEnabled(true);
-        actionBar.setDisplayShowHomeEnabled(true);
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setHomeAsUpIndicator(R.drawable.ic_action_back);
-
-        initUI();
-    }
+        /**
+         * Start GCM Service.
+         */
+        Intent intent = new Intent(this, RegistrationIntentService.class);
+        startService(intent);
 
 
-    private void initUI() {
+        ((EditText)findViewById(R.id.etxt_nickname)).setText(userName);
 
-        buttonChatSend = (Button) findViewById(R.id.button_chat_send);
-        listMessages = (ListView) findViewById(R.id.list_chat);
-        inputChatMessage = (EditText) findViewById(R.id.input_chat_message);
-        final ArrayList<String> message2 = new ArrayList<String>();
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, message2);
-        listMessages.setAdapter(adapter);
-        buttonChatSend.setOnClickListener(new View.OnClickListener() {
+        ((EditText)findViewById(R.id.etxt_nickname)).addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                userName = s.toString();
+            }
+        });
+/*
+오픈챗 버튼 액티비티
+        findViewById(R.id.btn_start_open_chat).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startChannelList();
+            }
+        });*/
+/*
+        findViewById(R.id.main_container).setVisibility(View.VISIBLE);
+        findViewById(R.id.messaging_container).setVisibility(View.GONE);
+        findViewById(R.id.btn_start_messaging).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String message = inputChatMessage.getText().toString();
-                if (message.length() > 0) {
-                    message2.add("나 : "+message);
-                    adapter.notifyDataSetChanged();
-                    inputChatMessage.setText("");
-                }
+                findViewById(R.id.main_container).setVisibility(View.GONE);
+                findViewById(R.id.messaging_container).setVisibility(View.VISIBLE);
             }
         });
 
-        // The list of users
-       /* adapterUsers = new ArrayAdapter<String>(this, R.layout.row_user);
-        listUsers.setAdapter(adapterUsers);
-        adapterMessages = new MessagesAdapter(this);
-        listMessages.setAdapter(adapterMessages);
-        // Enable auto scroll
-        listMessages.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
-        listMessages.setStackFromBottom(true);*/
-
-        //showLayout(layoutConnector);
-    }
-
-
-
-    /**
-     * Frees the resources.
-     */
-    private void showLayout(final View layoutToShow) {
-        runOnUiThread(new Runnable() {
-
+        findViewById(R.id.btn_messaging_back).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void run() {
-                // Show the layout selected and hide the others
-                for (View layout : new View[]{layoutChat, layoutConnector, layoutLogin}) {
-                    if (layoutToShow == layout) {
-                        layout.setVisibility(View.VISIBLE);
-                    } else {
-                        layout.setVisibility(View.GONE);
-                    }
-                }
+            public void onClick(View v) {
+                findViewById(R.id.main_container).setVisibility(View.VISIBLE);
+                findViewById(R.id.messaging_container).setVisibility(View.GONE);
+            }
+        });*/
+
+        startMessagingChannelList();
+        findViewById(R.id.btn_select_member).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startUserList();
             }
         });
+
+        findViewById(R.id.btn_start_messaging_list).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startMessagingChannelList();
+            }
+        });
+
     }
 
-    /*
+    private void startChat(String channelUrl) {
+        Intent intent = new Intent(ChatActivity.this, SendBirdChatActivity.class);
+        Bundle args = SendBirdChatActivity.makeSendBirdArgs(appId, userId, userName, channelUrl);
+
+        intent.putExtras(args);
+
+        startActivityForResult(intent, REQUEST_SENDBIRD_CHAT_ACTIVITY);
+    }
+
+    private void startUserList() {
+        Intent intent = new Intent(ChatActivity.this, SendBirdUserListActivity.class);
+        Bundle args = SendBirdUserListActivity.makeSendBirdArgs(appId, userId, userName);
+        intent.putExtras(args);
+
+        startActivityForResult(intent, REQUEST_SENDBIRD_USER_LIST_ACTIVITY);
+    }
+
+    private void startMessaging(String [] targetUserIds) {
+        Intent intent = new Intent(ChatActivity.this, SendBirdMessagingActivity.class);
+        Bundle args = SendBirdMessagingActivity.makeMessagingStartArgs(appId, userId, userName, targetUserIds);
+        intent.putExtras(args);
+
+        startActivityForResult(intent, REQUEST_SENDBIRD_MESSAGING_ACTIVITY);
+    }
+
+    private void joinMessaging(String channelUrl) {
+        Intent intent = new Intent(ChatActivity.this, SendBirdMessagingActivity.class);
+        Bundle args = SendBirdMessagingActivity.makeMessagingJoinArgs(appId, userId, userName, channelUrl);
+        intent.putExtras(args);
+
+        startActivityForResult(intent, REQUEST_SENDBIRD_MESSAGING_ACTIVITY);
+    }
+
+    private void startMessagingChannelList() {
+        Intent intent = new Intent(ChatActivity.this, SendBirdMessagingChannelListActivity.class);
+        Bundle args = SendBirdMessagingChannelListActivity.makeSendBirdArgs(appId, userId, userName);
+        intent.putExtras(args);
+
+        startActivityForResult(intent, REQUEST_SENDBIRD_MESSAGING_CHANNEL_LIST_ACTIVITY);
+    }
+
     @Override
-    public void onBackPressed() {
-        overridePendingTransition(R.anim.fade, R.anim.hold);
-        super.onBackPressed();
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode == RESULT_OK && requestCode == REQUEST_SENDBIRD_MESSAGING_CHANNEL_LIST_ACTIVITY && data != null) {
+            joinMessaging(data.getStringExtra("channelUrl"));
+        }
+
+        if(resultCode == RESULT_OK && requestCode == REQUEST_SENDBIRD_USER_LIST_ACTIVITY && data != null) {
+            startMessaging(data.getStringArrayExtra("userIds"));
+        }
+
+        if(resultCode == RESULT_OK && requestCode == REQUEST_SENDBIRD_CHAT_ACTIVITY && data != null) {
+            startMessaging(data.getStringArrayExtra("userIds"));
+        }
+
+        if(resultCode == RESULT_OK && requestCode == REQUEST_SENDBIRD_CHANNEL_LIST_ACTIVITY && data != null) {
+            startChat(data.getStringExtra("channelUrl"));
+        }
     }
-    */
-
-
-
 }

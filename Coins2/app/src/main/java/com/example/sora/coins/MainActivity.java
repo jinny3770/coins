@@ -34,8 +34,9 @@ import com.skp.Tmap.TMapView;
 
 import net.daum.mf.map.api.*;
 
-public class MainActivity extends AppCompatActivity implements TMapGpsManager.onLocationChangedCallback
-{
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity implements TMapGpsManager.onLocationChangedCallback {
     private static final int defaultZoomLevel = 17;
     private static final int defaultMinDistance = 3;    // 단위 : m
     private static final int defaultMinTime = 1000;     // 단위 : 1/1000s
@@ -43,14 +44,14 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
     // 상단 액션바 관련 변수
     ActionBar actionBar;
     ImageButton chatButton, locaButton, shareButton;
-    Button btnLockOn;
+    //Button btnLockOn;
 
     // GPS 지도 관련 변수
     TMapView mapView;
     LinearLayout mapLayout;
 
-    TMapPoint curLoca;
-    TMapMarkerItem myLoca;
+    TMapPoint curLoca, loca;
+    TMapMarkerItem myLoca, locaMarker;
     TMapGpsManager tMapGpsManager;
 
     Bitmap bitmap;
@@ -60,11 +61,14 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
     ActionBarDrawerToggle sideToggle;
     ListView sideList;
     FrameLayout sideContainer;
-    CustomMapViewEventListener mapViewListener;
     CustomOnclickListener clickListener;
+
+    // 내 정보
+    MyInfo myInfo;
 
     // 하단 가족 리스트뷰
     ListView familyList;
+    ListViewAdapter familyAdapter;
 
     @Override
     protected void onResume() {
@@ -73,24 +77,53 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
         // 현재 위치 설정
         curLoca = tMapGpsManager.getLocation();
         showMyLocation();
+
+        if (Settings.Login) {
+
+            familyList = (ListView) findViewById(R.id.familyList);
+            familyAdapter = new ListViewAdapter(this);
+            familyList.setAdapter(familyAdapter);
+
+            familyAdapter.addItem(getResources().getDrawable(R.drawable.person), "권순일1", "성북구 삼선동");
+
+
+            familyList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                    loca = new TMapPoint(127.00948476791382, 37.581937771712205);
+                    //ListData listData = (ListData)familyAdapter.getItem(position);
+                    mapView.setCenterPoint(loca.getLongitude(), loca.getLatitude());
+                    mapView.setTrackingMode(false);
+                    //myLoca.setTMapPoint(curLoca);
+                    //mapView.setTrackingMode(true);
+
+                    locaMarker = new TMapMarkerItem();
+                    locaMarker.setVisible(locaMarker.VISIBLE);
+
+                    locaMarker.setTMapPoint(loca);
+                    locaMarker.setIcon(bitmap);
+                    locaMarker.setPosition((float) 0.5, (float) 1.0);
+                    mapView.addMarkerItem("famLocation", locaMarker);
+
+                }
+            });
+        } else {
+
+        }
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /*
-        LocationManager locaManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if(!locaManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
-            Toast.makeText(MainActivity.this, "Sorry", Toast.LENGTH_LONG);
-        }
-        */
+        // MyInfo instance 불러온다.
+        myInfo = MyInfo.getInstance();
 
         // 상단 액션바
         actionBar = getSupportActionBar();
-        actionBar.setBackgroundDrawable(new ColorDrawable(0xFFFF8080));
+        actionBar.setBackgroundDrawable(new ColorDrawable(0xFF5e6472));
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayShowTitleEnabled(false);
 
@@ -111,8 +144,8 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
         locaButton.setOnClickListener(clickListener);
 
         // 잠금화면 변경
-        btnLockOn = (Button) findViewById(R.id.on);
-        btnLockOn.setOnClickListener(clickListener);
+        //btnLockOn = (Button) findViewById(R.id.on);
+        //btnLockOn.setOnClickListener(clickListener);
 
         // GPS 지도 setting 및 관련 리스너
         mapLayout = (LinearLayout) findViewById(R.id.mapView);
@@ -137,7 +170,6 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
         bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_action_place);
 
 
-
         // 드로어 & 사이드바 리스너
         sideList = (ListView) findViewById(R.id.list_activity_main);
         sideContainer = (FrameLayout) findViewById(R.id.frame_activity_main);
@@ -154,8 +186,13 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
 
                 switch (position) {
                     case 0:
-                        intent = new Intent(getApplicationContext(), LoginActivity.class);
-                        startActivity(intent);
+                        if (Settings.Login) {
+                            intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                            startActivity(intent);
+                        } else {
+                            intent = new Intent(getApplicationContext(), LoginActivity.class);
+                            startActivity(intent);
+                        }
                         break;
 
                     case 1: // 그룹 설정
@@ -177,15 +214,12 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
         });
 
         // 드로어 -> 액션바 토글
-        sideToggle = new ActionBarDrawerToggle(this, sideDrawer, R.string.app_name, R.string.app_name)
-        {
-            public void onDrawerClosed(View view)
-            {
+        sideToggle = new ActionBarDrawerToggle(this, sideDrawer, R.string.app_name, R.string.app_name) {
+            public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
             }
 
-            public void onDrawerOpened(View drawerView)
-            {
+            public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
             }
         };
@@ -195,6 +229,7 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
         sideToggle.syncState();
 
         mapLayout.addView(mapView);
+
 
     }
 
@@ -212,8 +247,7 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (sideToggle.onOptionsItemSelected(item))
-        {
+        if (sideToggle.onOptionsItemSelected(item)) {
             return true;
         }
 
@@ -238,6 +272,7 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
         curLoca = tMapGpsManager.getLocation();
         mapView.setLocationPoint(curLoca.getLongitude(), curLoca.getLatitude());
         myLoca.setTMapPoint(curLoca);
+        myInfo.setPoint(curLoca);
         Toast.makeText(MainActivity.this, myLoca.getTMapPoint().getLongitude() + ", " + myLoca.getTMapPoint().getLatitude(), Toast.LENGTH_SHORT).show();
     }
 
@@ -252,11 +287,12 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
         public void onClick(View v) {
             Intent intent;
 
-            switch(v.getId())
-            {
+            switch (v.getId()) {
+
                 case R.id.chatButton:
                     intent = new Intent(getApplicationContext(), ChatActivity.class);
                     startActivity(intent);
+                    //intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                     overridePendingTransition(R.anim.fade, R.anim.hold);
                     break;
 
@@ -268,10 +304,13 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
                     mapView.setTrackingMode(true);
                     break;
 
+                /*
                 case R.id.on:
                     intent = new Intent(getApplicationContext(), LockScreenService.class);
+                    //intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                     startService(intent);
                     break;
+                */
             }
         }
     }

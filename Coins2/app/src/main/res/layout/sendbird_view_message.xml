@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingTop="10dp"
+    android:paddingLeft="18dp"
+    android:paddingRight="18dp"
+    >
+
+    <!--<TextView-->
+        <!--android:id="@+id/txt_sender_name"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginRight="4dp"-->
+        <!--android:paddingLeft="2dp"-->
+        <!--android:paddingRight="2dp"-->
+        <!--android:text="SenderName"-->
+        <!--android:maxLines="5"-->
+        <!--android:ellipsize="end"-->
+        <!--android:maxWidth="120dp"-->
+        <!--android:textSize="14sp"-->
+        <!--android:textColor="#262626"-->
+        <!--android:textStyle="bold"-->
+        <!--/>-->
+
+    <ImageView
+        android:id="@+id/img_op_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/sendbird_icon_admin"
+        android:paddingTop="4dp"
+        />
+
+
+    <TextView
+        android:id="@+id/txt_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textColor="#595959"
+        android:autoLink="web"
+        android:text="내용내용내용내용내용내용내용 블라블라블라블라블라 칸채우기 귀찮다 대충 이런내용인데 뭐라는지모르겠다"
+        />
+
+</FrameLayout>

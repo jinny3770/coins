@@ -1,6 +1,7 @@
 <resources>
     <string name="open">메뉴 열기</string>
     <string name="close">메뉴 닫기</string>
+    <string name="title_activity_sendbird">Coins</string>
     <string name="app_name">Coins</string>
     <string name="connect">Connect</string>
     <string name="status">"Status: "</string>
