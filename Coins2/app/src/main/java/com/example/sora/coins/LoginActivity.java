@@ -10,6 +10,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -69,13 +73,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         String data;
         BufferedReader reader = null;
-        String ID;
 
         @Override
         protected String doInBackground(String... params) {
 
             String PW = (String) params[1];
-            ID = (String) params[0];
+            String ID = (String) params[0];
 
             try {
                 URL url = new URL(loginURL);
@@ -113,16 +116,32 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         @Override
         protected void onPostExecute(String s) {
 
-            myInfo.setID("LoginSuccess");
+            JSONObject jsonObj;
+            JSONArray jsonArray;
+
 
             if (s.equals("fail")) {
                 Toast.makeText(LoginActivity.this, "비밀번호가 다릅니다.", Toast.LENGTH_LONG).show();
-            } else if (s.equals("not exist")){
+            } else if (s.equals("not exist")) {
                 Toast.makeText(LoginActivity.this, "존재하지 않습니다.", Toast.LENGTH_LONG).show();
             } else {
-                // 이름, group_code 받아와야함.
-                myInfo.setID("LoginSuccess");
-                Toast.makeText(LoginActivity.this, "cool", Toast.LENGTH_LONG).show();
+                myInfo.setID(id.getText().toString());
+
+                try {
+                    jsonArray = new JSONArray(s);
+
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        jsonObj = jsonArray.getJSONObject(i);
+                        myInfo.setName(jsonObj.getString("name"));
+                        myInfo.setGroupCode(jsonObj.getString("group_code"));
+                    }
+                    //myInfo.setName(jsonObj.getString("name"));
+                    //
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
                 Settings.Login = true;
                 finish();
             }

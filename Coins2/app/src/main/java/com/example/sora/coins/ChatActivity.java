@@ -34,7 +34,7 @@ public class ChatActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.chatting);
+        setContentView(R.layout.activity_chatting);
 
         /**
          * Start GCM Service.

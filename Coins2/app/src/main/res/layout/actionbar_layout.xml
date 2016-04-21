@@ -22,6 +22,13 @@
             android:src="@drawable/ic_action_send_now"/>
 
         <ImageButton
+            android:id="@+id/destination"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="#00000000"
+            android:src="@drawable/ic_action_place"/>
+
+        <ImageButton
             android:id="@+id/chatButton"
             android:layout_width="32dp"
             android:layout_height="32dp"

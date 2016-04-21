@@ -34,16 +34,27 @@ import com.skp.Tmap.TMapView;
 
 import net.daum.mf.map.api.*;
 
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity implements TMapGpsManager.onLocationChangedCallback {
-    private static final int defaultZoomLevel = 17;
+    private static final int defaultZoomLevel = 15;
     private static final int defaultMinDistance = 3;    // 단위 : m
     private static final int defaultMinTime = 1000;     // 단위 : 1/1000s
 
+    private static String updateLocationURL = "52.79.124.54/updateLocation.php";
+
     // 상단 액션바 관련 변수
     ActionBar actionBar;
-    ImageButton chatButton, locaButton, shareButton;
+    ImageButton chatButton, locaButton, shareButton, desButton;
     //Button btnLockOn;
 
     // GPS 지도 관련 변수
@@ -65,6 +76,9 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
 
     // 내 정보
     MyInfo myInfo;
+
+    Timer timer;
+    TimerTask timerTask;
 
     // 하단 가족 리스트뷰
     ListView familyList;
@@ -91,13 +105,14 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                    loca = new TMapPoint(127.00948476791382, 37.581937771712205);
+                    //loca = new TMapPoint(127.00948476791382, 37.581937771712205);
                     //ListData listData = (ListData)familyAdapter.getItem(position);
-                    mapView.setCenterPoint(loca.getLongitude(), loca.getLatitude());
+                    mapView.setCenterPoint(127.00948476791382, 37.581937771712205);
                     mapView.setTrackingMode(false);
                     //myLoca.setTMapPoint(curLoca);
                     //mapView.setTrackingMode(true);
 
+                    /*
                     locaMarker = new TMapMarkerItem();
                     locaMarker.setVisible(locaMarker.VISIBLE);
 
@@ -105,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
                     locaMarker.setIcon(bitmap);
                     locaMarker.setPosition((float) 0.5, (float) 1.0);
                     mapView.addMarkerItem("famLocation", locaMarker);
+                    */
 
                 }
             });
@@ -138,10 +154,12 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
         chatButton = (ImageButton) findViewById(R.id.chatButton);
         shareButton = (ImageButton) findViewById(R.id.shareButton);
         locaButton = (ImageButton) findViewById(R.id.locaButton);
+        desButton = (ImageButton) findViewById(R.id.destination);
 
         chatButton.setOnClickListener(clickListener);
         shareButton.setOnClickListener(clickListener);
         locaButton.setOnClickListener(clickListener);
+        desButton.setOnClickListener(clickListener);
 
         // 잠금화면 변경
         //btnLockOn = (Button) findViewById(R.id.on);
@@ -230,6 +248,42 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
 
         mapLayout.addView(mapView);
 
+        timer = new Timer();
+        timerTask = new TimerTask() {
+            @Override
+            public void run() {
+
+                if(Settings.Login) {
+                    try {
+                        URL url = new URL(updateLocationURL);
+
+                        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                        conn.setRequestMethod("POST");
+
+                        conn.setReadTimeout(10000);
+                        conn.setConnectTimeout(15000);
+
+                        conn.setDoOutput(true);
+                        conn.setDoInput(true);
+
+                        String data = URLEncoder.encode("ID", "utf8") + "=" + URLEncoder.encode(myInfo.getID(), "utf8")
+                                + "&" + URLEncoder.encode("long", "utf8") + "=" + URLEncoder.encode(Double.toString(myInfo.getPoint().getLongitude()), "utf8")
+                                + "&" + URLEncoder.encode("lati", "utf8") + "=" + URLEncoder.encode(Double.toString(myInfo.getPoint().getLatitude()), "utf8");
+
+                        OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+                        wr.write(data);
+                        wr.flush();
+
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+
+        timer.schedule(timerTask, 0, 10000);
 
     }
 
@@ -273,7 +327,7 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
         mapView.setLocationPoint(curLoca.getLongitude(), curLoca.getLatitude());
         myLoca.setTMapPoint(curLoca);
         myInfo.setPoint(curLoca);
-        Toast.makeText(MainActivity.this, myLoca.getTMapPoint().getLongitude() + ", " + myLoca.getTMapPoint().getLatitude(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(MainActivity.this, myLoca.getTMapPoint().getLongitude() + ", " + myLoca.getTMapPoint().getLatitude(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -300,6 +354,10 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
                     Toast.makeText(MainActivity.this, Integer.toString(mapView.getZoomLevel()), Toast.LENGTH_LONG).show();
                     break;
 
+                case R.id.destination:
+                    intent = new Intent(getApplicationContext(), DestinationActivity.class);
+                    startActivity(intent);
+
                 case R.id.locaButton:
                     mapView.setTrackingMode(true);
                     break;
@@ -314,5 +372,4 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
             }
         }
     }
-
 }
