@@ -1,16 +1,20 @@
 package com.example.sora.coins;
 
 import android.app.ActionBar;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.skp.Tmap.TMapData;
+import com.skp.Tmap.TMapPOIItem;
 import com.skp.Tmap.TMapPoint;
 import com.skp.Tmap.TMapPolyLine;
 import com.skp.Tmap.TMapView;
@@ -20,6 +24,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.logging.LogManager;
@@ -27,20 +32,19 @@ import java.util.logging.LogManager;
 /**
  * Created by sora on 2016-04-21.
  */
-public class DestinationActivity extends AppCompatActivity {
+public class DestinationActivity extends AppCompatActivity implements View.OnClickListener{
 
     LinearLayout mapLayout;
     TMapView mapView;
 
     MyInfo myInfo;
     ActionBar actionBar;
-    Button desButton;
+    ImageButton desButton;
 
-    TextView timeView, distanceView;
+    EditText searchText;
+    Button searchButton;
 
-    // 4.9.35 이용
-    // findTimeMachineCarPath
-    // json parsor 이용해야함!
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,15 +60,21 @@ public class DestinationActivity extends AppCompatActivity {
         mapLayout.addView(mapView);
 
 
-        timeView = (TextView) findViewById(R.id.timeView);
-        distanceView = (TextView) findViewById(R.id.disView);
+        searchText = (EditText) findViewById(R.id.searchText);
+        searchButton = (Button) findViewById(R.id.searchButton);
+        desButton = (ImageButton) findViewById(R.id.desButton);
 
+        desButton.setOnClickListener(this);
+        searchButton.setOnClickListener(this);
 
-        drawMapPath2();
+        //drawMapPath();
 
     }
 
-    public void drawMapPath(TMapPoint startPoint, TMapPoint endPoint) {
+    public void drawMapPath(TMapPoint endPoint) {
+        TMapPoint startPoint = myInfo.getPoint();
+        //TmapPoint endPoint = randomTMapPoint();
+
         TMapData tmapdata = new TMapData();
 
         tmapdata.findPathData(startPoint, endPoint, new TMapData.FindPathDataListenerCallback() {
@@ -76,6 +86,7 @@ public class DestinationActivity extends AppCompatActivity {
         });
     }
 
+    /*
     public void drawMapPath2() {
         TMapPoint startPoint = myInfo.getPoint();
         TMapPoint endPoint = randomTMapPoint();
@@ -124,6 +135,7 @@ public class DestinationActivity extends AppCompatActivity {
         });
 
     }
+    */
 
     public TMapPoint randomTMapPoint() {
         double latitude = ((double) Math.random()) * (37.575113 - 37.483086) + 37.483086;
@@ -140,4 +152,28 @@ public class DestinationActivity extends AppCompatActivity {
         return point;
     }
 
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()) {
+            case R.id.desButton :
+                TMapPoint endPoint = mapView.getCenterPoint();
+
+                drawMapPath(endPoint);
+                break;
+
+
+            case R.id.searchButton :
+                TMapData tmapData = new TMapData();
+
+                // 4.9.11
+                // 4.1.34 addTMapPOIItem
+                tmapData.findTitlePOI(searchText.getText().toString(), new TMapData.FindTitlePOIListenerCallback() {
+                    @Override
+                    public void onFindTitlePOI(ArrayList<TMapPOIItem> arrayList) {
+                        mapView.removeAllTMapPOIItem();
+                        mapView.addTMapPOIItem(arrayList);
+                    }
+                });
+        }
+    }
 }
