@@ -56,10 +56,9 @@ public class DestinationActivity extends AppCompatActivity {
         mapLayout.addView(mapView);
 
 
-        /*
         timeView = (TextView) findViewById(R.id.timeView);
-        distanceView = (TextView) findViewById(R.id.distanceView);
-        */
+        distanceView = (TextView) findViewById(R.id.disView);
+
 
         drawMapPath2();
 
@@ -84,10 +83,11 @@ public class DestinationActivity extends AppCompatActivity {
 
         drawMapPath(startPoint, endPoint);
 
-        /*
         TMapData tmapData = new TMapData();
 
         HashMap<String, String> pathInfo = new HashMap<String, String>();
+
+
         pathInfo.put("rStName", "MyLocation");
         pathInfo.put("rStlat", Double.toString(startPoint.getLatitude()));
         pathInfo.put("rStlon", Double.toString(startPoint.getLongitude()));
@@ -96,50 +96,33 @@ public class DestinationActivity extends AppCompatActivity {
         pathInfo.put("rGolon", Double.toString(endPoint.getLongitude()));
         pathInfo.put("type", "arrival");
 
+
         Date currentTime = new Date();
+        //Document doc = tmapData.findTimeMachineCarPath(pathInfo, currentTime, null);
 
-        Document doc = tmapData.findTimeMachineCarPath(pathInfo, currentTime, null);
+        tmapData.findTimeMachineCarPath(pathInfo, currentTime, null, new TMapData.FindTimeMachineCarPathListenerCallback() {
+            @Override
+            public void onFindTimeMachineCarPath(Document document) {
 
-        try {
-            JSONArray jsonArray = new JSONArray(doc);
-
-            JSONObject topObj = jsonArray.getJSONObject(0);
-            JSONObject featureObj = topObj.getJSONObject("feature");
-            JSONObject propertyObj = featureObj.getJSONObject("properties");
-
-            String type = propertyObj.getString("pointType");
-            //int time = propertyObj.getInt("totalTime");
-            //int distance = propertyObj.getInt("totalDistance");
-
-            Toast.makeText(getApplicationContext(), "type = " + type, Toast.LENGTH_SHORT).show();
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        /*
-                new TMapData.FindTimeMachineCarPathListenerCallback() {
-                    @Override
-                    public void onFindTimeMachineCarPath(Document document) {
-                        try {
-
-                            /*
-                            JSONObject timeObj = propertyObj.getJSONObject("totalTime");
-                            JSONObject distanceObj = propertyObj.getJSONObject("totalDistance");
-
-                            timeView.setText(propertyObj.getInt("totalTime"));
-                            distanceView.setText(propertyObj.getInt("totalDistance"));
+                try {
+                    JSONArray jsonArray = new JSONArray(document);
 
 
+                    JSONObject topObj = jsonArray.getJSONObject(0);
+                    JSONObject featureObj = topObj.getJSONObject("feature");
+                    JSONObject propertyObj = featureObj.getJSONObject("properties");
 
-                            //Toast.makeText(getApplicationContext(), "time : " + Integer.toString(time) +  ", dis : " + Integer.toString(distance), Toast.LENGTH_SHORT).show();
+                    String type = propertyObj.getString("pointType");
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-                        */
+                    timeView.setText(Integer.toString(propertyObj.getInt("totalTime")));
+                    distanceView.setText(Integer.toString(propertyObj.getInt("totalDistance")));
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
     }
 
     public TMapPoint randomTMapPoint() {
