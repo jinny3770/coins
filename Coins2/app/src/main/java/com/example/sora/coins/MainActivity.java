@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
     // 상단 액션바 관련 변수
     ActionBar actionBar;
     ImageButton chatButton, locaButton, shareButton, desButton;
-    //Button btnLockOn;
 
     // GPS 지도 관련 변수
     TMapView mapView;
@@ -362,13 +361,6 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
                     mapView.setTrackingMode(true);
                     break;
 
-                /*
-                case R.id.on:
-                    intent = new Intent(getApplicationContext(), LockScreenService.class);
-                    //intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                    startService(intent);
-                    break;
-                */
             }
         }
     }
