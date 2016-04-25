@@ -25,6 +25,7 @@
             android:id="@+id/searchButton"
             android:text="검색"/>
 
+
     </LinearLayout>
 
 
@@ -44,10 +45,19 @@
             android:id="@+id/desButton"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_margin="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:src="@drawable/ic_action_location_found"/>
+
+        <ImageButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/sendButton"
+            android:layout_below="@+id/desButton"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/ic_action_send_now"/>
 
         <ImageView
             android:layout_width="wrap_content"

@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/Coins2.iml" filepath="$PROJECT_DIR$/Coins2.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/com.skp.Tmap_1.0.37/com.skp.Tmap_1.0.37.iml" filepath="$PROJECT_DIR$/com.skp.Tmap_1.0.37/com.skp.Tmap_1.0.37.iml" />
+      <module fileurl="file://$PROJECT_DIR$/httpclient-4.5.2/httpclient-4.5.2.iml" filepath="$PROJECT_DIR$/httpclient-4.5.2/httpclient-4.5.2.iml" />
     </modules>
   </component>
 </project>
