@@ -1,1 +1,1 @@
-include ':app', ':com.skp.Tmap_1.0.37', ':httpclient-4.5.2'
+include ':app', ':com.skp.Tmap_1.0.37'

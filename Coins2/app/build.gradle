@@ -36,5 +36,5 @@ dependencies {
     compile project(':com.skp.Tmap_1.0.37')
     compile files('src/main/jniLibs/sendbird-android-2.0.9.jar')
     compile 'com.google.android.gms:play-services-gcm:8.4.+'
-    compile project(':httpclient-4.5.2')
+    compile 'com.android.support:design:22.2.0'
 }

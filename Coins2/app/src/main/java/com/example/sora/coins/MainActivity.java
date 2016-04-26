@@ -354,8 +354,9 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
                     break;
 
                 case R.id.destination:
-                    intent = new Intent(getApplicationContext(), DestinationActivity.class);
+                    intent = new Intent(getApplicationContext(), DestinationList.class);
                     startActivity(intent);
+                    break;
 
                 case R.id.locaButton:
                     mapView.setTrackingMode(true);

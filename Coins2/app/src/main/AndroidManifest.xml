@@ -44,6 +44,7 @@
         <activity android:name=".SignUpActivity"/>
         <activity android:name=".ProfileActivity"/>
         <activity android:name=".DestinationActivity"/>
+        <activity android:name=".DestinationList"/>
 
         <service android:name=".LockScreenService"/>
 
