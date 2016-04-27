@@ -16,16 +16,16 @@ package com.example.sora.coins.gcm;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-        import android.app.IntentService;
-        import android.content.Intent;
-        import android.content.SharedPreferences;
-        import android.content.SharedPreferences.Editor;
-        import android.preference.PreferenceManager;
-        import android.util.Log;
+import android.app.IntentService;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.preference.PreferenceManager;
+import android.util.Log;
 
-        import com.google.android.gms.gcm.GoogleCloudMessaging;
-        import com.google.android.gms.iid.InstanceID;
-        import com.example.sora.coins.R;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.android.gms.iid.InstanceID;
+import com.example.sora.coins.R;
 
 public class RegistrationIntentService extends IntentService {
 

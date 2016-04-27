@@ -1,10 +1,7 @@
 package com.example.sora.coins;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.*;
-import android.widget.Toast;
 
 /**
  * Created by Administrator on 2016-03-21.
@@ -15,7 +12,6 @@ public class SideGroup extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.sidebar_group);
-        Toast.makeText(getApplicationContext(), "그룹 설정", Toast.LENGTH_LONG).show();
+        setContentView(R.layout.side_group);
     }
 }

@@ -2,9 +2,9 @@ package com.example.sora.coins.gcm;
 
 
 
-        import android.content.Intent;
+import android.content.Intent;
 
-        import com.google.android.gms.iid.InstanceIDListenerService;
+import com.google.android.gms.iid.InstanceIDListenerService;
 
 public class MyInstanceIDListenerService extends InstanceIDListenerService {
 

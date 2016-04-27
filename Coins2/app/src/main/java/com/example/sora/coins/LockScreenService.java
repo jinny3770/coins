@@ -49,6 +49,7 @@ public class LockScreenService extends Service
     public void onDestroy()
     {
         super.onDestroy();
+        myReceiver.reenableKeyguard();
         unregisterReceiver(myReceiver);
     }
 }

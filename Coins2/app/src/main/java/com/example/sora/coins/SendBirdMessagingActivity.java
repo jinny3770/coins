@@ -1,104 +1,120 @@
 package com.example.sora.coins;
 
 
-        import android.annotation.TargetApi;
-        import android.app.Activity;
-        import android.app.AlertDialog;
-        import android.content.ContentUris;
-        import android.content.Context;
-        import android.content.DialogInterface;
-        import android.content.Intent;
-        import android.content.res.Configuration;
-        import android.database.Cursor;
-        import android.graphics.Bitmap;
-        import android.graphics.BitmapFactory;
-        import android.graphics.BitmapShader;
-        import android.graphics.Canvas;
-        import android.graphics.ColorFilter;
-        import android.graphics.Paint;
-        import android.graphics.PixelFormat;
-        import android.graphics.Rect;
-        import android.graphics.RectF;
-        import android.graphics.Shader;
-        import android.graphics.drawable.ColorDrawable;
-        import android.graphics.drawable.Drawable;
-        import android.net.Uri;
-        import android.os.AsyncTask;
-        import android.os.Build;
-        import android.os.Bundle;
-        import android.os.CountDownTimer;
-        import android.os.Environment;
-        import android.preference.PreferenceManager;
-        import android.provider.DocumentsContract;
-        import android.provider.MediaStore;
-        import android.provider.Settings;
-        import android.support.v4.app.Fragment;
-        import android.support.v4.app.FragmentActivity;
-        import android.text.Editable;
-        import android.text.Html;
-        import android.text.TextWatcher;
-        import android.text.format.DateFormat;
-        import android.util.Log;
-        import android.view.KeyEvent;
-        import android.view.LayoutInflater;
-        import android.view.MotionEvent;
-        import android.view.View;
-        import android.view.ViewGroup;
-        import android.view.WindowManager;
-        import android.view.inputmethod.EditorInfo;
-        import android.view.inputmethod.InputMethodManager;
-        import android.widget.AbsListView;
-        import android.widget.BaseAdapter;
-        import android.widget.Button;
-        import android.widget.EditText;
-        import android.widget.ImageButton;
-        import android.widget.ImageView;
-        import android.widget.ListView;
-        import android.widget.ProgressBar;
-        import android.widget.TextView;
-        import android.widget.Toast;
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.ContentUris;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapShader;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.Paint;
+import android.graphics.PixelFormat;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.Shader;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Environment;
+import android.preference.PreferenceManager;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
+import android.provider.Settings;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.text.Editable;
+import android.text.Html;
+import android.text.TextWatcher;
+import android.text.format.DateFormat;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
-        import com.sendbird.android.MessageListQuery;
-        import com.sendbird.android.SendBird;
-        import com.sendbird.android.SendBirdEventHandler;
-        import com.sendbird.android.SendBirdException;
-        import com.sendbird.android.SendBirdFileUploadEventHandler;
-        import com.sendbird.android.SendBirdNotificationHandler;
-        import com.sendbird.android.handler.DeleteMessageHandler;
-        import com.sendbird.android.model.BroadcastMessage;
-        import com.sendbird.android.model.Channel;
-        import com.sendbird.android.model.FileInfo;
-        import com.sendbird.android.model.FileLink;
-        import com.sendbird.android.model.Mention;
-        import com.sendbird.android.model.Message;
-        import com.sendbird.android.model.MessageModel;
-        import com.sendbird.android.model.MessagingChannel;
-        import com.sendbird.android.model.ReadStatus;
-        import com.sendbird.android.model.SystemMessage;
-        import com.sendbird.android.model.TypeStatus;
+import com.sendbird.android.MessageListQuery;
+import com.sendbird.android.SendBird;
+import com.sendbird.android.SendBirdEventHandler;
+import com.sendbird.android.SendBirdException;
+import com.sendbird.android.SendBirdFileUploadEventHandler;
+import com.sendbird.android.SendBirdNotificationHandler;
+import com.sendbird.android.handler.DeleteMessageHandler;
+import com.sendbird.android.model.BroadcastMessage;
+import com.sendbird.android.model.Channel;
+import com.sendbird.android.model.FileInfo;
+import com.sendbird.android.model.FileLink;
+import com.sendbird.android.model.Mention;
+import com.sendbird.android.model.Message;
+import com.sendbird.android.model.MessageModel;
+import com.sendbird.android.model.MessagingChannel;
+import com.sendbird.android.model.ReadStatus;
+import com.sendbird.android.model.SystemMessage;
+import com.sendbird.android.model.TypeStatus;
+import com.skp.Tmap.TMapData;
+import com.skp.Tmap.TMapGpsManager;
+import com.skp.Tmap.TMapMarkerItem;
+import com.skp.Tmap.TMapPOIItem;
+import com.skp.Tmap.TMapPoint;
+import com.skp.Tmap.TMapView;
 
-        import java.io.BufferedInputStream;
-        import java.io.BufferedOutputStream;
-        import java.io.File;
-        import java.io.FileInputStream;
-        import java.io.FileOutputStream;
-        import java.io.IOException;
-        import java.io.InputStream;
-        import java.io.OutputStream;
-        import java.net.URL;
-        import java.security.MessageDigest;
-        import java.text.DecimalFormat;
-        import java.util.ArrayList;
-        import java.util.Arrays;
-        import java.util.Date;
-        import java.util.Hashtable;
-        import java.util.List;
-        import java.util.concurrent.ConcurrentHashMap;
-        import java.util.concurrent.ConcurrentLinkedQueue;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.security.MessageDigest;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 
 public class SendBirdMessagingActivity extends FragmentActivity {
+
+    String CALL_ACTIVITY;
+    int ACTIVITY_SHARE= 1;
+    int ACTIVITY_CHATROOM= 2;
+    private static final int defaultZoomLevel = 17;
+    private static final int defaultMinDistance = 3;    // 단위 : m
+    private static final int defaultMinTime = 1000;     // 단위 : 1/1000s
+
     private static final int REQUEST_MEMBER_LIST = 100;
+
 
     private SendBirdChatFragment mSendBirdMessagingFragment;
     private SendBirdMessagingAdapter mSendBirdMessagingAdapter;
@@ -139,13 +155,22 @@ public class SendBirdMessagingActivity extends FragmentActivity {
         args.putString("channelUrl", channelUrl);
         return args;
     }
+//    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(R.anim.sendbird_slide_in_from_bottom, R.anim.sendbird_slide_out_to_top);
+        overridePendingTransition(R.anim.fade, R.anim.hold);
         setContentView(R.layout.activity_sendbird_messaging);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+//        activity = this.getApplicationContext();
+//        switch(getIntent().getExtras().getInt(CALL_ACTIVITY)){
+//            case ACTIVITY_SHARE:
+//                break;
+//            default:
+//                break;
+//        };
 
         initFragment();
 
@@ -153,6 +178,7 @@ public class SendBirdMessagingActivity extends FragmentActivity {
         initSendBird(getIntent().getExtras());
 
     }
+
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -226,7 +252,7 @@ public class SendBirdMessagingActivity extends FragmentActivity {
     @Override
     public void finish() {
         super.finish();
-        overridePendingTransition(R.anim.sendbird_slide_in_from_top, R.anim.sendbird_slide_out_to_bottom);
+        overridePendingTransition(R.anim.fade, R.anim.hold);
     }
 
 
@@ -521,8 +547,10 @@ public class SendBirdMessagingActivity extends FragmentActivity {
         super.onStop();
     }
 
-    public static class SendBirdChatFragment extends Fragment {
+    public class SendBirdChatFragment extends Fragment {
         private static final int REQUEST_PICK_IMAGE = 100;
+
+
 
         private ListView mListView;
         private SendBirdMessagingAdapter mAdapter;
@@ -554,13 +582,43 @@ public class SendBirdMessagingActivity extends FragmentActivity {
             mEtxtMessage = (EditText) rootView.findViewById(R.id.etxt_message);
 
             mBtnSend.setEnabled(false);
+            Intent intent = getIntent();
+
+            Double Long = intent.getDoubleExtra("Longitude", 0);
+            Double Lati = intent.getDoubleExtra("Latitude", 0);
+            Integer Check = intent.getIntExtra("Check", 0);
+            String address = intent.getStringExtra("address");
+            TMapData tmapData = new TMapData();
+
+            /*tmapData.findAllPOI(address, new TMapData.FindAllPOIListenerCallback() // 비트맵 뽑아내기
+            {
+                @Override
+                public void onFindAllPOI(ArrayList<TMapPOIItem> arrayList)
+                {
+                    TMapPOIItem item0 = arrayList.get(0);
+
+                    mapView.setCenterPoint(item0.getPOIPoint().getLongitude(), item0.getPOIPoint().getLatitude());
+
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(searchText.getWindowToken(), 0);
+                }
+            });
+*/
+            if (Check == 1)
+            {
+                //Toast.makeText(SendBirdMessagingActivity.this, "MessagingActivity : "+ Long + ", " + Lati+", "+Check, Toast.LENGTH_SHORT).show();
+
+                mEtxtMessage.setText("내 위치 공유!!!!\n"+Long+", "+Lati + "\n" + address);
+                Log.d("id", "11111111111111" + mEtxtMessage.getText().toString());
+                SendBird.send(mEtxtMessage.getText().toString());
+                mEtxtMessage.setText("");
+            }
             mBtnSend.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     send();
                 }
             });
-
             mBtnUpload.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

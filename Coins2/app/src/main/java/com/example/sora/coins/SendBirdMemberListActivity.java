@@ -1,49 +1,49 @@
 package com.example.sora.coins;
 
 
-        import android.content.Context;
-        import android.content.res.Configuration;
-        import android.graphics.Bitmap;
-        import android.graphics.BitmapFactory;
-        import android.os.AsyncTask;
-        import android.os.Bundle;
-        import android.preference.PreferenceManager;
-        import android.support.v4.app.Fragment;
-        import android.support.v4.app.FragmentActivity;
-        import android.view.LayoutInflater;
-        import android.view.View;
-        import android.view.ViewGroup;
-        import android.view.WindowManager;
-        import android.widget.AdapterView;
-        import android.widget.BaseAdapter;
-        import android.widget.ImageButton;
-        import android.widget.ImageView;
-        import android.widget.ListView;
-        import android.widget.TextView;
-        import android.widget.Toast;
+import android.content.Context;
+import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
-        import com.sendbird.android.MemberCountQuery;
-        import com.sendbird.android.MemberListQuery;
-        import com.sendbird.android.SendBird;
-        import com.sendbird.android.SendBirdException;
-        import com.sendbird.android.model.Member;
+import com.sendbird.android.MemberCountQuery;
+import com.sendbird.android.MemberListQuery;
+import com.sendbird.android.SendBird;
+import com.sendbird.android.SendBirdException;
+import com.sendbird.android.model.Member;
 
-        import java.io.BufferedInputStream;
-        import java.io.BufferedOutputStream;
-        import java.io.File;
-        import java.io.FileInputStream;
-        import java.io.FileOutputStream;
-        import java.io.IOException;
-        import java.io.InputStream;
-        import java.io.OutputStream;
-        import java.net.URL;
-        import java.text.SimpleDateFormat;
-        import java.util.ArrayList;
-        import java.util.Collection;
-        import java.util.Date;
-        import java.util.Hashtable;
-        import java.util.concurrent.ConcurrentHashMap;
-        import java.util.concurrent.ConcurrentLinkedQueue;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Hashtable;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class SendBirdMemberListActivity extends FragmentActivity {
     private SendBirdMemberListFragment mSendBirdMemberListFragment;
@@ -64,7 +64,7 @@ public class SendBirdMemberListActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(R.anim.sendbird_slide_in_from_bottom, R.anim.sendbird_slide_out_to_top);
+        overridePendingTransition(R.anim.fade, R.anim.hold);
         setContentView(R.layout.activity_sendbird_member_list);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
@@ -103,7 +103,7 @@ public class SendBirdMemberListActivity extends FragmentActivity {
     @Override
     public void finish() {
         super.finish();
-        overridePendingTransition(R.anim.sendbird_slide_in_from_top, R.anim.sendbird_slide_out_to_bottom);
+        overridePendingTransition(R.anim.fade, R.anim.hold);
     }
 
     @Override

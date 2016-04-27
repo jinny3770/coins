@@ -16,47 +16,27 @@ import android.widget.Toast;
  */
 public class SideSetting extends AppCompatActivity
 {
-    Intent intent;
     private Switch swc;
-    SharedPreferences pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.sidebar_setting);
-
-        intent = new Intent(getApplicationContext(), LockScreenService.class);
+        setContentView(R.layout.side_setting);
 
         swc = (Switch) findViewById(R.id.lockSwitch);
-        pref = getSharedPreferences("pref", Activity.MODE_PRIVATE);
 
+        SharedPreferences pref = getSharedPreferences("pref", 0);
         Boolean check = pref.getBoolean("swc", true);
         swc.setChecked(check);
-
-        swc.setOnCheckedChangeListener(new Switch.OnCheckedChangeListener()
-        {
-            public void onCheckedChanged(CompoundButton cb, boolean isChecking)
-            {
-                if (isChecking)
-                {
-                    startService(intent);
-                }
-
-                else
-                {
-                    stopService(intent);
-                }
-            }
-        });
     }
 
     @Override
-    public void onStop()
+    public void onPause()
     {
-        super.onStop();
-        pref = getSharedPreferences("pref", Activity.MODE_PRIVATE);
+        super.onPause();
 
+        SharedPreferences pref = getSharedPreferences("pref", 0);
         SharedPreferences.Editor editor = pref.edit();
         editor.putBoolean("swc", swc.isChecked());
         editor.commit();

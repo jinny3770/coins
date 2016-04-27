@@ -1,49 +1,52 @@
 package com.example.sora.coins;
 
-import android.content.Context;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
-import android.os.AsyncTask;
-import android.os.Build;
+import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.gcm.GCMRegistrar;
+import com.skp.Tmap.TMapData;
 import com.skp.Tmap.TMapGpsManager;
 import com.skp.Tmap.TMapMarkerItem;
-import com.skp.Tmap.TMapMarkerItem2;
 import com.skp.Tmap.TMapPoint;
 import com.skp.Tmap.TMapView;
 
-import net.daum.mf.map.api.*;
+import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 public class MainActivity extends AppCompatActivity implements TMapGpsManager.onLocationChangedCallback {
     private static final int defaultZoomLevel = 15;
@@ -58,12 +61,10 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
 
     // GPS 지도 관련 변수
     TMapView mapView;
-    LinearLayout mapLayout;
-
-    TMapPoint curLoca, loca;
-    TMapMarkerItem myLoca, locaMarker;
+    TMapPoint curLoca;
+    TMapMarkerItem myLoca;
     TMapGpsManager tMapGpsManager;
-
+    LinearLayout mapLayout;
     Bitmap bitmap;
 
     // 사이드바 관련 변수
@@ -87,12 +88,25 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
     protected void onResume() {
         super.onResume();
 
+        // SideSetting의 값 받아서 조건처리
+        SharedPreferences pref = getSharedPreferences("pref", Activity.MODE_PRIVATE);
+        Intent intent = new Intent(getApplicationContext(), LockScreenService.class);
+
+        if (pref.getBoolean("swc", true))
+        {
+            startService(intent);
+        }
+
+        else
+        {
+            stopService(intent);
+        }
+
         // 현재 위치 설정
         curLoca = tMapGpsManager.getLocation();
         showMyLocation();
 
         if (Settings.Login) {
-
             familyList = (ListView) findViewById(R.id.familyList);
             familyAdapter = new ListViewAdapter(this);
             familyList.setAdapter(familyAdapter);
@@ -120,11 +134,8 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
                     locaMarker.setPosition((float) 0.5, (float) 1.0);
                     mapView.addMarkerItem("famLocation", locaMarker);
                     */
-
                 }
             });
-        } else {
-
         }
     }
 
@@ -132,6 +143,25 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build(); // android.os.NetworkOnMainThreadException 에러 방지용 코드
+        StrictMode.setThreadPolicy(policy);
+
+        // GCM
+        GCMRegistrar.checkDevice(this);
+        GCMRegistrar.checkManifest(this);
+
+        final String regID = GCMRegistrar.getRegistrationId(this);
+
+        if ("".equals(regID))
+        {
+            GCMRegistrar.register(this, "386569608668");
+        }
+
+        else
+        {
+            Log.e("id", regID);
+        }
 
         // MyInfo instance 불러온다.
         myInfo = MyInfo.getInstance();
@@ -159,10 +189,6 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
         shareButton.setOnClickListener(clickListener);
         locaButton.setOnClickListener(clickListener);
         desButton.setOnClickListener(clickListener);
-
-        // 잠금화면 변경
-        //btnLockOn = (Button) findViewById(R.id.on);
-        //btnLockOn.setOnClickListener(clickListener);
 
         // GPS 지도 setting 및 관련 리스너
         mapLayout = (LinearLayout) findViewById(R.id.mapView);
@@ -338,7 +364,7 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
     class CustomOnclickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            Intent intent;
+            final Intent intent;
 
             switch (v.getId()) {
 
@@ -350,7 +376,67 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
                     break;
 
                 case R.id.shareButton:
-                    Toast.makeText(MainActivity.this, Integer.toString(mapView.getZoomLevel()), Toast.LENGTH_LONG).show();
+                    intent = new Intent(getApplicationContext(), ChatActivity.class);
+
+                    new AlertDialog.Builder(MainActivity.this)
+                            .setTitle("WAY")
+                            .setMessage("내 위치를 채팅방에 공유?")
+                            .setCancelable(false)
+                            .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    double lat, lon;
+                                    String address = "";
+                                    TMapData tmapData = new TMapData();
+
+                                    curLoca = tMapGpsManager.getLocation();
+                                    mapView.setLocationPoint(curLoca.getLongitude(), curLoca.getLatitude());
+                                    myLoca.setTMapPoint(curLoca);
+
+                                    lat = myLoca.getTMapPoint().getLatitude();
+                                    lon = myLoca.getTMapPoint().getLongitude();
+
+                                    try
+                                    {
+                                        address = tmapData.convertGpsToAddress(lat, lon);
+                                    }
+
+                                    catch (MalformedURLException me)
+                                    {
+                                        me.printStackTrace();
+                                    }
+
+                                    catch (IOException ioe)
+                                    {
+                                        ioe.printStackTrace();
+                                    }
+
+                                    catch (ParserConfigurationException pce)
+                                    {
+                                        pce.printStackTrace();
+                                    }
+
+                                    catch (SAXException saxe)
+                                    {
+                                        saxe.printStackTrace();
+                                    }
+
+                                    Toast.makeText(getApplicationContext(), address, Toast.LENGTH_SHORT).show(); // 테스트
+                                    intent.putExtra("Latitude", lat);
+                                    intent.putExtra("Longitude", lon);
+                                    intent.putExtra("address", address);
+                                    intent.putExtra("Check", 1);
+                                    startActivity(intent);
+                                    overridePendingTransition(R.anim.fade, R.anim.hold);
+                                }
+                            })
+                            .setNegativeButton("놉", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            })
+                            .create()
+                            .show();
                     break;
 
                 case R.id.destination:

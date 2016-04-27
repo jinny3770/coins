@@ -27,9 +27,21 @@ public class LockScreenReceiver extends BroadcastReceiver
                 keyLock = km.newKeyguardLock(Context.KEYGUARD_SERVICE);
             }
 
+            disableKeyguard();
+
             Intent i = new Intent(context, LockScreenActivity.class);
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(i);
         }
+    }
+
+    public void reenableKeyguard()
+    {
+        keyLock.reenableKeyguard();
+    }
+
+    public void disableKeyguard()
+    {
+        keyLock.disableKeyguard();
     }
 }

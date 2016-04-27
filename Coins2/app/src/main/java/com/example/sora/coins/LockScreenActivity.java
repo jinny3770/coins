@@ -12,9 +12,7 @@ import android.telephony.SmsManager;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.AbsoluteLayout;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -23,14 +21,14 @@ import android.widget.Toast;
  */
 public class LockScreenActivity extends Activity {
     private static MediaPlayer alertPlayer;
-    private static int x, y; // btnSelect의 좌표값
     Button btnAlert, btnSelect, btnUnlock;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
         setContentView(R.layout.lockscreen); // 잠금화면 레이아웃
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
 
         btnAlert = (Button) findViewById(R.id.alert);
         btnSelect = (Button) findViewById(R.id.select);
@@ -38,37 +36,18 @@ public class LockScreenActivity extends Activity {
 
         alertPlayer = MediaPlayer.create(this, R.raw.alert);
 
-        btnAlert.setOnClickListener(new View.OnClickListener() {
+        btnSelect.setOnTouchListener(new View.OnTouchListener()
+        {
             @Override
-            public void onClick(View v) {
-                alertPlayer.start();
-                sendSMS("010-7347-5027", "문자보내기 테스트");
-            }
-        });
-
-        btnSelect.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public boolean onTouch(View v, MotionEvent event)
+            {
                 float offsetX = 0;
-                boolean isMoving = false;
-                boolean chk = true;
 
-                if (event.getAction() == MotionEvent.ACTION_DOWN)
-                {
-                    chk = false;
-                    isMoving = true;
-                }
-
-                else if (event.getAction() == MotionEvent.ACTION_MOVE)
+                if (event.getAction() == MotionEvent.ACTION_MOVE)
                 {
                     offsetX = v.getWidth() - event.getX();
                     v.setX((int) event.getRawX() - offsetX);
                     check(v, btnAlert, btnUnlock);
-                }
-
-                else if (event.getAction() == MotionEvent.ACTION_UP)
-                {
-                    isMoving = false;
                 }
 
                 return false;
@@ -135,12 +114,15 @@ public class LockScreenActivity extends Activity {
 
     public void check(View select, View alert, View unlock)
     {
-        if (select.getX() < alert.getX() + 50)
+        if (select.getX() < alert.getX() + 40)
         {
-            Toast.makeText(getApplicationContext(), "왼쪽", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "문자 전송 완료", Toast.LENGTH_SHORT).show();
+            alertPlayer.start();
+            sendSMS("010-5103-5364", "문자보내기 테스트");
+            finish();
         }
 
-        else if (select.getX() > unlock.getX() - 50)
+        else if (select.getX() > unlock.getX() - 40)
         {
             finish();
         }

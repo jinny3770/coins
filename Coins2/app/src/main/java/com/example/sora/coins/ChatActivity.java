@@ -5,10 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.View;
 import android.widget.EditText;
-
-import com.example.sora.coins.gcm.RegistrationIntentService;
 
 /**
  * SendBird Prebuilt UI
@@ -19,7 +16,6 @@ public class ChatActivity extends FragmentActivity {
     private static final int REQUEST_SENDBIRD_MESSAGING_ACTIVITY = 200;
     private static final int REQUEST_SENDBIRD_MESSAGING_CHANNEL_LIST_ACTIVITY = 201;
     private static final int REQUEST_SENDBIRD_USER_LIST_ACTIVITY = 300;
-
     public static String VERSION = "2.0.9.1";
 
     /**
@@ -29,7 +25,7 @@ public class ChatActivity extends FragmentActivity {
      */
     final String appId = "65502478-E77E-41D0-A636-4D5DEE969EEA"; /* Sample SendBird Application */
     String userId = SendBirdChatActivity.Helper.generateDeviceUUID(ChatActivity.this); /* Generate Device UUID */
-    String userName = "최귷"; /* Generate User Nickname  + userId.substring(0, 5)*/
+    String userName = "순일순일"; /* Generate User Nickname  + userId.substring(0, 5)*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,9 +35,19 @@ public class ChatActivity extends FragmentActivity {
         /**
          * Start GCM Service.
          */
-        Intent intent = new Intent(this, RegistrationIntentService.class);
+        Intent intent = getIntent();
         startService(intent);
 
+        Double Long, Lati;
+        Integer Check = 0;
+        String address;
+
+        Long = intent.getDoubleExtra("Longitude", 0);
+        Lati = intent.getDoubleExtra("Latitude", 0);
+        Check = intent.getIntExtra("Check", 0);
+        address = intent.getStringExtra("address");
+
+        //Toast.makeText(ChatActivity.this, "ChatActivity : "+ Long + ", " + Lati+", "+Check, Toast.LENGTH_SHORT).show();
 
         ((EditText)findViewById(R.id.etxt_nickname)).setText(userName);
 
@@ -66,7 +72,7 @@ public class ChatActivity extends FragmentActivity {
             public void onClick(View view) {
                 startChannelList();
             }
-        });*/
+        });
 /*
         findViewById(R.id.main_container).setVisibility(View.VISIBLE);
         findViewById(R.id.messaging_container).setVisibility(View.GONE);
@@ -85,22 +91,8 @@ public class ChatActivity extends FragmentActivity {
                 findViewById(R.id.messaging_container).setVisibility(View.GONE);
             }
         });*/
-
-        startMessagingChannelList();
-        findViewById(R.id.btn_select_member).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startUserList();
-            }
-        });
-
-        findViewById(R.id.btn_start_messaging_list).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startMessagingChannelList();
-            }
-        });
-
+        startMessagingChannelList(Long, Lati, Check, address);
+        finish();
     }
 
     private void startChat(String channelUrl) {
@@ -136,10 +128,14 @@ public class ChatActivity extends FragmentActivity {
         startActivityForResult(intent, REQUEST_SENDBIRD_MESSAGING_ACTIVITY);
     }
 
-    private void startMessagingChannelList() {
+    private void startMessagingChannelList(Double Long, Double Lati, Integer Check, String address) {
         Intent intent = new Intent(ChatActivity.this, SendBirdMessagingChannelListActivity.class);
         Bundle args = SendBirdMessagingChannelListActivity.makeSendBirdArgs(appId, userId, userName);
         intent.putExtras(args);
+        intent.putExtra("Longitude", Long);
+        intent.putExtra("Latitude", Lati);
+        intent.putExtra("Check", Check);
+        intent.putExtra("address", address);
 
         startActivityForResult(intent, REQUEST_SENDBIRD_MESSAGING_CHANNEL_LIST_ACTIVITY);
     }

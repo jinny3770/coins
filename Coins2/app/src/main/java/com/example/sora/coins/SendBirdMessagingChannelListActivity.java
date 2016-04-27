@@ -1,55 +1,56 @@
 package com.example.sora.coins;
 
-        import android.app.AlertDialog;
-        import android.content.Context;
-        import android.content.DialogInterface;
-        import android.content.Intent;
-        import android.content.res.Configuration;
-        import android.graphics.Bitmap;
-        import android.graphics.BitmapFactory;
-        import android.os.AsyncTask;
-        import android.os.Bundle;
-        import android.preference.PreferenceManager;
-        import android.support.v4.app.Fragment;
-        import android.support.v4.app.FragmentActivity;
-        import android.text.format.DateFormat;
-        import android.view.LayoutInflater;
-        import android.view.View;
-        import android.view.ViewGroup;
-        import android.view.WindowManager;
-        import android.widget.AbsListView;
-        import android.widget.AdapterView;
-        import android.widget.BaseAdapter;
-        import android.widget.ImageButton;
-        import android.widget.ImageView;
-        import android.widget.ListView;
-        import android.widget.TextView;
-        import android.widget.Toast;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.text.format.DateFormat;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
-        import com.sendbird.android.MessagingChannelListQuery;
-        import com.sendbird.android.SendBird;
-        import com.sendbird.android.SendBirdNotificationHandler;
-        import com.sendbird.android.model.Mention;
-        import com.sendbird.android.model.Message;
-        import com.sendbird.android.model.MessagingChannel;
+import com.sendbird.android.MessagingChannelListQuery;
+import com.sendbird.android.SendBird;
+import com.sendbird.android.SendBirdNotificationHandler;
+import com.sendbird.android.model.Mention;
+import com.sendbird.android.model.Message;
+import com.sendbird.android.model.MessagingChannel;
 
-        import java.io.BufferedInputStream;
-        import java.io.BufferedOutputStream;
-        import java.io.File;
-        import java.io.FileInputStream;
-        import java.io.FileOutputStream;
-        import java.io.IOException;
-        import java.io.InputStream;
-        import java.io.OutputStream;
-        import java.net.URL;
-        import java.util.ArrayList;
-        import java.util.Collections;
-        import java.util.Comparator;
-        import java.util.Date;
-        import java.util.Hashtable;
-        import java.util.List;
-        import java.util.concurrent.ConcurrentHashMap;
-        import java.util.concurrent.ConcurrentLinkedQueue;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 
 public class SendBirdMessagingChannelListActivity extends FragmentActivity {
@@ -74,8 +75,10 @@ public class SendBirdMessagingChannelListActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
-        overridePendingTransition(R.anim.sendbird_slide_in_from_bottom, R.anim.sendbird_slide_out_to_top);
+        overridePendingTransition(R.anim.fade, R.anim.hold);
         setContentView(R.layout.activity_sendbird_messaging_channel_list);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
@@ -87,8 +90,6 @@ public class SendBirdMessagingChannelListActivity extends FragmentActivity {
         initFragment();
         initUIComponents();
         initSendBird();
-
-        Toast.makeText(this, "채널을 길게 터치하여 채팅방 나가기", Toast.LENGTH_LONG).show();
     }
 
     private void initSendBird() {
@@ -130,7 +131,7 @@ public class SendBirdMessagingChannelListActivity extends FragmentActivity {
     @Override
     public void finish() {
         super.finish();
-        overridePendingTransition(R.anim.sendbird_slide_in_from_top, R.anim.sendbird_slide_out_to_bottom);
+        overridePendingTransition(R.anim.fade, R.anim.hold);
     }
 
     private void initFragment() {
@@ -138,10 +139,27 @@ public class SendBirdMessagingChannelListActivity extends FragmentActivity {
         mSendBirdMessagingChannelListFragment.setSendBirdMessagingChannelListHandler(new SendBirdMessagingChannelListFragment.SendBirdMessagingChannelListHandler() {
             @Override
             public void onMessagingChannelSelected(MessagingChannel messagingChannel) {
-                Intent intent = new Intent(SendBirdMessagingChannelListActivity.this, SendBirdMessagingActivity.class);
+                Intent intent2 = new Intent(SendBirdMessagingChannelListActivity.this, SendBirdMessagingActivity.class);
                 Bundle args = SendBirdMessagingActivity.makeMessagingJoinArgs(mAppId, mUserId, mNickname, messagingChannel.getUrl());
-                intent.putExtras(args);
-                startActivity(intent);
+
+                Intent intent = getIntent();
+
+                Double Long, Lati;
+                Integer Check = 0;
+                String address;
+
+                Long = intent.getDoubleExtra("Longitude", 0);
+                Lati = intent.getDoubleExtra("Latitude", 0);
+                Check = intent.getIntExtra("Check", 0);
+                address = intent.getStringExtra("address");
+                //Toast.makeText(SendBirdMessagingChannelListActivity.this, "MessagingChannelList : "+ Long + ", " + Lati+", "+Check, Toast.LENGTH_SHORT).show();
+                intent2.putExtra("Longitude", Long);
+                intent2.putExtra("Latitude", Lati);
+                intent2.putExtra("Check", Check);
+                intent2.putExtra("address", address);
+                intent2.putExtras(args);
+
+                startActivity(intent2);
             }
 
         });

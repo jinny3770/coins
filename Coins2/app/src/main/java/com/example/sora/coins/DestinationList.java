@@ -20,7 +20,8 @@ public class DestinationList extends AppCompatActivity implements View.OnClickLi
     FloatingActionButton addFloating;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.destination_list_activity);
 
@@ -28,11 +29,11 @@ public class DestinationList extends AppCompatActivity implements View.OnClickLi
 
         addFloating = (FloatingActionButton) findViewById(R.id.addFloating);
         addFloating.setOnClickListener(this);
-
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(View v)
+    {
         switch (v.getId()) {
             case R.id.addFloating :
                 Intent intent = new Intent(getApplicationContext(), DestinationActivity.class);
@@ -43,7 +44,6 @@ public class DestinationList extends AppCompatActivity implements View.OnClickLi
 
 
     class ListAdapter extends BaseAdapter {
-
 
 
         @Override

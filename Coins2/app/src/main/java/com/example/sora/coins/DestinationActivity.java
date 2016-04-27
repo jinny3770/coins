@@ -201,13 +201,21 @@ public class DestinationActivity extends AppCompatActivity implements View.OnCli
 
             case R.id.sendButton:
                 dialog = sendDialogMaker();
-                dialog.show();
+
+                if (dialog != null)
+                {
+                    dialog.show();
+                }
+
+                else
+                {
+                    Toast.makeText(getApplicationContext(), "이동수단을 선택해주세요.", Toast.LENGTH_SHORT).show();
+                }
+
                 break;
 
             case R.id.searchButton:
-
                 if (searchText.getText().toString().length() > 0) {
-
                     TMapData tmapData = new TMapData();
 
                     tmapData.findAllPOI(searchText.getText().toString(), new TMapData.FindAllPOIListenerCallback() {
@@ -216,7 +224,6 @@ public class DestinationActivity extends AppCompatActivity implements View.OnCli
                             mapView.removeAllTMapPOIItem();
                             mapView.addTMapPOIItem(arrayList);
 
-
                             // 4.1.100 -> poi라벨 클릭에 대한 인터페이스 함수수
                             TMapPOIItem item0 = arrayList.get(0);
 
@@ -224,16 +231,13 @@ public class DestinationActivity extends AppCompatActivity implements View.OnCli
 
                             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.hideSoftInputFromWindow(searchText.getWindowToken(), 0);
-
                         }
                     });
                 }
 
                 break;
-
         }
     }
-
 
     private AlertDialog sendDialogMaker() {
 
@@ -247,16 +251,25 @@ public class DestinationActivity extends AppCompatActivity implements View.OnCli
         builder.setTitle("test");
         builder.setView(dialogView);
 
-        time = (TextView) dialogView.findViewById(R.id.timeView);
-        distance = (TextView) dialogView.findViewById(R.id.distanceView);
+        try
+        {
+            time = (TextView) dialogView.findViewById(R.id.timeView);
+            distance = (TextView) dialogView.findViewById(R.id.distanceView);
 
-        time.setText("Time : " + destinationInfo.getStringTime());
-        distance.setText("Distance : " + destinationInfo.getStringDistance());
+            time.setText("Time : " + destinationInfo.getStringTime());
+            distance.setText("Distance : " + destinationInfo.getStringDistance());
 
-        builder.setPositiveButton("OK", null);
+            builder.setPositiveButton("OK", null);
 
-        AlertDialog dialog = builder.create();
-        return dialog;
+            AlertDialog dialog = builder.create();
+            return dialog;
+        }
+
+        catch (NullPointerException npe)
+        {
+            npe.printStackTrace();
+            return null;
+        }
     }
 
     private AlertDialog selectDialogMaker() {
@@ -271,6 +284,8 @@ public class DestinationActivity extends AppCompatActivity implements View.OnCli
         walk = (RadioButton) dialogView.findViewById(R.id.walkRadio);
         bicycle = (RadioButton) dialogView.findViewById(R.id.bicycleRadio);
         car = (RadioButton) dialogView.findViewById(R.id.carRadio);
+
+        rGroup.check(walk.getId()); // 기본 체크 => 도보
 
         AlertDialog.Builder builder = new AlertDialog.Builder(DestinationActivity.this);
 
@@ -309,7 +324,6 @@ public class DestinationActivity extends AppCompatActivity implements View.OnCli
 
                 RouteTask routeTask = new RouteTask();
                 routeTask.execute(url, sLati, sLong, eLati, eLong);
-
             }
         });
 
@@ -319,14 +333,16 @@ public class DestinationActivity extends AppCompatActivity implements View.OnCli
 
 
     class RouteTask extends AsyncTask<String, Void, String> {
+        TMapPoint startPoint;
+        TMapPoint endPoint;
 
         @Override
         protected String doInBackground(String... params) {
 
             String urlString = params[0];
 
-            TMapPoint start = new TMapPoint(Double.parseDouble(params[1]), Double.parseDouble(params[2]));
-            TMapPoint end = new TMapPoint(Double.parseDouble(params[3]), Double.parseDouble(params[4]));
+            startPoint = new TMapPoint(Double.parseDouble(params[1]), Double.parseDouble(params[2]));
+            endPoint = new TMapPoint(Double.parseDouble(params[3]), Double.parseDouble(params[4]));
 
             BufferedReader reader = null;
 
@@ -346,7 +362,7 @@ public class DestinationActivity extends AppCompatActivity implements View.OnCli
                 conn.setDoOutput(true);
                 conn.setDoInput(true);
 
-                String data = makeData(start, end);
+                String data = makeData(startPoint, endPoint);
 
                 OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
                 wr.write(data);
@@ -396,7 +412,7 @@ public class DestinationActivity extends AppCompatActivity implements View.OnCli
 
                 double time = featObj.getDouble("totalTime");
                 double dis = featObj.getDouble("totalDistance");
-                destinationInfo = new DestinationInfo(time, dis);
+                destinationInfo = new DestinationInfo(startPoint, endPoint, time, dis);
 
                 initPolyLine();
 

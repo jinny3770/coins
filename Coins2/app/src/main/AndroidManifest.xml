@@ -2,20 +2,24 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.sora.coins">
 
+    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="17"/>
+
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
     <uses-permission android:name="android.permission.SEND_SMS"/>
     <uses-permission android:name="android.permission.RECEIVE_SMS"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="com.example.sora.coins.permission.C2D_MESSAGE"/>
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <permission android:name="com.example.sora.coins.permission.C2D_MESSAGE"
-        android:protectionLevel="signature" />
-    <uses-permission android:name="com.example.sora.coins.permission.C2D_MESSAGE" />
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+        android:protectionLevel="signature"/>
 
     <application
         android:allowBackup="true"
@@ -23,101 +27,99 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat">
+
         <activity
-            android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:name=".MainActivity"
+            android:launchMode="singleInstance"
+            android:excludeFromRecents="true"
+            android:taskAffinity="">
         </activity>
+
         <activity
             android:name=".ChatActivity"
             android:label="@string/app_name"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
-            >
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
         </activity>
-        <activity android:name=".SideGroup"/>
-        <activity android:name=".SideSetting"/>
-        <activity android:name=".SideWarning"/>
-        <activity android:name=".LockScreenActivity"/>
-        <activity android:name=".LoginActivity"/>
-        <activity android:name=".SignUpActivity"/>
-        <activity android:name=".ProfileActivity"/>
-        <activity android:name=".DestinationActivity"/>
-        <activity android:name=".DestinationList"/>
 
-        <service android:name=".LockScreenService"/>
-
-        <receiver android:name=".LockScreenReceiver"/>
+        <activity android:name=".LockScreenActivity"
+            android:launchMode="singleInstance"
+            android:excludeFromRecents="true"
+            android:taskAffinity="">
+        </activity>
 
         <activity
             android:name=".SendBirdChatActivity"
             android:label="SendBird"
             android:configChanges="orientation|screenSize"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
-            >
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
         </activity>
+
         <activity
             android:name=".SendBirdUserListActivity"
             android:label="SendBird"
             android:configChanges="orientation|screenSize"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
-            >
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"            >
         </activity>
+
         <activity
             android:name=".SendBirdMemberListActivity"
             android:label="SendBird"
             android:configChanges="orientation|screenSize"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
-            >
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
         </activity>
+
         <activity
             android:name=".SendBirdChannelListActivity"
             android:label="SendBird"
             android:configChanges="orientation|screenSize"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
-            >
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
         </activity>
+
         <activity
             android:name=".SendBirdMessagingActivity"
             android:label="SendBird"
             android:configChanges="orientation|screenSize"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
-            >
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
         </activity>
+
         <activity
             android:name=".SendBirdMessagingChannelListActivity"
             android:label="SendBird"
             android:configChanges="orientation|screenSize"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
-            >
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
+        </activity>
+
+        <activity android:name=".SplashActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@style/SplashTheme">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
 
         <receiver
-            android:name="com.google.android.gms.gcm.GcmReceiver"
-            android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND">
+            android:name="com.google.android.gcm.GCMBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <category android:name="com.example.gcm" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
             </intent-filter>
         </receiver>
-        <service
-            android:name=".gcm.MyGcmListenerService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-            </intent-filter>
-        </service>
-        <service android:name=".gcm.RegistrationIntentService"
-            android:exported="false" />
-        <service
-            android:name=".gcm.MyInstanceIDListenerService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.android.gms.iid.InstanceID" />
-            </intent-filter>
-        </service>
 
+        <activity android:name=".SideGroup"/>
+        <activity android:name=".SideSetting"/>
+        <activity android:name=".SideWarning"/>
+        <activity android:name=".LoginActivity"/>
+        <activity android:name=".SignUpActivity"/>
+        <activity android:name=".ProfileActivity"/>
+        <activity android:name=".DestinationActivity"/>
+        <activity android:name=".DestinationList"/>
+        <service android:name=".LockScreenService"/>
+        <service android:name=".GCMIntentService"/>
+        <receiver android:name=".LockScreenReceiver"/>
     </application>
 </manifest>

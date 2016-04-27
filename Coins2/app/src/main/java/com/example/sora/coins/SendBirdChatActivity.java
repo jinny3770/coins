@@ -1,87 +1,85 @@
 package com.example.sora.coins;
 
 
-        import android.annotation.TargetApi;
-        import android.app.Activity;
-        import android.app.AlertDialog;
-        import android.content.ContentUris;
-        import android.content.Context;
-        import android.content.DialogInterface;
-        import android.content.Intent;
-        import android.content.res.Configuration;
-        import android.database.Cursor;
-        import android.graphics.Bitmap;
-        import android.graphics.BitmapFactory;
-        import android.graphics.drawable.ColorDrawable;
-        import android.net.Uri;
-        import android.os.AsyncTask;
-        import android.os.Build;
-        import android.os.Bundle;
-        import android.os.Environment;
-        import android.preference.PreferenceManager;
-        import android.provider.DocumentsContract;
-        import android.provider.MediaStore;
-        import android.provider.Settings;
-        import android.support.v4.app.Fragment;
-        import android.support.v4.app.FragmentActivity;
-        import android.text.Editable;
-        import android.text.Html;
-        import android.text.TextWatcher;
-        import android.util.Log;
-        import android.view.KeyEvent;
-        import android.view.LayoutInflater;
-        import android.view.MotionEvent;
-        import android.view.View;
-        import android.view.ViewGroup;
-        import android.view.WindowManager;
-        import android.view.inputmethod.EditorInfo;
-        import android.view.inputmethod.InputMethodManager;
-        import android.widget.AbsListView;
-        import android.widget.BaseAdapter;
-        import android.widget.Button;
-        import android.widget.EditText;
-        import android.widget.ImageButton;
-        import android.widget.ImageView;
-        import android.widget.ListView;
-        import android.widget.ProgressBar;
-        import android.widget.TextView;
-        import android.widget.Toast;
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.ContentUris;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Environment;
+import android.preference.PreferenceManager;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
+import android.provider.Settings;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.text.Editable;
+import android.text.Html;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
-        import com.sendbird.android.MessageListQuery;
-        import com.sendbird.android.SendBird;
-        import com.sendbird.android.SendBirdEventHandler;
-        import com.sendbird.android.SendBirdException;
-        import com.sendbird.android.SendBirdFileUploadEventHandler;
-        import com.sendbird.android.SendBirdSystemEventHandler;
-        import com.sendbird.android.handler.DeleteMessageHandler;
-        import com.sendbird.android.model.BroadcastMessage;
-        import com.sendbird.android.model.Channel;
-        import com.sendbird.android.model.FileInfo;
-        import com.sendbird.android.model.FileLink;
-        import com.sendbird.android.model.Message;
-        import com.sendbird.android.model.MessageModel;
-        import com.sendbird.android.model.MessagingChannel;
-        import com.sendbird.android.model.ReadStatus;
-        import com.sendbird.android.model.SystemEvent;
-        import com.sendbird.android.model.SystemMessage;
-        import com.sendbird.android.model.TypeStatus;
+import com.sendbird.android.MessageListQuery;
+import com.sendbird.android.SendBird;
+import com.sendbird.android.SendBirdEventHandler;
+import com.sendbird.android.SendBirdException;
+import com.sendbird.android.SendBirdFileUploadEventHandler;
+import com.sendbird.android.handler.DeleteMessageHandler;
+import com.sendbird.android.model.BroadcastMessage;
+import com.sendbird.android.model.Channel;
+import com.sendbird.android.model.FileInfo;
+import com.sendbird.android.model.FileLink;
+import com.sendbird.android.model.Message;
+import com.sendbird.android.model.MessageModel;
+import com.sendbird.android.model.MessagingChannel;
+import com.sendbird.android.model.ReadStatus;
+import com.sendbird.android.model.SystemMessage;
+import com.sendbird.android.model.TypeStatus;
 
-        import java.io.BufferedInputStream;
-        import java.io.BufferedOutputStream;
-        import java.io.File;
-        import java.io.FileInputStream;
-        import java.io.FileOutputStream;
-        import java.io.IOException;
-        import java.io.InputStream;
-        import java.io.OutputStream;
-        import java.net.URL;
-        import java.security.MessageDigest;
-        import java.text.DecimalFormat;
-        import java.util.ArrayList;
-        import java.util.Hashtable;
-        import java.util.List;
-        import java.util.concurrent.ConcurrentHashMap;
-        import java.util.concurrent.ConcurrentLinkedQueue;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.security.MessageDigest;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 
 public class SendBirdChatActivity extends FragmentActivity {
@@ -113,7 +111,7 @@ public class SendBirdChatActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(R.anim.sendbird_slide_in_from_bottom, R.anim.sendbird_slide_out_to_top);
+        overridePendingTransition(R.anim.fade, R.anim.hold);
         setContentView(R.layout.activity_sendbird_chat);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
@@ -173,7 +171,7 @@ public class SendBirdChatActivity extends FragmentActivity {
     @Override
     public void finish() {
         super.finish();
-        overridePendingTransition(R.anim.sendbird_slide_in_from_top, R.anim.sendbird_slide_out_to_bottom);
+        overridePendingTransition(R.anim.fade, R.anim.hold);
     }
 
     private void initFragment() {

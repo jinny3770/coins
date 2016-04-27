@@ -9,10 +9,16 @@ import java.util.ArrayList;
  */
 public class DestinationInfo {
 
+
+    TMapPoint start, end;
+
     double time, distance;
 
 
-    DestinationInfo(double time, double distance) {
+    DestinationInfo(TMapPoint start, TMapPoint end, double time, double distance) {
+
+        this.start = start;
+        this.end = end;
         this.time =  time;
         this.distance = distance;
     }
