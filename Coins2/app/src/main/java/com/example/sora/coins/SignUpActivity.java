@@ -36,9 +36,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.signup);
-
-        signUpTask = new SignUpTask();
+        setContentView(R.layout.activity_signup);
 
         id = (EditText) findViewById(R.id.signUpID);
         pw = (EditText) findViewById(R.id.signUpPW);
@@ -86,6 +84,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         } else if (name.getText().length() > 32) {
             Toast.makeText(SignUpActivity.this, "이름이 너무 깁니다.", Toast.LENGTH_LONG).show();
         } else {
+            signUpTask = new SignUpTask();
             signUpTask.execute(id.getText().toString(), pw.getText().toString(), name.getText().toString());
         }
     }
@@ -95,7 +94,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         String data;
         BufferedReader reader = null;
-        StringBuilder sb;
 
         @Override
         protected String doInBackground(String... params) {
@@ -131,7 +129,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 wr.flush();
 
                 reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                //sb = new StringBuilder("");
 
                 String line = reader.readLine();
 

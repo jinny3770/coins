@@ -110,9 +110,9 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".SideGroup"/>
-        <activity android:name=".SideSetting"/>
-        <activity android:name=".SideWarning"/>
+        <activity android:name=".SideGroupActivity"/>
+        <activity android:name=".SideSettingActivity"/>
+        <activity android:name=".SideWarningActivity"/>
         <activity android:name=".LoginActivity"/>
         <activity android:name=".SignUpActivity"/>
         <activity android:name=".ProfileActivity"/>

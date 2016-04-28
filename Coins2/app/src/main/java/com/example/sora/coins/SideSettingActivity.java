@@ -14,7 +14,7 @@ import android.widget.Toast;
 /**
  * Created by Administrator on 2016-03-21.
  */
-public class SideSetting extends AppCompatActivity
+public class SideSettingActivity extends AppCompatActivity
 {
     private Switch swc;
 

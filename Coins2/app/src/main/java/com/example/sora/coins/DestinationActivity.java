@@ -12,6 +12,7 @@ import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDialog;
 import android.text.AndroidCharacter;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -62,6 +63,7 @@ import java.util.logging.LogManager;
 import java.util.zip.Inflater;
 
 import javax.xml.parsers.ParserConfigurationException;
+
 
 /**
  * Created by sora on 2016-04-21.
@@ -118,80 +120,11 @@ public class DestinationActivity extends AppCompatActivity implements View.OnCli
 
     }
 
-    public void drawMapPath(TMapPoint startPoint, TMapPoint endPoint) {
-        TMapData tmapdata = new TMapData();
-
-        tmapdata.findPathData(startPoint, endPoint, new TMapData.FindPathDataListenerCallback() {
-
-            @Override
-            public void onFindPathData(TMapPolyLine polyLine) {
-                mapView.addTMapPath(polyLine);
-            }
-        });
-    }
-
-
-    public void drawMapPath2() {
-        TMapPoint startPoint = myInfo.getPoint();
-        TMapPoint endPoint = mapView.getCenterPoint();
-
-        drawMapPath(startPoint, endPoint);
-
-        TMapData tmapData = new TMapData();
-
-        HashMap<String, String> pathInfo = new HashMap<String, String>();
-
-
-        pathInfo.put("rStName", "MyLocation");
-        pathInfo.put("rStlat", Double.toString(startPoint.getLatitude()));
-        pathInfo.put("rStlon", Double.toString(startPoint.getLongitude()));
-        pathInfo.put("rGoName", "MyDestination");
-        pathInfo.put("rGolat", Double.toString(endPoint.getLatitude()));
-        pathInfo.put("rGolon", Double.toString(endPoint.getLongitude()));
-        pathInfo.put("type", "arrival");
-
-
-        tmapData.findTimeMachineCarPath(pathInfo, currentTime, null, new TMapData.FindTimeMachineCarPathListenerCallback() {
-            @Override
-            public void onFindTimeMachineCarPath(Document document) {
-
-                if (document == null) {
-                    Log.e("doc error", "Document is null");
-                } else {
-
-                    String time, distance;
-
-                    Element top = document.getDocumentElement();
-                    NodeList topList = top.getChildNodes();
-
-                    Element docuEle = (Element) topList.item(1);
-
-                    NodeList disList = docuEle.getElementsByTagName("tmap:totalDistance");
-                    NodeList timeList = docuEle.getElementsByTagName("tmap:totalTime");
-
-
-                    Element disEle = (Element) disList.item(0);
-                    Node disNode = disEle.getFirstChild();
-                    distance = disNode.getNodeValue();
-                    Log.i("nodeLog", distance);
-
-
-                    Element timeEle = (Element) timeList.item(0);
-                    Node timeNode = timeEle.getFirstChild();
-                    time = timeNode.getNodeValue();
-                    Log.i("nodeLog", time);
-
-
-                }
-
-            }
-        });
-    }
 
     @Override
     public void onClick(View v) {
 
-        AlertDialog dialog;
+        AppCompatDialog dialog;
 
         switch (v.getId()) {
             case R.id.desButton:
@@ -239,14 +172,14 @@ public class DestinationActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
-    private AlertDialog sendDialogMaker() {
+    private AppCompatDialog sendDialogMaker() {
 
         TextView time, distance;
 
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.destination_alert, null);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(DestinationActivity.this);
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(DestinationActivity.this);
 
         builder.setTitle("test");
         builder.setView(dialogView);
@@ -256,12 +189,12 @@ public class DestinationActivity extends AppCompatActivity implements View.OnCli
             time = (TextView) dialogView.findViewById(R.id.timeView);
             distance = (TextView) dialogView.findViewById(R.id.distanceView);
 
-            time.setText("Time : " + destinationInfo.getStringTime());
-            distance.setText("Distance : " + destinationInfo.getStringDistance());
+            time.setText("소요 시간은 " + destinationInfo.getStringTime() + "초 이며,");
+            distance.setText("예상 이동거리는 " + destinationInfo.getStringDistance() + "m 입니다.");
 
             builder.setPositiveButton("OK", null);
 
-            AlertDialog dialog = builder.create();
+            AppCompatDialog dialog =  builder.create();
             return dialog;
         }
 
@@ -272,7 +205,7 @@ public class DestinationActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
-    private AlertDialog selectDialogMaker() {
+    private AppCompatDialog selectDialogMaker() {
 
         final RadioGroup rGroup;
         final RadioButton walk, bicycle, car;
@@ -287,7 +220,7 @@ public class DestinationActivity extends AppCompatActivity implements View.OnCli
 
         rGroup.check(walk.getId()); // 기본 체크 => 도보
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(DestinationActivity.this);
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(DestinationActivity.this);
 
         builder.setTitle("select");
         builder.setView(dialogView);
@@ -327,7 +260,7 @@ public class DestinationActivity extends AppCompatActivity implements View.OnCli
             }
         });
 
-        AlertDialog dialog = builder.create();
+        AppCompatDialog dialog = builder.create();
         return dialog;
     }
 

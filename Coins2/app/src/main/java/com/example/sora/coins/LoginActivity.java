@@ -38,7 +38,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login);
+        setContentView(R.layout.activity_login);
 
         myInfo = MyInfo.getInstance();
 
@@ -62,12 +62,27 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             case R.id.login:
 
-                loginTask = new LoginTask();
-                loginTask.execute(id.getText().toString(), pw.getText().toString());
+                if(LoginCheck()) {
+                    loginTask = new LoginTask();
+                    loginTask.execute(id.getText().toString(), pw.getText().toString());
+                }
                 break;
         }
     }
 
+    boolean LoginCheck() {
+        if(id.getText().length() == 0) {
+            Toast.makeText(getApplicationContext(), "ID를 입력해주세요.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if(pw.getText().length() == 0) {
+            Toast.makeText(LoginActivity.this, "PW를 입력해주세요.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
+    }
 
     class LoginTask extends AsyncTask<String, Void, String> {
 
@@ -77,8 +92,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         @Override
         protected String doInBackground(String... params) {
 
-            String PW = (String) params[1];
-            String ID = (String) params[0];
+            String PW = params[1];
+            String ID = params[0];
 
             try {
                 URL url = new URL(loginURL);

@@ -11,13 +11,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
 
@@ -26,7 +22,7 @@ import java.net.URLEncoder;
  */
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
-    static String nameUpdateURL = "52.79.124.54/nameUpdate.php";
+    static String nameUpdateURL = "http://52.79.124.54/nameChange.php";
 
     MyInfo myinfo;
 
@@ -37,7 +33,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.profile);
+        setContentView(R.layout.activity_profile);
 
         myinfo = MyInfo.getInstance();
 
@@ -60,6 +56,10 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.changeButton :
+
+                NameUpdate nameUpdate = new NameUpdate();
+                nameUpdate.execute(nameEdit.getText().toString());
+
                 myinfo.setName(nameEdit.getText().toString());
                 Toast.makeText(this, "change success", Toast.LENGTH_SHORT).show();
                 break;
@@ -83,9 +83,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
             name = params[0];
 
-            URL url = null;
             try {
-                url = new URL(nameUpdateURL);
+                URL url = new URL(nameUpdateURL);
 
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");

@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 /**
  * Created by Administrator on 2016-03-21.
  */
-public class SideWarning extends AppCompatActivity
+public class SideWarningActivity extends AppCompatActivity
 {
     ListView alertListview;
     EditText input;
@@ -72,7 +72,7 @@ public class SideWarning extends AppCompatActivity
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id)
             {
                 // 롱클릭시 팝업창 호출 => 삭제여부 물어보고 그에 따라 조치
-                AlertDialog.Builder builder = new AlertDialog.Builder(SideWarning.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(SideWarningActivity.this);
                 builder.setTitle("연락처 삭제");
                 builder.setMessage("삭제할래영?");
 

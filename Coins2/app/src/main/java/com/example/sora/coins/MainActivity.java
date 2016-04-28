@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.widget.DrawerLayout;
@@ -29,6 +30,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gcm.GCMRegistrar;
+import com.skp.Tmap.TMapAddressInfo;
 import com.skp.Tmap.TMapData;
 import com.skp.Tmap.TMapGpsManager;
 import com.skp.Tmap.TMapMarkerItem;
@@ -37,10 +39,14 @@ import com.skp.Tmap.TMapView;
 
 import org.xml.sax.SAXException;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Timer;
@@ -92,13 +98,9 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
         SharedPreferences pref = getSharedPreferences("pref", Activity.MODE_PRIVATE);
         Intent intent = new Intent(getApplicationContext(), LockScreenService.class);
 
-        if (pref.getBoolean("swc", true))
-        {
+        if (pref.getBoolean("swc", true)) {
             startService(intent);
-        }
-
-        else
-        {
+        } else {
             stopService(intent);
         }
 
@@ -106,37 +108,7 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
         curLoca = tMapGpsManager.getLocation();
         showMyLocation();
 
-        if (Settings.Login) {
-            familyList = (ListView) findViewById(R.id.familyList);
-            familyAdapter = new ListViewAdapter(this);
-            familyList.setAdapter(familyAdapter);
 
-            familyAdapter.addItem(getResources().getDrawable(R.drawable.person), "권순일1", "성북구 삼선동");
-
-
-            familyList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                    //loca = new TMapPoint(127.00948476791382, 37.581937771712205);
-                    //ListData listData = (ListData)familyAdapter.getItem(position);
-                    mapView.setCenterPoint(127.00948476791382, 37.581937771712205);
-                    mapView.setTrackingMode(false);
-                    //myLoca.setTMapPoint(curLoca);
-                    //mapView.setTrackingMode(true);
-
-                    /*
-                    locaMarker = new TMapMarkerItem();
-                    locaMarker.setVisible(locaMarker.VISIBLE);
-
-                    locaMarker.setTMapPoint(loca);
-                    locaMarker.setIcon(bitmap);
-                    locaMarker.setPosition((float) 0.5, (float) 1.0);
-                    mapView.addMarkerItem("famLocation", locaMarker);
-                    */
-                }
-            });
-        }
     }
 
     @Override
@@ -153,13 +125,9 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
 
         final String regID = GCMRegistrar.getRegistrationId(this);
 
-        if ("".equals(regID))
-        {
+        if ("".equals(regID)) {
             GCMRegistrar.register(this, "386569608668");
-        }
-
-        else
-        {
+        } else {
             Log.e("id", regID);
         }
 
@@ -190,6 +158,9 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
         locaButton.setOnClickListener(clickListener);
         desButton.setOnClickListener(clickListener);
 
+        familyList = (ListView) findViewById(R.id.familyList);
+        familyAdapter = new ListViewAdapter(this);
+
         // GPS 지도 setting 및 관련 리스너
         mapLayout = (LinearLayout) findViewById(R.id.mapView);
         //mapView = new TMapView(this, 위도, 경도, defaultZoomLevel);
@@ -218,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
         sideContainer = (FrameLayout) findViewById(R.id.frame_activity_main);
         sideDrawer = (DrawerLayout) findViewById(R.id.drawer_activity_main);
 
-        String sideItems[] = {"login", "그룹 설정", "비상연락망 설정", "환경 설정"};
+        String sideItems[] = {"내 정보", "그룹 설정", "비상연락망 설정", "환경 설정"};
         sideList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, sideItems));
 
         sideList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -239,17 +210,17 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
                         break;
 
                     case 1: // 그룹 설정
-                        intent = new Intent(getApplicationContext(), SideGroup.class);
+                        intent = new Intent(getApplicationContext(), SideGroupActivity.class);
                         startActivity(intent);
                         break;
 
                     case 2: // 비상연락망 설정
-                        intent = new Intent(getApplicationContext(), SideWarning.class);
+                        intent = new Intent(getApplicationContext(), SideWarningActivity.class);
                         startActivity(intent);
                         break;
 
                     case 3: // 환경 설정
-                        intent = new Intent(getApplicationContext(), SideSetting.class);
+                        intent = new Intent(getApplicationContext(), SideSettingActivity.class);
                         startActivity(intent);
                         break;
                 }
@@ -267,48 +238,12 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
             }
         };
 
-        sideDrawer.setDrawerListener(sideToggle);
+        sideDrawer.addDrawerListener(sideToggle);
         actionBar.setDisplayHomeAsUpEnabled(true);
         sideToggle.syncState();
 
         mapLayout.addView(mapView);
 
-        timer = new Timer();
-        timerTask = new TimerTask() {
-            @Override
-            public void run() {
-
-                if(Settings.Login) {
-                    try {
-                        URL url = new URL(updateLocationURL);
-
-                        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                        conn.setRequestMethod("POST");
-
-                        conn.setReadTimeout(10000);
-                        conn.setConnectTimeout(15000);
-
-                        conn.setDoOutput(true);
-                        conn.setDoInput(true);
-
-                        String data = URLEncoder.encode("ID", "utf8") + "=" + URLEncoder.encode(myInfo.getID(), "utf8")
-                                + "&" + URLEncoder.encode("long", "utf8") + "=" + URLEncoder.encode(Double.toString(myInfo.getPoint().getLongitude()), "utf8")
-                                + "&" + URLEncoder.encode("lati", "utf8") + "=" + URLEncoder.encode(Double.toString(myInfo.getPoint().getLatitude()), "utf8");
-
-                        OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-                        wr.write(data);
-                        wr.flush();
-
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        };
-
-        timer.schedule(timerTask, 0, 10000);
 
     }
 
@@ -352,13 +287,108 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
         mapView.setLocationPoint(curLoca.getLongitude(), curLoca.getLatitude());
         myLoca.setTMapPoint(curLoca);
         myInfo.setPoint(curLoca);
-        //Toast.makeText(MainActivity.this, myLoca.getTMapPoint().getLongitude() + ", " + myLoca.getTMapPoint().getLatitude(), Toast.LENGTH_SHORT).show();
+
+        if(Settings.Login) {
+            // update하는 코드 넣자
+            UpdateLcation update = new UpdateLcation();
+            update.execute(myInfo.getID(), Double.toString(myInfo.getPoint().getLatitude()), Double.toString(myInfo.getPoint().getLongitude()));
+        }
+    }
+
+
+    public void loadFamilyList() {
+
+
+        if (Settings.Login) {
+
+
+            familyList.setAdapter(familyAdapter);
+
+            familyAdapter.addItem(getResources().getDrawable(R.drawable.person), "권순일1", "성북구 삼선동");
+
+
+            familyList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                    //loca = new TMapPoint(127.00948476791382, 37.581937771712205);
+                    //ListData listData = (ListData)familyAdapter.getItem(position);
+                    mapView.setCenterPoint(127.00948476791382, 37.581937771712205);
+                    mapView.setTrackingMode(false);
+                    //myLoca.setTMapPoint(curLoca);
+                    //mapView.setTrackingMode(true);
+
+                    /*
+                    locaMarker = new TMapMarkerItem();
+                    locaMarker.setVisible(locaMarker.VISIBLE);
+
+                    locaMarker.setTMapPoint(loca);
+                    locaMarker.setIcon(bitmap);
+                    locaMarker.setPosition((float) 0.5, (float) 1.0);
+                    mapView.addMarkerItem("famLocation", locaMarker);
+                    */
+                }
+            });
+        }
+    }
+
+    String pointToString(TMapPoint point) throws IOException, ParserConfigurationException, SAXException {
+
+        TMapData data = new TMapData();
+        return data.convertGpsToAddress(point.getLatitude(), point.getLongitude());
+
     }
 
     @Override
     protected void onDestroy() {
         tMapGpsManager.CloseGps();
         super.onDestroy();
+    }
+
+
+    class UpdateLcation extends AsyncTask<String, Void, Void> {
+
+        String data;
+
+        @Override
+        protected Void doInBackground(String... params) {
+            String ID = params[0];
+            String lat = params[1];
+            String lon = params[2];
+
+            URL url = null;
+            try {
+                url = new URL(updateLocationURL);
+
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("POST");
+
+                conn.setReadTimeout(10000);
+                conn.setConnectTimeout(15000);
+
+                conn.setDoOutput(true);
+                conn.setDoInput(true);
+
+                data = URLEncoder.encode("ID", "UTF-8") + "=" + URLEncoder.encode(ID, "UTF-8")
+                        + "&" + URLEncoder.encode("lati", "UTF-8") + "=" + URLEncoder.encode(lat, "UTF-8")
+                        + "&" + URLEncoder.encode("long", "UTF-8") + "=" + URLEncoder.encode(lon, "UTF-8");
+
+                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+                wr.write(data);
+                wr.flush();
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (ProtocolException e) {
+                e.printStackTrace();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
     }
 
     class CustomOnclickListener implements View.OnClickListener {
@@ -386,42 +416,24 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     double lat, lon;
-                                    String address = "";
-                                    TMapData tmapData = new TMapData();
-
-                                    curLoca = tMapGpsManager.getLocation();
-                                    mapView.setLocationPoint(curLoca.getLongitude(), curLoca.getLatitude());
-                                    myLoca.setTMapPoint(curLoca);
+                                    String address = null;
 
                                     lat = myLoca.getTMapPoint().getLatitude();
                                     lon = myLoca.getTMapPoint().getLongitude();
 
-                                    try
-                                    {
-                                        address = tmapData.convertGpsToAddress(lat, lon);
-                                    }
-
-                                    catch (MalformedURLException me)
-                                    {
+                                    try {
+                                        address = pointToString(myInfo.getPoint());
+                                    } catch (MalformedURLException me) {
                                         me.printStackTrace();
-                                    }
-
-                                    catch (IOException ioe)
-                                    {
+                                    } catch (IOException ioe) {
                                         ioe.printStackTrace();
-                                    }
-
-                                    catch (ParserConfigurationException pce)
-                                    {
+                                    } catch (ParserConfigurationException pce) {
                                         pce.printStackTrace();
-                                    }
-
-                                    catch (SAXException saxe)
-                                    {
+                                    } catch (SAXException saxe) {
                                         saxe.printStackTrace();
                                     }
 
-                                    Toast.makeText(getApplicationContext(), address, Toast.LENGTH_SHORT).show(); // 테스트
+                                    //Toast.makeText(getApplicationContext(), address, Toast.LENGTH_SHORT).show(); // 테스트
                                     intent.putExtra("Latitude", lat);
                                     intent.putExtra("Longitude", lon);
                                     intent.putExtra("address", address);
