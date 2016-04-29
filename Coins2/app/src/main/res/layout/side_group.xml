@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,30 +11,33 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="그룹코드 확인"
-        android:id="@+id/groupChecker"/>
-
+        android:id="@+id/groupChecker">
+    </Button>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="그룹생성"
-        android:id="@+id/groupMaker"/>
+        android:id="@+id/groupMaker">
+    </Button>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="그룹초대"
-        android:id="@+id/groupInvite"/>
+        android:id="@+id/groupInvite">
+    </Button>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/groupCodeEdit"/>
+        android:id="@+id/groupCodeEdit">
+    </EditText>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="그룹가입"
-        android:id="@+id/groupJoin"/>
-
+        android:id="@+id/groupJoin">
+    </Button>
 </LinearLayout>

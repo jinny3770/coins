@@ -25,6 +25,8 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.google.android.gms:play-services-gcm:8.4.+'
+    compile 'com.android.support:design:23.2.1'
     compile files('src/main/jniLibs/smack/gson-2.2.4.jar')
     compile files('src/main/jniLibs/smack/smack-android-extensions-4.1.0-rc4.jar')
     compile files('src/main/jniLibs/libDaumMapAndroid.jar')
@@ -33,10 +35,8 @@ dependencies {
     compile files('src/main/jniLibs/smack/smack-im-4.1.0-rc4.jar')
     compile files('src/main/jniLibs/smack/smack-resolver-dnsjava-4.1.0-rc4.jar')
     compile files('src/main/jniLibs/smack/smack-tcp-4.1.0-rc4.jar')
-    compile project(':com.skp.Tmap_1.0.37')
     compile files('src/main/jniLibs/sendbird-android-2.0.9.jar')
-    compile 'com.google.android.gms:play-services-gcm:8.4.+'
-    compile 'com.android.support:design:23.3.0'
     compile files('src/main/jniLibs/gcm.jar')
     compile files('src/main/jniLibs/json-simple-1.1.1.jar')
+    compile project(':com.skp.Tmap_1.0.37')
 }

@@ -3,7 +3,6 @@
     package="com.example.sora.coins">
 
     <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="17"/>
-
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
@@ -35,16 +34,16 @@
             android:taskAffinity="">
         </activity>
 
+        <activity android:name=".LockScreen.LockScreenActivity"
+            android:launchMode="singleInstance"
+            android:excludeFromRecents="true"
+            android:taskAffinity="">
+        </activity>
+
         <activity
             android:name=".ChatActivity"
             android:label="@string/app_name"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
-        </activity>
-
-        <activity android:name=".LockScreenActivity"
-            android:launchMode="singleInstance"
-            android:excludeFromRecents="true"
-            android:taskAffinity="">
         </activity>
 
         <activity
@@ -110,16 +109,18 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".SideGroupActivity"/>
-        <activity android:name=".SideSettingActivity"/>
-        <activity android:name=".SideWarningActivity"/>
+        <activity android:name=".Sidebar.SideGroupActivity"/>
+        <activity android:name=".Sidebar.SideSettingActivity"/>
+        <activity android:name=".Sidebar.SideWarningActivity"/>
         <activity android:name=".LoginActivity"/>
         <activity android:name=".SignUpActivity"/>
         <activity android:name=".ProfileActivity"/>
         <activity android:name=".DestinationActivity"/>
         <activity android:name=".DestinationList"/>
-        <service android:name=".LockScreenService"/>
+        <service android:name=".LockScreen.LockScreenService"/>
         <service android:name=".GCMIntentService"/>
-        <receiver android:name=".LockScreenReceiver"/>
+        <receiver android:name=".LockScreen.LockScreenReceiver"/>
+        <receiver android:name=".LockScreen.DeliverReceiver"/>
+        <receiver android:name=".LockScreen.SendReceiver"/>
     </application>
 </manifest>

@@ -1,4 +1,4 @@
-package com.example.sora.coins;
+package com.example.sora.coins.Sidebar;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,8 +9,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.example.sora.coins.MyInfo;
+import com.example.sora.coins.R;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -22,9 +22,9 @@ import java.net.URLEncoder;
 /**
  * Created by Administrator on 2016-03-21.
  */
+
 public class SideGroupActivity extends AppCompatActivity implements View.OnClickListener
 {
-
     final String makeURL = "http://52.79.124.54/groupMaker.php";
     final String joinURL = "http://52.79.124.54/groupJoin.php";
 

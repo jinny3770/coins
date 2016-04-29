@@ -1,7 +1,6 @@
 package com.example.sora.coins;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,24 +12,27 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.sora.coins.LockScreen.LockScreenService;
+import com.example.sora.coins.Sidebar.SideGroupActivity;
+import com.example.sora.coins.Sidebar.SideSettingActivity;
+import com.example.sora.coins.Sidebar.SideWarningActivity;
 import com.google.android.gcm.GCMRegistrar;
-import com.skp.Tmap.TMapAddressInfo;
 import com.skp.Tmap.TMapData;
 import com.skp.Tmap.TMapGpsManager;
 import com.skp.Tmap.TMapMarkerItem;
@@ -39,9 +41,7 @@ import com.skp.Tmap.TMapView;
 
 import org.xml.sax.SAXException;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
     // 상단 액션바 관련 변수
     ActionBar actionBar;
     ImageButton chatButton, locaButton, shareButton, desButton;
+    CustomOnclickListener clickListener;
 
     // GPS 지도 관련 변수
     TMapView mapView;
@@ -73,18 +74,16 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
     LinearLayout mapLayout;
     Bitmap bitmap;
 
-    // 사이드바 관련 변수
-    DrawerLayout sideDrawer;
+
+    // 드로어 & 사이드바 관련 변수
+    DrawerLayout sideLayout;
     ActionBarDrawerToggle sideToggle;
-    ListView sideList;
-    FrameLayout sideContainer;
-    CustomOnclickListener clickListener;
+    NavigationView navigationView;
+    /*boolean check;
+    View v = getLayoutInflater().inflate(R.layout.side_header, null, false);*/
 
     // 내 정보
     MyInfo myInfo;
-
-    Timer timer;
-    TimerTask timerTask;
 
     // 하단 가족 리스트뷰
     ListView familyList;
@@ -98,17 +97,19 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
         SharedPreferences pref = getSharedPreferences("pref", Activity.MODE_PRIVATE);
         Intent intent = new Intent(getApplicationContext(), LockScreenService.class);
 
-        if (pref.getBoolean("swc", true)) {
+        if (pref.getBoolean("swc", true))
+        {
             startService(intent);
-        } else {
+        }
+
+        else
+        {
             stopService(intent);
         }
 
         // 현재 위치 설정
         curLoca = tMapGpsManager.getLocation();
         showMyLocation();
-
-
     }
 
     @Override
@@ -116,8 +117,11 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build(); // android.os.NetworkOnMainThreadException 에러 방지용 코드
+
+        // android.os.NetworkOnMainThreadException 에러 방지용 코드
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+
 
         // GCM
         GCMRegistrar.checkDevice(this);
@@ -125,27 +129,35 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
 
         final String regID = GCMRegistrar.getRegistrationId(this);
 
-        if ("".equals(regID)) {
+        if ("".equals(regID))
+        {
             GCMRegistrar.register(this, "386569608668");
-        } else {
+        }
+
+        else
+        {
             Log.e("id", regID);
         }
 
+
         // MyInfo instance 불러온다.
         myInfo = MyInfo.getInstance();
+
 
         // 상단 액션바
         actionBar = getSupportActionBar();
         actionBar.setBackgroundDrawable(new ColorDrawable(0xFF5e6472));
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         LayoutInflater actionBarInflater = LayoutInflater.from(this);
         View customView = actionBarInflater.inflate(R.layout.actionbar_layout, null);
         actionBar.setCustomView(customView);
         actionBar.setDisplayShowCustomEnabled(true);
 
-        // 액션바 리스너
+
+        // 상단 액션바 리스너
         clickListener = new CustomOnclickListener();
 
         chatButton = (ImageButton) findViewById(R.id.chatButton);
@@ -158,19 +170,13 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
         locaButton.setOnClickListener(clickListener);
         desButton.setOnClickListener(clickListener);
 
-        familyList = (ListView) findViewById(R.id.familyList);
-        familyAdapter = new ListViewAdapter(this);
 
         // GPS 지도 setting 및 관련 리스너
-        mapLayout = (LinearLayout) findViewById(R.id.mapView);
-        //mapView = new TMapView(this, 위도, 경도, defaultZoomLevel);
-
         tMapGpsManager = new TMapGpsManager(this);
         tMapGpsManager.setProvider(TMapGpsManager.NETWORK_PROVIDER);
         tMapGpsManager.setMinTime(defaultMinTime);
         tMapGpsManager.setMinDistance(defaultMinDistance);
         tMapGpsManager.OpenGps();
-
         curLoca = tMapGpsManager.getLocation();
 
         mapView = new TMapView(this);
@@ -178,28 +184,47 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
         mapView.setSKPMapApiKey(APIKey.ApiKey);
         mapView.setZoomLevel(defaultZoomLevel);
         mapView.setMapPosition(TMapView.POSITION_DEFAULT);
-        //mapViewListener = new CustomMapViewEventListener();
-        //mapView.setMapViewEventListener(mapViewListener);
+
+        mapLayout = (LinearLayout) findViewById(R.id.mapView);
+        mapLayout.addView(mapView);
 
         bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_action_place);
 
 
-        // 드로어 & 사이드바 리스너
-        sideList = (ListView) findViewById(R.id.list_activity_main);
-        sideContainer = (FrameLayout) findViewById(R.id.frame_activity_main);
-        sideDrawer = (DrawerLayout) findViewById(R.id.drawer_activity_main);
+        // 가족 리스트
+        familyList = (ListView) findViewById(R.id.familyList);
+        familyAdapter = new ListViewAdapter(this);
 
-        String sideItems[] = {"내 정보", "그룹 설정", "비상연락망 설정", "환경 설정"};
-        sideList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, sideItems));
 
-        sideList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        // 드로어 & 사이드바
+        //check = false;
+
+        sideLayout = (DrawerLayout) findViewById(R.id.drawerlayout);
+        sideLayout.setDrawerListener(sideToggle);
+
+        sideToggle = new ActionBarDrawerToggle(this, sideLayout, R.string.app_name, R.string.app_name)
+        {
+            public void onDrawerOpened(View drawerView)
+            {
+                super.onDrawerOpened(drawerView);
+            }
+
+            public void onDrawerClosed(View view)
+            {
+                super.onDrawerClosed(view);
+            }
+        };
+
+        sideToggle.syncState();
+
+        navigationView = (NavigationView) findViewById(R.id.drawer);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
                 Intent intent;
-                sideDrawer.closeDrawer(sideList);
 
-                switch (position) {
-                    case 0:
+                switch (menuItem.getItemId()) {
+                    case R.id.side_login: // 로그인
                         if (Settings.Login) {
                             intent = new Intent(getApplicationContext(), ProfileActivity.class);
                             startActivity(intent);
@@ -207,65 +232,69 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
                             intent = new Intent(getApplicationContext(), LoginActivity.class);
                             startActivity(intent);
                         }
+
                         break;
 
-                    case 1: // 그룹 설정
+                    case R.id.side_group: // 그룹 설정
                         intent = new Intent(getApplicationContext(), SideGroupActivity.class);
                         startActivity(intent);
                         break;
 
-                    case 2: // 비상연락망 설정
+                    case R.id.side_alert: // 비상연락망 설정
                         intent = new Intent(getApplicationContext(), SideWarningActivity.class);
                         startActivity(intent);
                         break;
 
-                    case 3: // 환경 설정
+                    case R.id.side_setting: // 환경 설정
                         intent = new Intent(getApplicationContext(), SideSettingActivity.class);
                         startActivity(intent);
                         break;
                 }
+
+                sideLayout.closeDrawers();
+                return false;
             }
         });
-
-        // 드로어 -> 액션바 토글
-        sideToggle = new ActionBarDrawerToggle(this, sideDrawer, R.string.app_name, R.string.app_name) {
-            public void onDrawerClosed(View view) {
-                super.onDrawerClosed(view);
-            }
-
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-            }
-        };
-
-        sideDrawer.addDrawerListener(sideToggle);
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        sideToggle.syncState();
-
-        mapLayout.addView(mapView);
-
-
     }
 
     @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
+    protected void onPostCreate(Bundle savedInstanceState)
+    {
         super.onPostCreate(savedInstanceState);
         sideToggle.syncState();
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
+    public void onConfigurationChanged(Configuration newConfig)
+    {
         super.onConfigurationChanged(newConfig);
         sideToggle.onConfigurationChanged(newConfig);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (sideToggle.onOptionsItemSelected(item)) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        if (sideToggle.onOptionsItemSelected(item))
+        {
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onLocationChange(Location location)
+    {
+        curLoca = tMapGpsManager.getLocation();
+        mapView.setLocationPoint(curLoca.getLongitude(), curLoca.getLatitude());
+        myLoca.setTMapPoint(curLoca);
+        myInfo.setPoint(curLoca);
+    }
+
+    @Override
+    protected void onDestroy() {
+        tMapGpsManager.CloseGps();
+        super.onDestroy();
     }
 
 
@@ -281,36 +310,25 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
         mapView.addMarkerItem("myLocation", myLoca);
     }
 
-    @Override
-    public void onLocationChange(Location location) {
-        curLoca = tMapGpsManager.getLocation();
-        mapView.setLocationPoint(curLoca.getLongitude(), curLoca.getLatitude());
-        myLoca.setTMapPoint(curLoca);
-        myInfo.setPoint(curLoca);
-
-        if(Settings.Login) {
-            // update하는 코드 넣자
-            UpdateLcation update = new UpdateLcation();
-            update.execute(myInfo.getID(), Double.toString(myInfo.getPoint().getLatitude()), Double.toString(myInfo.getPoint().getLongitude()));
-        }
-    }
-
-
-    public void loadFamilyList() {
-
-
-        if (Settings.Login) {
-
+    // 가족 리스트 불러오기
+    public void loadFamilyList()
+    {
+        if (Settings.Login)
+        {
+            /*if (!check)
+            {
+                navigationView.addHeaderView(v);
+                check = true;
+            }*/
 
             familyList.setAdapter(familyAdapter);
-
             familyAdapter.addItem(getResources().getDrawable(R.drawable.person), "권순일1", "성북구 삼선동");
 
-
-            familyList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            familyList.setOnItemClickListener(new AdapterView.OnItemClickListener()
+            {
                 @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+                {
                     //loca = new TMapPoint(127.00948476791382, 37.581937771712205);
                     //ListData listData = (ListData)familyAdapter.getItem(position);
                     mapView.setCenterPoint(127.00948476791382, 37.581937771712205);
@@ -330,33 +348,31 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
                 }
             });
         }
+/*
+        else
+        {
+            navigationView.removeHeaderView(v);
+        }*/
     }
 
-    String pointToString(TMapPoint point) throws IOException, ParserConfigurationException, SAXException {
-
+    public String pointToString(TMapPoint point) throws IOException, ParserConfigurationException, SAXException
+    {
         TMapData data = new TMapData();
         return data.convertGpsToAddress(point.getLatitude(), point.getLongitude());
-
     }
 
-    @Override
-    protected void onDestroy() {
-        tMapGpsManager.CloseGps();
-        super.onDestroy();
-    }
-
-
-    class UpdateLcation extends AsyncTask<String, Void, Void> {
-
+    class UpdateLcation extends AsyncTask<String, Void, Void>
+    {
         String data;
 
         @Override
-        protected Void doInBackground(String... params) {
+        protected Void doInBackground(String... params)
+        {
             String ID = params[0];
             String lat = params[1];
             String lon = params[2];
-
             URL url = null;
+
             try {
                 url = new URL(updateLocationURL);
 
@@ -416,24 +432,42 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     double lat, lon;
-                                    String address = null;
+                                    String address = "";
+                                    TMapData tmapData = new TMapData();
+
+                                    curLoca = tMapGpsManager.getLocation();
+                                    mapView.setLocationPoint(curLoca.getLongitude(), curLoca.getLatitude());
+                                    myLoca.setTMapPoint(curLoca);
 
                                     lat = myLoca.getTMapPoint().getLatitude();
                                     lon = myLoca.getTMapPoint().getLongitude();
 
-                                    try {
-                                        address = pointToString(myInfo.getPoint());
-                                    } catch (MalformedURLException me) {
+                                    try
+                                    {
+                                        address = tmapData.convertGpsToAddress(lat, lon);
+                                    }
+
+                                    catch (MalformedURLException me)
+                                    {
                                         me.printStackTrace();
-                                    } catch (IOException ioe) {
+                                    }
+
+                                    catch (IOException ioe)
+                                    {
                                         ioe.printStackTrace();
-                                    } catch (ParserConfigurationException pce) {
+                                    }
+
+                                    catch (ParserConfigurationException pce)
+                                    {
                                         pce.printStackTrace();
-                                    } catch (SAXException saxe) {
+                                    }
+
+                                    catch (SAXException saxe)
+                                    {
                                         saxe.printStackTrace();
                                     }
 
-                                    //Toast.makeText(getApplicationContext(), address, Toast.LENGTH_SHORT).show(); // 테스트
+                                    Toast.makeText(getApplicationContext(), address, Toast.LENGTH_SHORT).show(); // 테스트
                                     intent.putExtra("Latitude", lat);
                                     intent.putExtra("Longitude", lon);
                                     intent.putExtra("address", address);
@@ -459,7 +493,6 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
                 case R.id.locaButton:
                     mapView.setTrackingMode(true);
                     break;
-
             }
         }
     }

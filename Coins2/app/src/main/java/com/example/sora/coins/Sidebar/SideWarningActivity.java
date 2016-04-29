@@ -1,4 +1,4 @@
-package com.example.sora.coins;
+package com.example.sora.coins.Sidebar;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -13,6 +13,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.sora.coins.R;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -22,6 +24,7 @@ import java.util.regex.Pattern;
 /**
  * Created by Administrator on 2016-03-21.
  */
+
 public class SideWarningActivity extends AppCompatActivity
 {
     ListView alertListview;

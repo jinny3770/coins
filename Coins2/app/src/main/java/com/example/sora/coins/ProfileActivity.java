@@ -126,7 +126,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 Toast.makeText(ProfileActivity.this, "이름 변경 실패패.", Toast.LENGTH_SHORT).show();
             }
             super.onPostExecute(s);
-       }
+        }
     }
 }
 

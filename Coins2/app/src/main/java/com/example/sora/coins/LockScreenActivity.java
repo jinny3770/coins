@@ -27,7 +27,7 @@ public class LockScreenActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lockscreen); // 잠금화면 레이아웃
+        setContentView(R.layout.lockscreen); // 잠금화면 레이아웃
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
 
         btnAlert = (Button) findViewById(R.id.alert);

@@ -1,19 +1,16 @@
-package com.example.sora.coins;
+package com.example.sora.coins.Sidebar;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.*;
-import android.widget.CompoundButton;
 import android.widget.Switch;
-import android.widget.Toast;
+
+import com.example.sora.coins.R;
 
 /**
  * Created by Administrator on 2016-03-21.
  */
+
 public class SideSettingActivity extends AppCompatActivity
 {
     private Switch swc;

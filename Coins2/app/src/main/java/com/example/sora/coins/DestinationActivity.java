@@ -70,6 +70,11 @@ import javax.xml.parsers.ParserConfigurationException;
  */
 public class DestinationActivity extends AppCompatActivity implements View.OnClickListener {
 
+    final String walkURL = "https://apis.skplanetx.com/tmap/routes/pedestrian?version=1";
+    final String bicycleURL = "https://apis.skplanetx.com/tmap/routes/bicycle?version=1";
+    final String carURL = "https://apis.skplanetx.com/tmap/routes?version=1";
+    final String resistURL = "http://52.79.124.54/destinationResist.php";
+
     LinearLayout mapLayout;
     TMapView mapView;
 
@@ -84,7 +89,6 @@ public class DestinationActivity extends AppCompatActivity implements View.OnCli
 
     TMapData tMapData;
 
-    TMapPolyLine polyLine;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -192,7 +196,7 @@ public class DestinationActivity extends AppCompatActivity implements View.OnCli
             time.setText("소요 시간은 " + destinationInfo.getStringTime() + "초 이며,");
             distance.setText("예상 이동거리는 " + destinationInfo.getStringDistance() + "m 입니다.");
 
-            builder.setPositiveButton("OK", null);
+            builder.setPositiveButton("Send", null);
 
             AppCompatDialog dialog =  builder.create();
             return dialog;
@@ -235,6 +239,7 @@ public class DestinationActivity extends AppCompatActivity implements View.OnCli
                 endPoint = mapView.getCenterPoint();
 
                 String url= null;
+                String type = null;
                 String sLati = Double.toString(startPoint.getLatitude());
                 String sLong = Double.toString(startPoint.getLongitude());
                 String eLati = Double.toString(endPoint.getLatitude());
@@ -243,20 +248,23 @@ public class DestinationActivity extends AppCompatActivity implements View.OnCli
 
                 switch (rGroup.getCheckedRadioButtonId()) {
                     case R.id.walkRadio:
-                        url = "https://apis.skplanetx.com/tmap/routes/pedestrian?version=1";
+                        url = walkURL;
+                        type = "walk";
                         break;
 
                     case R.id.bicycleRadio:
-                        url = "https://apis.skplanetx.com/tmap/routes/bicycle?version=1";
+                        url = bicycleURL;
+                        type = "bicycle";
                         break;
 
                     case R.id.carRadio:
-                        url = "https://apis.skplanetx.com/tmap/routes?version=1";
+                        url = carURL;
+                        type = "car";
                         break;
                 }
 
                 RouteTask routeTask = new RouteTask();
-                routeTask.execute(url, sLati, sLong, eLati, eLong);
+                routeTask.execute(url, sLati, sLong, eLati, eLong, type);
             }
         });
 
@@ -276,6 +284,9 @@ public class DestinationActivity extends AppCompatActivity implements View.OnCli
 
             startPoint = new TMapPoint(Double.parseDouble(params[1]), Double.parseDouble(params[2]));
             endPoint = new TMapPoint(Double.parseDouble(params[3]), Double.parseDouble(params[4]));
+
+            String type = params[5];
+
 
             BufferedReader reader = null;
 
@@ -316,19 +327,10 @@ public class DestinationActivity extends AppCompatActivity implements View.OnCli
 
                 return str;
 
-            } catch (SAXException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
-            } catch (ParserConfigurationException e) {
-                e.printStackTrace();
-            } catch (ProtocolException e) {
-                e.printStackTrace();
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
+                return e.toString();
             }
-
-            return null;
         }
 
 
@@ -346,10 +348,7 @@ public class DestinationActivity extends AppCompatActivity implements View.OnCli
                 double time = featObj.getDouble("totalTime");
                 double dis = featObj.getDouble("totalDistance");
                 destinationInfo = new DestinationInfo(startPoint, endPoint, time, dis);
-
-                initPolyLine();
-
-                Log.i("Destination", destinationInfo.getStringTime() + ", " + destinationInfo.getStringDistance());
+                destinationInfo.initLinePoint();
 
 
                 //feature obj 중 geometry obj만 가져옴 -> 경로 표시를 위해서
@@ -363,7 +362,7 @@ public class DestinationActivity extends AppCompatActivity implements View.OnCli
                         TMapPoint point = new TMapPoint(cooArray.getDouble(1), cooArray.getDouble(0));
 
                         Log.i("Point", Double.toString(point.getLongitude()) + ", " + Double.toString(point.getLatitude()));
-                        polyLine.addLinePoint(point);
+                        destinationInfo.addLinePoint(point);
 
                     } else if(type.equals("LineString")) {
 
@@ -374,17 +373,71 @@ public class DestinationActivity extends AppCompatActivity implements View.OnCli
                             TMapPoint point = new TMapPoint(obj.getDouble(1), obj.getDouble(0));
 
                             Log.i("Point : " + i, Double.toString(point.getLongitude()) + ", " + Double.toString(point.getLatitude()));
-                            polyLine.addLinePoint(point);
+                            destinationInfo.addLinePoint(point);
 
                         }
                     }
                 }
-                mapView.addTMapPath(polyLine);
+                mapView.addTMapPath(destinationInfo.getLine());
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
+        }
+    }
+
+    class ResistDestination extends AsyncTask<DestinationInfo, Void, String> {
+
+        BufferedReader reader = null;
+
+        @Override
+        protected String doInBackground(DestinationInfo... params) {
+
+            DestinationInfo info = params[0];
+
+            try {
+                URL url = new URL(resistURL);
+
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("POST");
+
+                conn.setReadTimeout(10000);
+                conn.setConnectTimeout(15000);
+
+                conn.setDoOutput(true);
+                conn.setDoInput(true);
+
+                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+                wr.write(makeData(info, myInfo));
+                wr.flush();
+
+                reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+                String line = reader.readLine();
+
+                return line;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return e.toString();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+
+            if(s.equals("exist")) {
+                Toast.makeText(getApplicationContext(), "이미 등록 된 목적지가 있습니다.", Toast.LENGTH_LONG).show();
+                finish();
+
+            }else if(s.equals("fail")) {
+                Toast.makeText(getApplicationContext(), "등록에 실패했습니다.", Toast.LENGTH_LONG).show();
+
+            }else if (s.equals("success")) {
+                Toast.makeText(getApplicationContext(), "등록되었습니다.", Toast.LENGTH_LONG).show();
+                finish();
+            }
         }
     }
 
@@ -402,16 +455,21 @@ public class DestinationActivity extends AppCompatActivity implements View.OnCli
                 + "&" + URLEncoder.encode("reqCoordType", "UTF-8") + "=" + URLEncoder.encode("WGS84GEO", "UTF-8")
                 + "&" + URLEncoder.encode("resCoordType", "UTF-8") + "=" + URLEncoder.encode("WGS84GEO", "UTF-8");
 
-        Log.i("PostData", data);
         return data;
     }
 
-    private void initPolyLine() {
 
-        polyLine = new TMapPolyLine();
-        polyLine.setLineWidth(5);
-        polyLine.setLineColor(Color.RED);
 
+    private String makeData(DestinationInfo info, MyInfo myInfo) throws UnsupportedEncodingException {
+        String data = new String() ;
+
+        data = URLEncoder.encode("ID", "UTF-8") + "=" + URLEncoder.encode(myInfo.getID(), "UTF-8")
+                + "&" + URLEncoder.encode("CODE", "UTF-8") + "=" + URLEncoder.encode(myInfo.getGroupCode(), "UTF-8")
+                + "&" + URLEncoder.encode("POINTS", "UTF-8") + "=" + URLEncoder.encode(info.getStringLine(), "UTF-8")
+                + "&" + URLEncoder.encode("TIME", "UTF-8") + "=" + URLEncoder.encode(info.getStringLine(), "UTF-8")
+                + "&" + URLEncoder.encode("DISTANCE", "UTF-8") + "=" + URLEncoder.encode(info.getStringDistance(), "UTF-8")
+                + "&" + URLEncoder.encode("TYPE", "UTF-8") + "=" + URLEncoder.encode(info.getType(), "UTF-8");
+
+        return data;
     }
-
 }
