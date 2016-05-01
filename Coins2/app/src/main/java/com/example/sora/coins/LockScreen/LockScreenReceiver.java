@@ -5,6 +5,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import com.example.sora.coins.LockScreenActivity;
+
 /**
  * Created by Administrator on 2016-03-23.
  */
