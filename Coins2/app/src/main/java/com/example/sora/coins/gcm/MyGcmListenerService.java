@@ -11,7 +11,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
-import com.example.sora.coins.ChatActivity;
+import com.example.sora.coins.Chat.ChatActivity;
 import com.example.sora.coins.R;
 
 public class MyGcmListenerService extends GcmListenerService {

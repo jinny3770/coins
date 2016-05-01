@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.sora.coins.MyInfo;
+import com.example.sora.coins.etc.MyInfo;
 import com.example.sora.coins.R;
 
 import java.io.BufferedReader;

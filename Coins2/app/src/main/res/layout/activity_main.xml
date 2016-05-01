@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/drawerlayout"
-    tools:context="com.example.sora.coins.MainActivity">
+    tools:context=".Main.MainActivity">
 
     <!-- 메인화면 레이아웃 -->
     <FrameLayout
