@@ -31,6 +31,7 @@ public class DestinationList extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.destination_list_activity);
 
+        /*
         listView = (ListView) findViewById(R.id.destinationList);
 
         swipe = (SwipeRefreshLayout) findViewById(R.id.swipeLayout);
@@ -40,7 +41,7 @@ public class DestinationList extends AppCompatActivity implements View.OnClickLi
 
             }
         });
-
+        */
         addFloating = (FloatingActionButton) findViewById(R.id.addFloating);
         addFloating.setOnClickListener(this);
     }
@@ -58,7 +59,6 @@ public class DestinationList extends AppCompatActivity implements View.OnClickLi
 
 
     class ListAdapter extends BaseAdapter {
-
 
         @Override
         public int getCount() {

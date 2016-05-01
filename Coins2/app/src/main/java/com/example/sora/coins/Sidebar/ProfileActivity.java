@@ -42,6 +42,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_profile);
 
         myinfo = MyInfo.getInstance();
+        settings = new Settings();
 
         ID = (TextView) findViewById(R.id.IDView);
         groupCode = (TextView) findViewById(R.id.groupCodeView);

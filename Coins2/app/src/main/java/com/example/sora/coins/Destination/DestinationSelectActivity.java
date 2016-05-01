@@ -53,10 +53,10 @@ import javax.xml.parsers.ParserConfigurationException;
  */
 public class DestinationSelectActivity extends AppCompatActivity implements View.OnClickListener {
 
-    final String walkURL = "https://apis.skplanetx.com/tmap/routes/pedestrian?version=1";
-    final String bicycleURL = "https://apis.skplanetx.com/tmap/routes/bicycle?version=1";
-    final String carURL = "https://apis.skplanetx.com/tmap/routes?version=1";
-    final String resistURL = "http://52.79.124.54/destinationResist.php";
+    static final String walkURL = "https://apis.skplanetx.com/tmap/routes/pedestrian?version=1";
+    static final String bicycleURL = "https://apis.skplanetx.com/tmap/routes/bicycle?version=1";
+    static final String carURL = "https://apis.skplanetx.com/tmap/routes?version=1";
+    static final String resistURL = "http://52.79.124.54/destinationResist.php";
 
     LinearLayout mapLayout;
     TMapView mapView;
@@ -90,7 +90,6 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
         mapView.setCenterPoint(myInfo.getPoint().getLongitude(), myInfo.getPoint().getLatitude());
         mapLayout.addView(mapView);
 
-
         Bitmap departure = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.departure);
         Bitmap arrival = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.arrival);
 
@@ -121,17 +120,7 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
 
             case R.id.sendButton:
                 dialog = sendDialogMaker();
-
-                if (dialog != null)
-                {
-                    dialog.show();
-                }
-
-                else
-                {
-                    Toast.makeText(getApplicationContext(), "이동수단을 선택해주세요.", Toast.LENGTH_SHORT).show();
-                }
-
+                dialog.show();
                 break;
 
             case R.id.searchButton:
@@ -171,22 +160,26 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
         builder.setTitle("test");
         builder.setView(dialogView);
 
-        try
-        {
+        try {
             time = (TextView) dialogView.findViewById(R.id.timeView);
             distance = (TextView) dialogView.findViewById(R.id.distanceView);
 
             time.setText("소요 시간은 " + destinationInfo.getStringTime() + "초 이며,");
             distance.setText("예상 이동거리는 " + destinationInfo.getStringDistance() + "m 입니다.");
 
-            builder.setPositiveButton("Send", null);
+            builder.setPositiveButton("Send", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
 
-            AppCompatDialog dialog =  builder.create();
+                    ResistDestination resistDestination = new ResistDestination();
+                    resistDestination.execute(destinationInfo);
+
+                }
+            });
+
+            AppCompatDialog dialog = builder.create();
             return dialog;
-        }
-
-        catch (NullPointerException npe)
-        {
+        } catch (NullPointerException npe) {
             npe.printStackTrace();
             return null;
         }
@@ -221,7 +214,7 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
                 startPoint = myInfo.getPoint();
                 endPoint = mapView.getCenterPoint();
 
-                String url= null;
+                String url = null;
                 String type = null;
                 String sLati = Double.toString(startPoint.getLatitude());
                 String sLong = Double.toString(startPoint.getLongitude());
@@ -306,8 +299,6 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
 
                 str = answer.toString();
 
-                Log.i("Answer", str);
-
                 return str;
 
             } catch (Exception e) {
@@ -335,19 +326,18 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
 
 
                 //feature obj 중 geometry obj만 가져옴 -> 경로 표시를 위해서
-                for(int k=0; k<featureArray.length(); k++) {
+                for (int k = 0; k < featureArray.length(); k++) {
                     JSONObject geoObj = featureArray.getJSONObject(k).getJSONObject("geometry");
                     JSONArray cooArray = geoObj.getJSONArray("coordinates");
                     String type = geoObj.getString("type");
 
-                    if(type.equals("Point")) {
+                    if (type.equals("Point")) {
 
                         TMapPoint point = new TMapPoint(cooArray.getDouble(1), cooArray.getDouble(0));
 
-                        Log.i("Point", Double.toString(point.getLongitude()) + ", " + Double.toString(point.getLatitude()));
                         destinationInfo.addLinePoint(point);
 
-                    } else if(type.equals("LineString")) {
+                    } else if (type.equals("LineString")) {
 
                         for (int i = 0; i < cooArray.length(); i++) {
 
@@ -380,7 +370,8 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
             DestinationInfo info = params[0];
 
             try {
-                URL url = new URL(resistURL);
+                //URL url = new URL(resistURL);
+                URL url = new URL("http://52.79.124.54/test.php");
 
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
@@ -410,14 +401,14 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
         @Override
         protected void onPostExecute(String s) {
 
-            if(s.equals("exist")) {
+            if (s.equals("exist")) {
                 Toast.makeText(getApplicationContext(), "이미 등록 된 목적지가 있습니다.", Toast.LENGTH_LONG).show();
                 finish();
 
-            }else if(s.equals("fail")) {
+            } else if (s.equals("fail")) {
                 Toast.makeText(getApplicationContext(), "등록에 실패했습니다.", Toast.LENGTH_LONG).show();
 
-            }else if (s.equals("success")) {
+            } else if (s.equals("success")) {
                 Toast.makeText(getApplicationContext(), "등록되었습니다.", Toast.LENGTH_LONG).show();
                 finish();
             }
@@ -442,17 +433,37 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
     }
 
 
+    private String makeData(DestinationInfo info, MyInfo myInfo) throws JSONException, UnsupportedEncodingException {
 
-    private String makeData(DestinationInfo info, MyInfo myInfo) throws UnsupportedEncodingException {
-        String data = new String() ;
+        String data = null;
 
-        data = URLEncoder.encode("ID", "UTF-8") + "=" + URLEncoder.encode(myInfo.getID(), "UTF-8")
-                + "&" + URLEncoder.encode("CODE", "UTF-8") + "=" + URLEncoder.encode(myInfo.getGroupCode(), "UTF-8")
-                + "&" + URLEncoder.encode("POINTS", "UTF-8") + "=" + URLEncoder.encode(info.getStringLine(), "UTF-8")
-                + "&" + URLEncoder.encode("TIME", "UTF-8") + "=" + URLEncoder.encode(info.getStringLine(), "UTF-8")
-                + "&" + URLEncoder.encode("DISTANCE", "UTF-8") + "=" + URLEncoder.encode(info.getStringDistance(), "UTF-8")
-                + "&" + URLEncoder.encode("TYPE", "UTF-8") + "=" + URLEncoder.encode(info.getType(), "UTF-8");
+        JSONObject obj = new JSONObject();
+        JSONArray arr = new JSONArray();
 
+        ArrayList<TMapPoint> points = info.getLinePoint();
+
+        obj.put("ID", myInfo.getID());
+        obj.put("CODE", myInfo.getGroupCode());
+        obj.put("TIME", info.getTime());
+        obj.put("DISTANCE", info.getDistance());
+        obj.put("TYPE", info.getType());
+
+        for(int i=0; i<points.size(); i++) {
+
+            TMapPoint p = points.get(i);
+            JSONArray tmp = new JSONArray();
+
+            tmp.put(p.getLatitude());
+            tmp.put(p.getLongitude());
+
+            arr.put(tmp);
+        }
+
+        obj.put("POINTS", arr);
+
+        data = URLEncoder.encode("json", "UTF-8") + "=" + obj.toString();
+        
+        Log.i("dataLog", data);
         return data;
     }
 }

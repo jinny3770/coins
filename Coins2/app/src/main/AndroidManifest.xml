@@ -117,11 +117,11 @@
         <activity android:name=".Sidebar.ProfileActivity"/>
         <activity android:name=".Destination.DestinationSelectActivity"/>
         <activity android:name=".Destination.DestinationList"/>
+        <activity android:name=".LockScreenActivity"/>
 
 
         <service android:name=".LockScreen.LockScreenService"/>
         <service android:name=".etc.GCMIntentService"/>
-        <service android:name=".Main.LocationService"/>
 
 
         <receiver android:name=".LockScreen.LockScreenReceiver"/>

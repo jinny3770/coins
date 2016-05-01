@@ -1,4 +1,4 @@
-package com.example.sora.coins;
+package com.example.sora.coins.LockScreen;
 
 import android.app.Activity;
 import android.app.PendingIntent;
@@ -15,6 +15,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.example.sora.coins.R;
 
 /**
  * Created by Administrator on 2016-03-23.

@@ -42,11 +42,11 @@ public class DestinationInfo {
         return Double.toString(distance);
     }
 
-    public double getTime() {
+    public int getTime() {
         return time;
     }
 
-    public double getDistance() {
+    public int getDistance() {
         return distance;
     }
 
@@ -58,17 +58,21 @@ public class DestinationInfo {
         return line;
     }
 
+    public ArrayList<TMapPoint> getLinePoint() {
+        return linePoint;
+    }
+
     public String getStringLine() {
         String str = "[";
         TMapPoint tmp;
 
 
-        for(int i=0; i<linePoint.size(); i++) {
+        for (int i = 0; i < linePoint.size(); i++) {
             tmp = linePoint.get(i);
 
             str += "[" + Double.toString(tmp.getLatitude()) + "," + Double.toString(tmp.getLongitude()) + "]";
 
-            if(i != linePoint.size()-1) {
+            if (i != linePoint.size() - 1) {
                 str += ",";
             }
         }

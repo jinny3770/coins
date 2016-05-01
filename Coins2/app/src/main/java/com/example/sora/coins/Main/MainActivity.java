@@ -68,6 +68,7 @@ import java.util.ArrayList;
 import javax.xml.parsers.ParserConfigurationException;
 
 public class MainActivity extends AppCompatActivity implements TMapGpsManager.onLocationChangedCallback {
+
     private static final int defaultZoomLevel = 15;
     private static final int defaultMinDistance = 3;    // 단위 : m
     private static final int defaultMinTime = 1000;     // 단위 : 1/1000s
@@ -161,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
 
         // MyInfo instance 불러온다.
         myInfo = MyInfo.getInstance();
-
+        settings = new Settings();
 
         // 상단 액션바
         actionBar = getSupportActionBar();
@@ -196,6 +197,7 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
         tMapGpsManager.setMinTime(defaultMinTime);
         tMapGpsManager.setMinDistance(defaultMinDistance);
         tMapGpsManager.OpenGps();
+
         curLoca = tMapGpsManager.getLocation();
 
         mapView = new TMapView(this);
@@ -303,12 +305,19 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
     }
 
     @Override
-    public void onLocationChange(Location location)
-    {
+    public void onLocationChange(Location location) {
         curLoca = tMapGpsManager.getLocation();
         mapView.setLocationPoint(curLoca.getLongitude(), curLoca.getLatitude());
         myLoca.setTMapPoint(curLoca);
         myInfo.setPoint(curLoca);
+
+        /*
+        if(Settings.Login) {
+            // update하는 코드 넣자
+            UpdateLcation update = new UpdateLcation();
+            update.execute(myInfo.getID(), Double.toString(myInfo.getPoint().getLatitude()), Double.toString(myInfo.getPoint().getLongitude()));
+        }
+        */
     }
 
     @Override

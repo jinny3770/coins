@@ -10,7 +10,7 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:background="#00000000"
-            android:src="@drawable/ic_action_place"
+            android:src="@drawable/ic_action_directions"
             android:layout_column="2" />
 
         <ImageButton
