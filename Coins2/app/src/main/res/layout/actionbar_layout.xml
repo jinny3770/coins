@@ -7,51 +7,26 @@
     <TableRow>
         <ImageButton
             android:id="@+id/destination"
-<<<<<<< HEAD
             android:layout_width="37dp"
             android:layout_height="42dp"
             android:background="#00000000"
-            android:src="@drawable/ic_action_directions2"
-=======
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:background="#00000000"
-            android:src="@drawable/ic_action_directions"
->>>>>>> fddc4f3228cd47a123d5282771d6e9d97d21f236
-            android:layout_column="2" />
+            android:src="@drawable/ic_action_directions2"/>
 
         <ImageButton
             android:id="@+id/shareButton"
-<<<<<<< HEAD
             android:layout_width="37dp"
             android:layout_height="42dp"
             android:layout_column="5"
             android:background="#00000000"
             android:src="@drawable/ic_action_send_now2"/>
-=======
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_column="5"
-            android:background="#00000000"
-            android:src="@drawable/ic_action_send_now"/>
->>>>>>> fddc4f3228cd47a123d5282771d6e9d97d21f236
-
 
         <ImageButton
             android:id="@+id/chatButton"
-<<<<<<< HEAD
             android:layout_width="37dp"
             android:layout_height="42dp"
             android:layout_column="8"
             android:background="#00000000"
             android:src="@drawable/ic_action_chat2"/>
-=======
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_column="8"
-            android:background="#00000000"
-            android:src="@drawable/ic_action_chat"/>
->>>>>>> fddc4f3228cd47a123d5282771d6e9d97d21f236
 
     </TableRow>
 </TableLayout>
