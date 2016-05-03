@@ -1,0 +1,28 @@
+<resources>
+    <string name="open">메뉴 열기</string>
+    <string name="close">메뉴 닫기</string>
+    <string name="title_activity_sendbird">Coins</string>
+    <string name="app_name">Coins</string>
+    <string name="connect">Connect</string>
+    <string name="status">"Status: "</string>
+    <string name="connected">Connected</string>
+    <string name="connection_lost">Connection Lost</string>
+    <string name="dialog_connection_lost_message">Reason=%s</string>
+    <string name="connection_error">Connection Error</string>
+    <string name="logged_into">Logged:</string>
+    <string name="joined_to_room">You have joined:</string>
+    <string name="example_zone">BasicExamples</string>
+    <string name="example_lobby">The Lobby</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="disconnected">Disconnected</string>
+    <string name="log_2points">Log:</string>
+    <string name="test">Test</string>
+    <string name="connecting">Connecting</string>
+    <string name="use_bluebox">Use Bluebox</string>
+    <string name="login">Login</string>
+    <string name="login_choose_user_name">Please enter your nick:</string>
+    <string name="users">Users</string>
+    <string name="chat">Chat</string>
+    <string name="send">Send</string>
+
+</resources>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:stretchColumns="0,3,6">
+
+    <TableRow>
+        <ImageButton
+            android:id="@+id/destination"
+            android:layout_width="37dp"
+            android:layout_height="42dp"
+            android:background="#00000000"
+            android:src="@drawable/ic_action_directions2"
+            android:layout_column="2" />
+
+        <ImageButton
+            android:id="@+id/shareButton"
+            android:layout_width="37dp"
+            android:layout_height="42dp"
+            android:layout_column="5"
+            android:background="#00000000"
+            android:src="@drawable/ic_action_send_now2"/>
+
+
+        <ImageButton
+            android:id="@+id/chatButton"
+            android:layout_width="37dp"
+            android:layout_height="42dp"
+            android:layout_column="8"
+            android:background="#00000000"
+            android:src="@drawable/ic_action_chat2"/>
+
+    </TableRow>
+</TableLayout>
