@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+<<<<<<< HEAD
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical" android:layout_width="match_parent"
         android:layout_margin="50dp"
         android:layout_height="match_parent">
+=======
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_margin="20dp"
+    android:layout_height="match_parent">
+>>>>>>> fddc4f3228cd47a123d5282771d6e9d97d21f236
 
     <RadioGroup
         android:layout_width="match_parent"

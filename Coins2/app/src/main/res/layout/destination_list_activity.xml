@@ -33,7 +33,11 @@
         android:id="@+id/addFloating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+<<<<<<< HEAD
         android:src="@drawable/ic_action_destination_add"
+=======
+        android:src="@drawable/ic_action_location_found"
+>>>>>>> fddc4f3228cd47a123d5282771d6e9d97d21f236
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_margin="15dp"/>
