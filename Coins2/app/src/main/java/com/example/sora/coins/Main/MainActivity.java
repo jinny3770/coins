@@ -523,8 +523,8 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
                     intent = new Intent(getApplicationContext(), ChatActivity.class);
 
                     new AlertDialog.Builder(MainActivity.this)
-                            .setTitle("WAY")
-                            .setMessage("내 위치를 채팅방에 공유?")
+                            .setTitle("공유하기")
+                            .setMessage("내 위치를 공유하시겠습니까?")
                             .setCancelable(false)
                             .setPositiveButton("예", new DialogInterface.OnClickListener() {
                                 @Override
@@ -574,7 +574,7 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
                                     overridePendingTransition(R.anim.fade, R.anim.hold);
                                 }
                             })
-                            .setNegativeButton("놉", new DialogInterface.OnClickListener() {
+                            .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                 }
