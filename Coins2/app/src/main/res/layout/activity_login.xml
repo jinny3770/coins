@@ -36,7 +36,7 @@
                 android:layout_marginLeft="8dp"
                 android:layout_weight="1"
                 android:background="#ffffff"
-                android:hint="이메일을 입력하세요."
+                android:hint="아이디를 입력하세요."
                 android:textColor="#5e6472"
                 android:textColorHint="#5e6472" />
 
@@ -63,6 +63,7 @@
                 android:layout_marginLeft="4dp"
                 android:layout_weight="1"
                 android:hint="비밀번호를 입력하세요."
+                android:inputType="textPassword"
                 android:textColor="#5e6472"
                 android:textColorHint="#5e6472" />
 
@@ -89,12 +90,13 @@
 
                 <Button
                     android:id="@+id/login"
-                    android:layout_width="150dp"
-                    android:layout_height="50dp"
+                    android:layout_width="130dp"
+                    android:layout_height="45dp"
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="10dp"
                     android:background="#5e6472"
-                    android:text="로그인" />
+                    android:text="로그인"
+                    android:textSize="15dp"/>
 
             </LinearLayout>
 
@@ -106,7 +108,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="처음 등록하시겠습니까?"
-        android:textSize="18dp"
+        android:textSize="15dp"
         android:textColor="#5e6472"
         android:id="@+id/textView"
         android:layout_alignParentBottom="true"
