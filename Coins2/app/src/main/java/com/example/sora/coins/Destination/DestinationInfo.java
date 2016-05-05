@@ -12,27 +12,20 @@ import java.util.ArrayList;
  */
 public class DestinationInfo {
 
-
-    TMapPoint start, end;
     TMapPolyLine line;
     ArrayList<TMapPoint> linePoint;
     int time, distance;
 
     String type;
 
-    DestinationInfo(TMapPoint start, TMapPoint end, int time, int distance) {
+    DestinationInfo(int time, int distance, String type) {
 
-        this.start = start;
-        this.end = end;
         this.time = time;
         this.distance = distance;
+        this.type = type;
         initLinePoint();
     }
 
-    DestinationInfo(String time, String distance) {
-        this.time = Integer.parseInt(time);
-        this.distance = Integer.parseInt(distance);
-    }
 
     public String getStringTime() {
         return Double.toString(time);
@@ -62,25 +55,6 @@ public class DestinationInfo {
         return linePoint;
     }
 
-    public String getStringLine() {
-        String str = "[";
-        TMapPoint tmp;
-
-
-        for (int i = 0; i < linePoint.size(); i++) {
-            tmp = linePoint.get(i);
-
-            str += "[" + Double.toString(tmp.getLatitude()) + "," + Double.toString(tmp.getLongitude()) + "]";
-
-            if (i != linePoint.size() - 1) {
-                str += ",";
-            }
-        }
-
-        str += "]";
-        return str;
-    }
-
     public void setTime(String time) {
         this.time = Integer.parseInt(time);
     }
@@ -99,12 +73,20 @@ public class DestinationInfo {
 
     public void setType(String type) {
         this.type = type;
-
     }
 
     public void addLinePoint(TMapPoint point) {
         line.addLinePoint(point);
         linePoint.add(point);
+    }
+
+    public boolean compareLastPoint(TMapPoint point) {
+
+        if (linePoint.size() == 0)
+            return false;
+        else if (linePoint.get(linePoint.size()-1).equals(point)) {
+            return true;
+        } else return false;
     }
 
     public void initLinePoint() {

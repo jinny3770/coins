@@ -130,6 +130,10 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
         // 현재 위치 설정
         curLoca = tMapGpsManager.getLocation();
         showMyLocation();
+
+
+        LoadFamilyList loadList = new LoadFamilyList();
+        loadList.execute(myInfo.getGroupCode());
     }
 
     @Override
@@ -162,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
 
         // MyInfo instance 불러온다.
         myInfo = MyInfo.getInstance();
-        settings = new Settings();
+        settings = Settings.getInstance();
 
         // 상단 액션바
         actionBar = getSupportActionBar();
@@ -436,15 +440,14 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
 
     class LoadFamilyList extends AsyncTask <String, Void, String> {
 
-        URL url = null;
         BufferedReader reader = null;
         String code;
+        String data;
 
         @Override
         protected String doInBackground(String... params) {
 
             code = params[0];
-            String data = null;
 
             try {
                 URL url = new URL(loadFamilyURL);
@@ -467,6 +470,7 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
                 reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
                 String line = reader.readLine();
+                Log.i("family", line);
 
                 return line;
 
@@ -489,6 +493,8 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
                 try {
                     jsonArray = new JSONArray(s);
                     pInfo = new PersonInfo();
+
+                    Log.i("family", s);
 
                     for(int i=0; i<jsonArray.length(); i++) {
                         obj = jsonArray.getJSONObject(i);

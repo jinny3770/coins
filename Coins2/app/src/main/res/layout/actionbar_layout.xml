@@ -28,7 +28,7 @@
             android:layout_height="32dp"
             android:layout_column="8"
             android:background="#00000000"
-            android:src="@drawable/ic_action_chat"/>
+            android:src="@drawable/ic_chat"/>
 
     </TableRow>
 </TableLayout>

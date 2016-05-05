@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_login);
 
         myInfo = MyInfo.getInstance();
-        settings = new Settings();
+        settings = Settings.getInstance();
 
         id = (EditText) findViewById(R.id.IDEdit);
         pw = (EditText) findViewById(R.id.PWEdit);

@@ -15,19 +15,10 @@ public class DestinationListInfo extends DestinationInfo {
     TMapPolyLine myLine;
     ArrayList<TMapPoint> myLinePoint;
 
-    DestinationListInfo(TMapPoint start, TMapPoint end, int time, int distance) {
-        super(start, end, time, distance);
-    }
-
-    DestinationListInfo(String time, String distance) {
-        super(time, distance);
-    }
-
-    DestinationListInfo(String ID, TMapPoint start, TMapPoint end, int time, int distance, String type) {
-        super(start, end, time, distance);
+    DestinationListInfo(String ID, int time, int distance, String type) {
+        super(time, distance, type);
 
         this.ID = ID;
-        this.type = type;
 
     }
 

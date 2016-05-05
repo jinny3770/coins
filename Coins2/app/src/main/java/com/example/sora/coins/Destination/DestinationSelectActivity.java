@@ -252,6 +252,7 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
     class RouteTask extends AsyncTask<String, Void, String> {
         TMapPoint startPoint;
         TMapPoint endPoint;
+        String type;
 
         @Override
         protected String doInBackground(String... params) {
@@ -261,7 +262,7 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
             startPoint = new TMapPoint(Double.parseDouble(params[1]), Double.parseDouble(params[2]));
             endPoint = new TMapPoint(Double.parseDouble(params[3]), Double.parseDouble(params[4]));
 
-            String type = params[5];
+            type = params[5];
 
 
             BufferedReader reader = null;
@@ -321,7 +322,7 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
 
                 int time = featObj.getInt("totalTime");
                 int dis = featObj.getInt("totalDistance");
-                destinationInfo = new DestinationInfo(startPoint, endPoint, time, dis);
+                destinationInfo = new DestinationInfo(time, dis, type);
                 destinationInfo.initLinePoint();
 
 
@@ -335,18 +336,20 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
 
                         TMapPoint point = new TMapPoint(cooArray.getDouble(1), cooArray.getDouble(0));
 
-                        destinationInfo.addLinePoint(point);
+                        if(!destinationInfo.compareLastPoint(point)) {
+                            destinationInfo.addLinePoint(point);
+                        }
 
                     } else if (type.equals("LineString")) {
 
                         for (int i = 0; i < cooArray.length(); i++) {
 
                             JSONArray obj = cooArray.getJSONArray(i);
-
                             TMapPoint point = new TMapPoint(obj.getDouble(1), obj.getDouble(0));
 
-                            Log.i("Point : " + i, Double.toString(point.getLongitude()) + ", " + Double.toString(point.getLatitude()));
-                            destinationInfo.addLinePoint(point);
+                            if(!destinationInfo.compareLastPoint(point)) {
+                                destinationInfo.addLinePoint(point);
+                            }
 
                         }
                     }
@@ -371,7 +374,7 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
 
             try {
                 //URL url = new URL(resistURL);
-                URL url = new URL("http://52.79.124.54/test.php");
+                URL url = new URL(resistURL);
 
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
@@ -448,7 +451,7 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
         obj.put("DISTANCE", info.getDistance());
         obj.put("TYPE", info.getType());
 
-        for(int i=0; i<points.size(); i++) {
+        for (int i = 0; i < points.size(); i++) {
 
             TMapPoint p = points.get(i);
             JSONArray tmp = new JSONArray();
@@ -460,10 +463,9 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
         }
 
         obj.put("POINTS", arr);
+        Log.i("dataLog", obj.toString());
 
-        data = URLEncoder.encode("json", "UTF-8") + "=" + obj.toString();
-        
-        Log.i("dataLog", data);
+        data = URLEncoder.encode("json", "UTF-8") + "=" + URLEncoder.encode(obj.toString(), "UTF-8");
         return data;
     }
 }
