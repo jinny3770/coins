@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -9,38 +8,34 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <android.support.v4.widget.SwipeRefreshLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/swipeLayout">
+            android:layout_height="match_parent">
 
-            <ListView
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/swipeLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+                <ListView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-            </ListView>
 
-        </android.support.v4.widget.SwipeRefreshLayout>
+                </ListView>
 
-    </LinearLayout>
+            </android.support.v4.widget.SwipeRefreshLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/addFloating"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-<<<<<<< HEAD
-        android:src="@drawable/ic_action_destination_add"
-=======
-        android:src="@drawable/ic_action_location_found"
->>>>>>> fddc4f3228cd47a123d5282771d6e9d97d21f236
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_margin="15dp"/>
+        </LinearLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/addFloating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="15dp"
+            android:src="@drawable/ic_action_destination_add" />
 
     </RelativeLayout>
 

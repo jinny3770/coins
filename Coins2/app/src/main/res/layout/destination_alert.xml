@@ -8,13 +8,19 @@
         android:layout_height="wrap_content"
         android:textSize="15dp"
         android:layout_margin="10dp"
-        android:id="@+id/timeView"/>
+        android:id="@+id/timeView"
+        android:gravity="center"
+        android:textAlignment="gravity"
+        />
+
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="15dp"
         android:layout_margin="10dp"
-        android:id="@+id/distanceView"/>
+        android:id="@+id/distanceView"
+        android:gravity="center"
+        android:textAlignment="gravity"/>
 
 </LinearLayout>

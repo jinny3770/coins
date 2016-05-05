@@ -32,7 +32,6 @@
 
                 <ImageButton
                     android:id="@+id/locaButton"
-<<<<<<< HEAD
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_margin="20dp"
@@ -40,14 +39,6 @@
                     android:layout_alignParentLeft="true"
                     android:background="@drawable/button_layout"
                     android:src="@drawable/main_mylocation"/>
-=======
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_margin="20dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentLeft="true"
-                    android:src="@drawable/ic_action_location_found"/>
->>>>>>> fddc4f3228cd47a123d5282771d6e9d97d21f236
 
             </RelativeLayout>
 

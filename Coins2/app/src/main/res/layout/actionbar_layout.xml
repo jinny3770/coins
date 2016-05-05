@@ -9,6 +9,7 @@
             android:id="@+id/destination"
             android:layout_width="37dp"
             android:layout_height="42dp"
+            android:layout_column="2"
             android:background="#00000000"
             android:src="@drawable/ic_action_directions2"/>
 

@@ -1,39 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<<<<<<< HEAD
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical" android:layout_width="match_parent"
-        android:layout_margin="50dp"
-        android:layout_height="match_parent">
-=======
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_margin="20dp"
-    android:layout_height="match_parent">
->>>>>>> fddc4f3228cd47a123d5282771d6e9d97d21f236
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="50dp"
+    android:orientation="vertical">
 
-    <RadioGroup
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:checkedButton="@+id/walkRadio"
-        android:id="@+id/radioGroup">
+        android:layout_margin="20dp"
+        android:orientation="vertical">
 
-        <RadioButton
+        <RadioGroup
+            android:id="@+id/radioGroup"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="도보"
-            android:id="@+id/walkRadio"/>
+            android:layout_height="match_parent"
+            android:checkedButton="@+id/walkRadio">
 
-        <RadioButton
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="자전거"
-            android:id="@+id/bicycleRadio"/>
+            <RadioButton
+                android:id="@+id/walkRadio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="도보" />
 
-        <RadioButton
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="자동차"
-            android:id="@+id/carRadio"/>
-    </RadioGroup>
+            <RadioButton
+                android:id="@+id/bicycleRadio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="자전거" />
+
+            <RadioButton
+                android:id="@+id/carRadio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="자동차" />
+        </RadioGroup>
+
+    </LinearLayout>
 
 </LinearLayout>

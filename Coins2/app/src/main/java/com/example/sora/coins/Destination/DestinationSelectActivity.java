@@ -65,7 +65,7 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
     ImageButton desButton, sendButton;
 
     EditText searchText;
-    Button searchButton;
+    ImageButton searchButton;
 
     DestinationInfo destinationInfo;
     Date currentTime;
@@ -96,7 +96,7 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
         mapView.setTMapPathIcon(departure, arrival);
 
         searchText = (EditText) findViewById(R.id.searchText);
-        searchButton = (Button) findViewById(R.id.searchButton);
+        searchButton = (ImageButton) findViewById(R.id.searchButton);
         desButton = (ImageButton) findViewById(R.id.desButton);
         sendButton = (ImageButton) findViewById(R.id.sendButton);
 
@@ -157,17 +157,17 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
 
         android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(DestinationSelectActivity.this);
 
-        builder.setTitle("test");
+        builder.setTitle("도착알림결과입니다.");
         builder.setView(dialogView);
 
         try {
             time = (TextView) dialogView.findViewById(R.id.timeView);
             distance = (TextView) dialogView.findViewById(R.id.distanceView);
 
-            time.setText("소요 시간은 " + destinationInfo.getStringTime() + "초 이며,");
-            distance.setText("예상 이동거리는 " + destinationInfo.getStringDistance() + "m 입니다.");
+            time.setText("소요 시간 :  " + destinationInfo.getStringTime() + " 초 ");
+            distance.setText("이동 거리 : " + destinationInfo.getStringDistance() + " m ");
 
-            builder.setPositiveButton("Send", new DialogInterface.OnClickListener() {
+            builder.setPositiveButton("공유하기", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
 

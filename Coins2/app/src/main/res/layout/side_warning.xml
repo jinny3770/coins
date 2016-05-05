@@ -27,7 +27,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="40dp"
             android:textAlignment="center"
-            android:hint="번호를 입력해주세요"
+            android:hint="번호를 입력하세요."
             android:id="@+id/phone">
         </EditText>
 
