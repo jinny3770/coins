@@ -36,7 +36,7 @@ import java.util.ArrayList;
 /**
  * Created by sora on 2016-04-26.
  */
-public class DestinationList extends AppCompatActivity implements View.OnClickListener{
+public class DestinationList extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener{
 
     SwipeRefreshLayout swipe;
 
@@ -44,6 +44,7 @@ public class DestinationList extends AppCompatActivity implements View.OnClickLi
 
     ListView listView;
     ListViewAdapter listAdapter;
+
 
     FloatingActionButton addFloating;
     String group_code;
@@ -59,6 +60,11 @@ public class DestinationList extends AppCompatActivity implements View.OnClickLi
         destinationListInfos = new ArrayList<DestinationListInfo>();
 
         group_code = MyInfo.getInstance().getGroupCode();
+
+        swipe = (SwipeRefreshLayout) findViewById(R.id.swipeLayout);
+        swipe.setOnRefreshListener(this);
+
+        listView = (ListView) findViewById(R.id.destinationList);
 
         addFloating = (FloatingActionButton) findViewById(R.id.addFloating);
         addFloating.setOnClickListener(this);
@@ -83,6 +89,14 @@ public class DestinationList extends AppCompatActivity implements View.OnClickLi
                 startActivity(intent);
                 break;
         }
+    }
+
+    @Override
+    public void onRefresh() {
+        //list 재구성
+        
+        swipe.setRefreshing(false);
+
     }
 
     class LoadDestinationsList extends AsyncTask<String, Void, String> {
@@ -175,7 +189,7 @@ public class DestinationList extends AppCompatActivity implements View.OnClickLi
         public int getCount() {
             return 0;
         }
-    
+
         @Override
         public Object getItem(int position) {
             return null;
