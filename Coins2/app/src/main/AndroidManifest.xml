@@ -116,8 +116,10 @@
         <activity android:name=".Sidebar.SignUpActivity"/>
         <activity android:name=".Sidebar.ProfileActivity"/>
         <activity android:name=".Destination.DestinationSelectActivity"/>
-        <activity android:name=".Destination.DestinationList"/>
+        <activity android:name=".Destination.DestinationListActivity"/>
+        <activity android:name=".Destination.DestinationViewActivity"/>
         <activity android:name=".LockScreenActivity"/>
+
 
 
         <service android:name=".LockScreen.LockScreenService"/>

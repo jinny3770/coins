@@ -9,7 +9,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.design.widget.NavigationView;
@@ -29,7 +28,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.sora.coins.Chat.ChatActivity;
-import com.example.sora.coins.Destination.DestinationList;
+import com.example.sora.coins.Destination.DestinationListActivity;
 import com.example.sora.coins.LockScreen.LockScreenService;
 import com.example.sora.coins.etc.MyInfo;
 import com.example.sora.coins.R;
@@ -41,9 +40,6 @@ import com.example.sora.coins.Sidebar.SideGroupActivity;
 import com.example.sora.coins.Sidebar.SideSettingActivity;
 import com.example.sora.coins.Sidebar.SideWarningActivity;
 import com.example.sora.coins.etc.APIKey;
-import com.example.sora.coins.etc.MyInfo;
-import com.example.sora.coins.etc.PersonInfo;
-import com.example.sora.coins.etc.Settings;
 import com.google.android.gcm.GCMRegistrar;
 import com.skp.Tmap.TMapData;
 import com.skp.Tmap.TMapGpsManager;
@@ -52,20 +48,10 @@ import com.skp.Tmap.TMapPoint;
 import com.skp.Tmap.TMapView;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.xml.sax.SAXException;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -106,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
     // 하단 가족 리스트뷰
     Boolean flag = false;
     ListView familyListView;
-    ListViewAdapter familyAdapter;
+    FamilyListViewAdapter familyAdapter;
 
     ArrayList<PersonInfo> family;
 
@@ -155,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
                         pInfo.setID(jsonObject.getString("id"));
                         pInfo.setGroupCode(myInfo.getGroupCode());
                         pInfo.setName(jsonObject.getString("name"));
-                        pInfo.setPoint(new TMapPoint(37.58141461906891, 127.00945944471735));
+                        pInfo.setPoint(new TMapPoint(jsonObject.getDouble("latitude"), jsonObject.getDouble("longitude")));
                         family.add(pInfo);
                         familyAdapter.addItem(getResources().getDrawable(R.drawable.person), family.get(i).getName(), pointToString(family.get(i).getPoint()));
                     }
@@ -268,7 +254,7 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
 
         // 가족 리스트
         family = new ArrayList<PersonInfo>();
-        familyAdapter = new ListViewAdapter(this);
+        familyAdapter = new FamilyListViewAdapter(this);
         familyListView = (ListView) findViewById(R.id.familyList);
         familyListView.setAdapter(familyAdapter);
 
@@ -459,7 +445,7 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
                     break;
 
                 case R.id.destination:
-                    intent = new Intent(getApplicationContext(), DestinationList.class);
+                    intent = new Intent(getApplicationContext(), DestinationListActivity.class);
                     startActivity(intent);
                     break;
 

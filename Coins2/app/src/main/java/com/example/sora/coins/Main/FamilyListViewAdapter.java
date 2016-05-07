@@ -17,12 +17,12 @@ import java.util.Collections;
 /**
  * Created by sora on 2016-04-14.
  */
-public class ListViewAdapter extends BaseAdapter
+public class FamilyListViewAdapter extends BaseAdapter
 {
     private Context myContext = null;
-    private ArrayList<ListData> myListData = new ArrayList<ListData>();
+    private ArrayList<FamilyListData> myListData = new ArrayList<FamilyListData>();
 
-    public ListViewAdapter(Context mContext) {
+    public FamilyListViewAdapter(Context mContext) {
         super();
         this.myContext = mContext;
     }
@@ -45,11 +45,11 @@ public class ListViewAdapter extends BaseAdapter
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        ViewHolder holder;
+        FamilyViewHolder holder;
 
         if (convertView == null)
         {
-            holder = new ViewHolder();
+            holder = new FamilyViewHolder();
 
             LayoutInflater inflater = (LayoutInflater) myContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.familylist, null);
@@ -63,10 +63,10 @@ public class ListViewAdapter extends BaseAdapter
 
         else
         {
-            holder = (ViewHolder) convertView.getTag();
+            holder = (FamilyViewHolder) convertView.getTag();
         }
 
-        ListData myData = myListData.get(position);
+        FamilyListData myData = myListData.get(position);
 
         if (myData.icon != null)
         {
@@ -87,8 +87,8 @@ public class ListViewAdapter extends BaseAdapter
 
     public void addItem(Drawable icon, String name, String loca)
     {
-        ListData addInfo = null;
-        addInfo = new ListData();
+        FamilyListData addInfo = null;
+        addInfo = new FamilyListData();
         addInfo.icon = icon;
         addInfo.name = name;
         addInfo.loca = loca;
@@ -102,11 +102,6 @@ public class ListViewAdapter extends BaseAdapter
         dataChange();
     }
 
-    public void sort()
-    {
-        Collections.sort(myListData, ListData.comparator);
-        dataChange();
-    }
 
     public void dataChange()
     {
