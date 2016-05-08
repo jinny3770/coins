@@ -128,11 +128,17 @@ public class DestinationListAdapter extends BaseAdapter {
         myListData.add(data);
     }
 
-    public void remove(int position) {
+    public void remove (int position) {
+        myListData.remove(position);
+        dataChange();
+    }
 
+    @Override
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
     }
 
     public void dataChange() {
-
+        this.notifyDataSetChanged();
     }
 }

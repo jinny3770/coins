@@ -1,10 +1,12 @@
 package com.example.sora.coins.Destination;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -37,7 +39,7 @@ import java.util.concurrent.ExecutionException;
  * Created by sora on 2016-04-26.
  */
 public class DestinationListActivity extends AppCompatActivity
-        implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener, ListView.OnLongClickListener{
+        implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener{
 
     TMapView mapView;
     SwipeRefreshLayout swipe;
@@ -47,6 +49,7 @@ public class DestinationListActivity extends AppCompatActivity
     ListView listView;
     DestinationListAdapter listAdapter;
 
+    MyInfo myInfo;
 
     FloatingActionButton addFloating;
     String group_code;
@@ -60,6 +63,7 @@ public class DestinationListActivity extends AppCompatActivity
         mapView = new TMapView(this);
         mapView.setSKPMapApiKey(APIKey.ApiKey);
 
+        myInfo = MyInfo.getInstance();
         destinationListInfos = new ArrayList<DestinationListInfo>();
 
         group_code = MyInfo.getInstance().getGroupCode();
@@ -75,9 +79,10 @@ public class DestinationListActivity extends AppCompatActivity
         addFloating.setOnClickListener(this);
     }
 
+
     @Override
-    protected void onPostResume() {
-        super.onPostResume();
+    protected void onResume() {
+        super.onResume();
 
         DestinationListInfo info;
         TMapPoint startP = null, endP = null;
@@ -137,6 +142,33 @@ public class DestinationListActivity extends AppCompatActivity
 
             }
         });
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+
+                if(myInfo.getID().equals(destinationListInfos.get(position).getID())) {
+
+                    new AlertDialog.Builder(DestinationListActivity.this)
+                            .setTitle("삭제 확인")
+                            .setMessage("목적지를 삭제하시겠습니까?")
+                            .setCancelable(false)
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    DeleteDestinations deleteDestinations = new DeleteDestinations();
+                                    deleteDestinations.execute(myInfo.getID());
+                                    listAdapter.remove(position);
+
+                                }
+                            })
+                            .setNegativeButton("No", null).create().show();
+
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     @Override
@@ -154,11 +186,6 @@ public class DestinationListActivity extends AppCompatActivity
                 startActivity(intent);
                 break;
         }
-    }
-
-    @Override
-    public boolean onLongClick(View v) {
-        return false;
     }
 
 }

@@ -29,13 +29,11 @@
 
         <activity
             android:name=".Main.MainActivity"
-            android:launchMode="singleInstance"
             android:excludeFromRecents="true"
             android:taskAffinity="">
         </activity>
 
         <activity android:name=".LockScreen.LockScreenActivity"
-            android:launchMode="singleInstance"
             android:excludeFromRecents="true"
             android:taskAffinity="">
         </activity>
