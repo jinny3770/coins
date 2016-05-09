@@ -20,11 +20,9 @@
             android:title="비상연락망 설정">
         </item>
 
-        
         <item
             android:id="@+id/side_setting"
             android:title="환경 설정">
         </item>
-
     </group>
 </menu>

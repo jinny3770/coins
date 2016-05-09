@@ -10,9 +10,5 @@
     <dimen name="activity_login_pw_margin">4dp</dimen>
     <dimen name="floatingButton_margin">10dp</dimen>
 
-    <dimen name="activity_sideGroup_fontSize">18dp</dimen>
-    <dimen name="activity_sideGroup_button_padding">3dp</dimen>
-    <dimen name="activity_sideGroup_button_width">200dp</dimen>
-
     <dimen name="icon_size">36dp</dimen>
 </resources>

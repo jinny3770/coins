@@ -25,22 +25,24 @@ import java.util.regex.Pattern;
  * Created by Administrator on 2016-03-21.
  */
 
-public class SideWarningActivity extends AppCompatActivity {
+public class SideWarningActivity extends AppCompatActivity
+{
     ListView alertListview;
     EditText input;
     Button register;
-    ArrayList<String> items;
+    ArrayList <String> items;
     ArrayAdapter adapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.side_warning);
 
         alertListview = (ListView) findViewById(R.id.alertList);
         input = (EditText) findViewById(R.id.phone);
         register = (Button) findViewById(R.id.register);
-        items = new ArrayList<String>();
+        items = new ArrayList <String>();
         adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, items);
 
         alertListview.setAdapter(adapter);
@@ -48,39 +50,51 @@ public class SideWarningActivity extends AppCompatActivity {
         SharedPreferences pref = getSharedPreferences("pref", 0);
         String json = pref.getString("phone", null);
 
-        if (json != null) {
-            try {
+        if (json != null)
+        {
+            try
+            {
                 JSONArray jsonArray = new JSONArray(json);
 
-                for (int i = 0; i < jsonArray.length(); i++) {
+                for (int i = 0; i < jsonArray.length(); i++)
+                {
                     String url = jsonArray.optString(i);
                     items.add(url);
                 }
-            } catch (JSONException jsone) {
+            }
+
+            catch (JSONException jsone)
+            {
                 jsone.printStackTrace();
             }
         }
 
-        alertListview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        alertListview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
+        {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id)
+            {
                 // 롱클릭시 팝업창 호출 => 삭제여부 물어보고 그에 따라 조치
                 AlertDialog.Builder builder = new AlertDialog.Builder(SideWarningActivity.this);
                 builder.setTitle("연락처 삭제");
                 builder.setMessage("삭제하시겠습니까?");
 
-                builder.setNegativeButton("네", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton("네", new DialogInterface.OnClickListener()
+                {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(DialogInterface dialog, int which)
+                    {
                         items.remove(position);
                         adapter.notifyDataSetChanged();
                         dialog.dismiss();
                     }
                 });
 
-                builder.setPositiveButton("아니오", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("아니오", new DialogInterface.OnClickListener()
+                {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(DialogInterface dialog, int which)
+                    {
                         dialog.dismiss();
                     }
                 });
@@ -91,7 +105,8 @@ public class SideWarningActivity extends AppCompatActivity {
             }
         });
 
-        register.setOnClickListener(new View.OnClickListener() {
+        register.setOnClickListener(new View.OnClickListener()
+        {
             @Override
             public void onClick(View v) {
                 String number = input.getText().toString();
@@ -117,27 +132,34 @@ public class SideWarningActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onPause() {
+    public void onPause()
+    {
         super.onPause();
 
         SharedPreferences pref = getSharedPreferences("pref", 0);
         SharedPreferences.Editor editor = pref.edit();
         JSONArray jsonArray = new JSONArray();
 
-        for (int i = 0; i < items.size(); i++) {
+        for (int i = 0; i < items.size(); i++)
+        {
             jsonArray.put(items.get(i));
         }
 
-        if (!items.isEmpty()) {
+        if (!items.isEmpty())
+        {
             editor.putString("phone", jsonArray.toString());
-        } else {
+        }
+
+        else
+        {
             editor.putString("phone", null);
         }
 
         editor.commit();
     }
 
-    public static String makePhoneNumber(String phone) {
+    public static String makePhoneNumber(String phone)
+    {
         String regExample = "(\\d{3})(\\d{3,4})(\\d{4})";
 
         if (!Pattern.matches(regExample, phone))
@@ -146,9 +168,12 @@ public class SideWarningActivity extends AppCompatActivity {
         return phone.replaceAll(regExample, "$1-$2-$3");
     }
 
-    public boolean checkDuplication(ArrayList<String> arrayList, String str) {
-        for (int i = 0; i < arrayList.size(); i++) {
-            if (arrayList.get(i).equals(str)) {
+    public boolean checkDuplication(ArrayList <String> arrayList, String str)
+    {
+        for (int i = 0; i < arrayList.size(); i++)
+        {
+            if (arrayList.get(i).equals(str))
+            {
                 return true;
             }
         }

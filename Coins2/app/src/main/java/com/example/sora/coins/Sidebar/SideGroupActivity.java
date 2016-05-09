@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sora.coins.etc.MyInfo;
@@ -31,8 +30,8 @@ public class SideGroupActivity extends AppCompatActivity implements View.OnClick
 
     MyInfo myInfo;
 
-    Button maker, invite, join;
-    TextView codeText;
+    Button maker, checker, invite, join;
+    EditText codeEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -43,16 +42,14 @@ public class SideGroupActivity extends AppCompatActivity implements View.OnClick
         myInfo = MyInfo.getInstance();
 
         maker = (Button)findViewById(R.id.groupMaker);
+        checker = (Button)findViewById(R.id.groupChecker);
         invite = (Button) findViewById(R.id.groupInvite);
         join = (Button) findViewById(R.id.groupJoin);
 
-        codeText = (TextView) findViewById(R.id.groupCodeText);
-
-        if(myInfo.getGroupCode().equals("000000")){
-            codeText.setText("그룹에 가입하세요.");
-        }else codeText.setText("나의 그룹코드는 " + myInfo.getGroupCode() + " 입니다.");
+        codeEdit = (EditText) findViewById(R.id.groupCodeEdit);
 
         maker.setOnClickListener(this);
+        checker.setOnClickListener(this);
         invite.setOnClickListener(this);
         join.setOnClickListener(this);
     }
@@ -60,6 +57,7 @@ public class SideGroupActivity extends AppCompatActivity implements View.OnClick
     @Override
     protected void onResume() {
         super.onResume();
+
 
         if(myInfo.getGroupCode().equals("000000")) {
             maker.setEnabled(true);
@@ -82,12 +80,24 @@ public class SideGroupActivity extends AppCompatActivity implements View.OnClick
                 groupMake.execute(myInfo.getID());
                 break;
 
+            case R.id.groupChecker:
+                Toast.makeText(getApplicationContext(), myInfo.getGroupCode(), Toast.LENGTH_SHORT).show();
+                break;
+
             case R.id.groupInvite:
                 // 문자로 code 보내줌
                 break;
 
             case R.id.groupJoin :
-                // alert dialog 만들기
+                String str = codeEdit.getText().toString();
+
+                if(str.length()!=6) {
+                    Toast.makeText(SideGroupActivity.this, "코드 형식이 아닙니다.", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    GroupJoin groupJoin = new GroupJoin();
+                    groupJoin.execute(myInfo.getID(), str);
+                }
                 break;
 
         }

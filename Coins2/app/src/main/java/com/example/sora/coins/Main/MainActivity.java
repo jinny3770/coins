@@ -288,7 +288,6 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
                         startActivity(intent);
                         break;
 
-
                     case R.id.side_setting: // 환경 설정
                         intent = new Intent(getApplicationContext(), SideSettingActivity.class);
                         startActivity(intent);

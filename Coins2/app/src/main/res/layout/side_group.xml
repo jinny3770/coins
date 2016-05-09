@@ -1,80 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#dee0df"
     android:orientation="vertical"
     tools:context="com.androidhuman.example.navigationdrawer.basicfragments.app.fragGroup">
 
-    <RelativeLayout
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp">
+        android:text="그룹코드 확인"
+        android:id="@+id/groupChecker">
+    </Button>
 
-        <TextView
-            android:id="@+id/groupCodeText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:text="나의 그룹코드는 "
-            android:textColor="#5e6472"
-            android:textSize="18dp" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="그룹생성"
+        android:id="@+id/groupMaker">
+    </Button>
 
-        <!--  <Button
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:text="그룹코드 확인"
-              android:id="@+id/groupChecker">
-          </Button> -->
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="그룹초대"
+        android:id="@+id/groupInvite">
+    </Button>
 
-        <Button
-            android:id="@+id/groupMaker"
-            android:layout_width="@dimen/activity_sideGroup_button_width"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/groupCodeText"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center_vertical"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/button_layout"
-            android:paddingBottom="@dimen/activity_sideGroup_button_padding"
-            android:paddingTop="@dimen/activity_sideGroup_button_padding"
-            android:text="그룹만들기"
-            android:textColor="@color/colorPrimary"
-            android:textSize="@dimen/activity_sideGroup_fontSize"></Button>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/groupCodeEdit">
+    </EditText>
 
-        <Button
-            android:id="@+id/groupInvite"
-            android:layout_width="@dimen/activity_sideGroup_button_width"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/groupMaker"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center_vertical"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/button_layout"
-            android:paddingBottom="@dimen/activity_sideGroup_button_padding"
-            android:paddingTop="@dimen/activity_sideGroup_button_padding"
-            android:text="그룹초대하기"
-            android:textColor="@color/colorPrimary"
-            android:textSize="@dimen/activity_sideGroup_fontSize"></Button>
-
-
-        <Button
-            android:id="@+id/groupJoin"
-            android:layout_width="@dimen/activity_sideGroup_button_width"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/groupInvite"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center_vertical"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/button_layout"
-            android:paddingBottom="@dimen/activity_sideGroup_button_padding"
-            android:paddingTop="@dimen/activity_sideGroup_button_padding"
-            android:text="그룹가입하기"
-            android:textColor="@color/colorPrimary"
-            android:textSize="@dimen/activity_sideGroup_fontSize"></Button>
-
-
-    </RelativeLayout>
-</RelativeLayout>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="그룹가입"
+        android:id="@+id/groupJoin">
+    </Button>
+</LinearLayout>
