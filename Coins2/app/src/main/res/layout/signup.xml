@@ -5,7 +5,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#dee0df">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,14 +16,30 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ID" />
+            android:text="ID"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="50dp"
+            android:textColor="#5e6472"
+            android:textSize="18dp"/>
 
         <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/signUpID"
+            android:layout_width="20dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="10dp"
             android:layout_weight="1"
-            android:inputType="textEmailAddress"
-            android:id="@+id/signUpID"/>
+            android:background="#ffffff"
+            android:hint="아이디를 입력하세요."
+            android:textColor="#5e6472"
+            android:textColorHint="#5e6472"
+            android:textSize="18dp"
+            android:textAlignment="center"
+
+            />
+
+
 
     </LinearLayout>
 
@@ -34,14 +51,65 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="PW" />
+            android:text="NAME"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="3dp"
+            android:textColor="#5e6472"
+            android:textSize="18dp"/>
 
         <EditText
+            android:id="@+id/signUpName"
+            android:layout_width="20dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:background="#ffffff"
+            android:hint="이름을 입력하세요."
+            android:textColor="#5e6472"
+            android:textColorHint="#5e6472"
+            android:textSize="18dp"
+            android:textAlignment="center"
+            />
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="PW"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:textColor="#5e6472"
+            android:textSize="18dp"/>
+
+        <EditText
+            android:id="@+id/signUpPW"
+            android:layout_width="20dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="10dp"
             android:layout_weight="1"
+            android:background="#ffffff"
+            android:hint="비밀번호를 입력하세요."
+            android:textColor="#5e6472"
+            android:textColorHint="#5e6472"
+            android:textSize="18dp"
+            android:textAlignment="center"
             android:inputType="textPassword"
-            android:id="@+id/signUpPW"/>
+            />
+
+
+
 
     </LinearLayout>
 
@@ -53,42 +121,43 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Refeat" />
+            android:text="PW"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:textColor="#5e6472"
+            android:textSize="18dp"/>
+
+
 
         <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/signUpPWRepeat"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="10dp"
             android:layout_weight="1"
+            android:background="#ffffff"
+            android:hint="비밀번호를 다시 입력하세요."
+            android:textColor="#5e6472"
+            android:textColorHint="#5e6472"
+            android:textSize="18dp"
+            android:textAlignment="center"
             android:inputType="textPassword"
             android:privateImeOptions="defaultInputmode=english"
-            android:id="@+id/signUpPWRepeat"/>
+            />
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Name" />
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="영어 32자, 한글 16자 이내"
-            android:textAlignment="center"
-            android:id="@+id/signUpName"/>
-
-    </LinearLayout>
 
     <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Sign UP"
-        android:id="@+id/signupButton"/>
+        android:id="@+id/signupButton"
+        android:layout_width="130dp"
+        android:layout_height="45dp"
+        android:layout_marginLeft="110dp"
+        android:layout_marginTop="50dp"
+        android:background="#5e6472"
+        android:text="회원가입"
+        android:textSize="15dp"/>
 
 </LinearLayout>
