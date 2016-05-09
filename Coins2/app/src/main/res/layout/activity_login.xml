@@ -93,7 +93,7 @@
                     android:layout_width="130dp"
                     android:layout_height="45dp"
                     android:layout_marginLeft="5dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="30dp"
                     android:background="#5e6472"
                     android:text="로그인"
                     android:textSize="15dp"/>
