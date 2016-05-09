@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.sora.coins">
 
+    <uses-feature
+        android:name="android.hardware.nfc"
+        android:required="false" />
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="17" />
@@ -114,17 +117,14 @@
         <activity android:name=".Destination.DestinationSelectActivity" />
         <activity android:name=".Destination.DestinationListActivity" />
         <activity android:name=".Destination.DestinationViewActivity" />
-        <activity android:name=".LockScreenActivity" />
-
 
         <service android:name=".LockScreen.LockScreenService" />
-        <service android:name=".etc.GCMIntentService" />
-
+        <service android:name=".GCMIntentService" />
+        <service android:name=".Main.LocationService" />
 
         <receiver android:name=".LockScreen.LockScreenReceiver" />
         <receiver android:name=".LockScreen.DeliverReceiver" />
         <receiver android:name=".LockScreen.SendReceiver" />
-
 
     </application>
 </manifest>

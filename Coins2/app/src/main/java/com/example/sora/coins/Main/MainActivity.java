@@ -78,6 +78,10 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
     Bitmap bitmap;
 
 
+    static TMapPoint curLoca2;                      // 합친부분!
+    static TMapGpsManager tMapGpsManager2;          // 합친부분!
+
+
     // 드로어 & 사이드바 관련 변수
     DrawerLayout sideLayout;
     ActionBarDrawerToggle sideToggle;
@@ -224,6 +228,13 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
 
         curLoca = tMapGpsManager.getLocation();
 
+        tMapGpsManager2 = new TMapGpsManager(this);                          //추가!!
+        tMapGpsManager2.setProvider(TMapGpsManager.NETWORK_PROVIDER);      //추가!!
+        tMapGpsManager2.setMinTime(defaultMinTime);                         //추가!!
+        tMapGpsManager2.setMinDistance(defaultMinDistance);                 //추가!!
+        tMapGpsManager2.OpenGps();                                              //추가!!
+        curLoca2 = tMapGpsManager2.getLocation();
+
         mapView = new TMapView(this);
         mapView.setTrackingMode(true);
         mapView.setSKPMapApiKey(APIKey.ApiKey);
@@ -232,6 +243,9 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
 
         mapLayout = (LinearLayout) findViewById(R.id.mapView);
         mapLayout.addView(mapView);
+
+        Intent service = new Intent(this, LocationService.class);           //추가!!
+        startService(service);
 
         bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_action_place);
 

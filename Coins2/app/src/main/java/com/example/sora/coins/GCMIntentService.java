@@ -1,4 +1,4 @@
-package com.example.sora.coins.etc;
+package com.example.sora.coins;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -7,17 +7,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.example.sora.coins.Chat.SendBirdChannelListActivity;
+import com.example.sora.coins.Chat.SendBirdMessagingChannelListActivity;
 import com.example.sora.coins.Main.MainActivity;
-import com.example.sora.coins.R;
+
 import com.google.android.gcm.GCMBaseIntentService;
+import com.sendbird.android.SendBird;
 
 /**
  * Created by Administrator on 2016-04-23.
  */
+
 public class GCMIntentService extends GCMBaseIntentService
 {
     private static final String tag = "GCMIntentService";
-    private static final String ProjectID = "massive-dynamo-127407";
+    private static final String projectID = "massive-dynamo-127407";
 
     private static void generateNotification(Context context, String message)
     {
@@ -45,12 +49,12 @@ public class GCMIntentService extends GCMBaseIntentService
 
     public GCMIntentService()
     {
-        this(ProjectID);
+        this(projectID);
     }
 
-    public GCMIntentService(String project_id)
+    public GCMIntentService(String projectID)
     {
-        super(project_id);
+        super(projectID);
     }
 
     /* 푸시로 받은 메시지 */
