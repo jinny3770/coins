@@ -56,7 +56,7 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
     static final String walkURL = "https://apis.skplanetx.com/tmap/routes/pedestrian?version=1";
     static final String bicycleURL = "https://apis.skplanetx.com/tmap/routes/bicycle?version=1";
     static final String carURL = "https://apis.skplanetx.com/tmap/routes?version=1";
-    static final String resistURL = "http://52.79.124.54/destinationResist.php";
+    static final String resistURL = "http://52.79.124.54/destinationsResist.php";
 
     LinearLayout mapLayout;
     TMapView mapView;
@@ -65,7 +65,7 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
     ImageButton desButton, sendButton;
 
     EditText searchText;
-    Button searchButton;
+    ImageButton searchButton;
 
     DestinationInfo destinationInfo;
     Date currentTime;
@@ -96,7 +96,7 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
         mapView.setTMapPathIcon(departure, arrival);
 
         searchText = (EditText) findViewById(R.id.searchText);
-        searchButton = (Button) findViewById(R.id.searchButton);
+        searchButton = (ImageButton) findViewById(R.id.searchButton);
         desButton = (ImageButton) findViewById(R.id.desButton);
         sendButton = (ImageButton) findViewById(R.id.sendButton);
 

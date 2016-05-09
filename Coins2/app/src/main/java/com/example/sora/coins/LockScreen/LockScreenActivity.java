@@ -5,10 +5,14 @@ import android.content.*;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.telephony.SmsManager;
+import android.util.Log;
 import android.view.*;
 import android.widget.*;
 
 import com.example.sora.coins.R;
+import com.example.sora.coins.etc.Settings;
+
+import java.util.ArrayList;
 
 /**
  * Created by Administrator on 2016-03-23.
@@ -16,8 +20,9 @@ import com.example.sora.coins.R;
 
 public class LockScreenActivity extends Activity implements View.OnTouchListener
 {
+    private String numbers[];
+    private int initX, offsetX;
     private static MediaPlayer alertPlayer;
-    private int offsetX;
     private ImageView alert, select, unlock;
 
     @Override
@@ -31,8 +36,19 @@ public class LockScreenActivity extends Activity implements View.OnTouchListener
         alert = (ImageView) findViewById(R.id.alert);
         select = (ImageView) findViewById(R.id.select);
         unlock = (ImageView) findViewById(R.id.unlock);
-
+        initX = select.getWidth();
         select.setOnTouchListener(this);
+
+        SharedPreferences pref = getSharedPreferences("pref", 0);
+        String phone = pref.getString("phone", null);
+
+        if (phone != null)
+        {
+            phone = phone.replace("[", "");
+            phone = phone.replace("]", "");
+            phone = phone.replace("\"", "");
+            numbers = phone.split(",");
+        }
     }
 
     @Override
@@ -52,7 +68,7 @@ public class LockScreenActivity extends Activity implements View.OnTouchListener
                 break;
 
             case MotionEvent.ACTION_UP:
-                check(select, alert, unlock);
+                select.setTranslationX(initX);
                 break;
         }
 
@@ -68,30 +84,40 @@ public class LockScreenActivity extends Activity implements View.OnTouchListener
                 return true;
         }
 
-        return true;
+        return super.onKeyDown(keyCode, event);
     }
 
     public void check(View select, View alert, View unlock)
     {
-        if (select.getX() < alert.getX() + 40)
+        if (select.getX() < alert.getX() + 25)
         {
             alertPlayer.start();
-            sendSMS("010-5103-5364", "문자보내기 테스트");
+            sendSMS(numbers, "문자보내기 테스트");
+            select.setTranslationX(initX);
             finish();
         }
 
-        else if (select.getX() > unlock.getX() - 40)
+        else if (select.getX() > unlock.getX() - 25)
         {
+            select.setTranslationX(initX);
             finish();
         }
     }
 
-    private void sendSMS(String number, String message)
+    private void sendSMS(String numbers[], String message)
     {
-        String SENT = "SMS_SENT";
-        String DELIVERED = "SMS_DELIVERED";
-        BroadcastReceiver send = new SendReceiver();
-        BroadcastReceiver deliver = new DeliverReceiver();
+        if (numbers == null)
+        {
+            Toast.makeText(getApplicationContext(), "비상연락망 리스트가 없습니다.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        else
+        {
+            String SENT = "SMS_SENT";
+            String DELIVERED = "SMS_DELIVERED";
+            BroadcastReceiver send = new SendReceiver();
+            BroadcastReceiver deliver = new DeliverReceiver();
 
         PendingIntent sentPI = PendingIntent.getBroadcast(this, 0, new Intent(SENT), 0); // 문자 보내는 상태 감지하는 Intent
         PendingIntent deliveredPI = PendingIntent.getBroadcast(this, 0, new Intent(DELIVERED), 0); // 문자 받는 상태 감지하는 Intent
@@ -99,10 +125,15 @@ public class LockScreenActivity extends Activity implements View.OnTouchListener
         registerReceiver(send, new IntentFilter(SENT));
         registerReceiver(deliver, new IntentFilter(DELIVERED));
 
-        SmsManager sms = SmsManager.getDefault();
-        sms.sendTextMessage(number, null, message, sentPI, deliveredPI);
+            SmsManager sms = SmsManager.getDefault();
 
-        unregisterReceiver(send);
-        unregisterReceiver(deliver);
+            for (int i = 0; i < numbers.length; i++)
+            {
+                sms.sendTextMessage(numbers[i], null, message, sentPI, deliveredPI);
+            }
+
+            unregisterReceiver(send);
+            unregisterReceiver(deliver);
+        }
     }
 }

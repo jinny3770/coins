@@ -17,12 +17,11 @@ import java.util.Collections;
 /**
  * Created by sora on 2016-04-14.
  */
-public class ListViewAdapter extends BaseAdapter
-{
+public class FamilyListViewAdapter extends BaseAdapter {
     private Context myContext = null;
-    private ArrayList<ListData> myListData = new ArrayList<ListData>();
+    private ArrayList<FamilyListData> myListData = new ArrayList<FamilyListData>();
 
-    public ListViewAdapter(Context mContext) {
+    public FamilyListViewAdapter(Context mContext) {
         super();
         this.myContext = mContext;
     }
@@ -43,39 +42,30 @@ public class ListViewAdapter extends BaseAdapter
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent)
-    {
-        ViewHolder holder;
+    public View getView(int position, View convertView, ViewGroup parent) {
+        FamilyViewHolder holder;
 
-        if (convertView == null)
-        {
-            holder = new ViewHolder();
+        if (convertView == null) {
+            holder = new FamilyViewHolder();
 
             LayoutInflater inflater = (LayoutInflater) myContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.familylist, null);
+            convertView = inflater.inflate(R.layout.family_list_shape, null);
 
             holder.icon = (ImageView) convertView.findViewById(R.id.familyPicture);
             holder.name = (TextView) convertView.findViewById(R.id.familyName);
             holder.loca = (TextView) convertView.findViewById(R.id.familyLoca);
 
             convertView.setTag(holder);
+        } else {
+            holder = (FamilyViewHolder) convertView.getTag();
         }
 
-        else
-        {
-            holder = (ViewHolder) convertView.getTag();
-        }
+        FamilyListData myData = myListData.get(position);
 
-        ListData myData = myListData.get(position);
-
-        if (myData.icon != null)
-        {
+        if (myData.icon != null) {
             holder.icon.setVisibility(View.VISIBLE);
             holder.icon.setImageDrawable(myData.icon);
-        }
-
-        else
-        {
+        } else {
             holder.icon.setVisibility(View.GONE);
         }
 
@@ -85,10 +75,9 @@ public class ListViewAdapter extends BaseAdapter
         return convertView;
     }
 
-    public void addItem(Drawable icon, String name, String loca)
-    {
-        ListData addInfo = null;
-        addInfo = new ListData();
+    public void addItem(Drawable icon, String name, String loca) {
+        FamilyListData addInfo = null;
+        addInfo = new FamilyListData();
         addInfo.icon = icon;
         addInfo.name = name;
         addInfo.loca = loca;
@@ -96,20 +85,17 @@ public class ListViewAdapter extends BaseAdapter
         myListData.add(addInfo);
     }
 
-    public void remove(int position)
-    {
+    public void remove(int position) {
         myListData.remove(position);
         dataChange();
     }
 
-    public void sort()
-    {
-        Collections.sort(myListData, ListData.comparator);
+    public void sort() {
+        Collections.sort(myListData, FamilyListData.comparator);
         dataChange();
     }
 
-    public void dataChange()
-    {
+    public void dataChange() {
         this.notifyDataSetChanged();
     }
 }

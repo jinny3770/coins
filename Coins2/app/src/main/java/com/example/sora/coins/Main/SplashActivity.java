@@ -10,8 +10,10 @@ import com.example.sora.coins.R;
 /**
  * Created by Administrator on 2016-04-25.
  */
-public class SplashActivity extends AppCompatActivity {
-    final int splashTime = 2500;
+
+public class SplashActivity extends AppCompatActivity
+{
+    final int splashTime = 3000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,7 +22,7 @@ public class SplashActivity extends AppCompatActivity {
 
         try
         {
-            Thread.sleep(2500);
+            Thread.sleep(splashTime);
         }
 
         catch (InterruptedException ie)

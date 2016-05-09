@@ -4,4 +4,7 @@
     <color name="colorPrimaryDark">#1BA4F7</color>
     <color name="colorAccent">#dee0df</color>
     <color name="familyList">#e8b2b0</color>
+    <color name="pointColor">#5dc0bb</color>
+    <color name="pointColor2">#4ba5a0</color>
+    <color name="white">#ffffff</color>
 </resources>

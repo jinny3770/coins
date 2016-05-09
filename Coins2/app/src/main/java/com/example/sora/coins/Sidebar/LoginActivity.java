@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sora.coins.etc.MyInfo;
@@ -39,6 +40,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     Button signup, login;
     MyInfo myInfo;
 
+    TextView textView;
+
     LoginTask loginTask;
 
     @Override
@@ -52,17 +55,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         id = (EditText) findViewById(R.id.IDEdit);
         pw = (EditText) findViewById(R.id.PWEdit);
 
-        signup = (Button) findViewById(R.id.signup);
+        //signup = (Button) findViewById(R.id.signup);
         login = (Button) findViewById(R.id.login);
+        textView = (TextView) findViewById(R.id.textView);
 
-        signup.setOnClickListener(this);
+        //signup.setOnClickListener(this);
         login.setOnClickListener(this);
+        textView.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.signup:
+            case R.id.textView:
                 Intent intent = new Intent(getApplicationContext(), SignUpActivity.class);
                 startActivity(intent);
                 break;

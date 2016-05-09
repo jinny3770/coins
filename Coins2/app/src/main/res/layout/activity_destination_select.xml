@@ -16,14 +16,15 @@
             android:layout_height="match_parent"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:background="#ffffff"
-            android:textColor="@color/colorPrimary" />
+            android:background="@color/colorPrimary"
+            android:hint="목적지를 검색하세요."
+            android:textColor="@color/white" />
 
-        <Button
+        <ImageButton
             android:id="@+id/searchButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="검색" />
+            android:src="@drawable/ic_search" />
 
 
     </LinearLayout>
@@ -43,21 +44,24 @@
 
         <ImageButton
             android:id="@+id/desButton"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="20dp"
-            android:src="@drawable/ic_action_location_found" />
+            android:background="@drawable/button_layout"
+            android:src="@drawable/main_mylocation" />
 
         <ImageButton
             android:id="@+id/sendButton"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
             android:layout_below="@+id/desButton"
             android:layout_marginLeft="20dp"
-            android:src="@drawable/ic_action_send_now" />
+            android:layout_marginTop="5dp"
+            android:background="@drawable/button_layout"
+            android:src="@drawable/mylocation_send" />
 
         <ImageView
             android:layout_width="wrap_content"
