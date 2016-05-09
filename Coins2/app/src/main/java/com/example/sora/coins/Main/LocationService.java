@@ -97,9 +97,10 @@ public class LocationService extends Service implements Runnable {
 
             myInfo.setPoint(curLoca);
 
+            /* 위치 db에 update하는 부분
             UpdateLocation updateLocation = new UpdateLocation();
             updateLocation.execute(myInfo.getID(), Double.toString(lat), Double.toString(lon));
-
+            */
             Log.d("111111Long", String.valueOf(lon));
             Log.d("111111Lati", String.valueOf(lat));
             Log.d("111111Service", "" + mCounter);

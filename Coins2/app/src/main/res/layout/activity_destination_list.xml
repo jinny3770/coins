@@ -36,7 +36,7 @@
         android:src="@drawable/ic_destination_add"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_margin="@dimen/floatingButton_margin"
+        android:layout_margin="@dimen/default_margin"
         app:backgroundTint="@color/pointColor2" />
 
     </RelativeLayout>

@@ -10,7 +10,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="center_vertical"
-        android:layout_margin="@dimen/defalut_margin"
+        android:layout_margin="@dimen/default_margin"
         android:src="@drawable/ic_chat" />
 
     <LinearLayout

@@ -5,9 +5,9 @@
     android:background="@drawable/lockscreen_image">
 
     <ImageView
-        android:layout_marginRight="30dp"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_marginRight="@dimen/activity_lockScreen_margin_small"
+        android:layout_width="@dimen/activity_lockScreen_imageSize"
+        android:layout_height="@dimen/activity_lockScreen_imageSize"
         android:background="@drawable/alert_image"
         android:id="@+id/alert"
         android:layout_alignTop="@+id/select"
@@ -16,19 +16,19 @@
     </ImageView>
 
     <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="@dimen/activity_lockScreen_imageSize"
+        android:layout_height="@dimen/activity_lockScreen_imageSize"
         android:background="@drawable/lock_image"
         android:id="@+id/select"
-        android:layout_marginBottom="70dp"
+        android:layout_marginBottom="@dimen/activity_lockScreen_margin_large"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true">
     </ImageView>
 
     <ImageView
-        android:layout_marginLeft="30dp"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_marginLeft="@dimen/activity_lockScreen_margin_small"
+        android:layout_width="@dimen/activity_lockScreen_imageSize"
+        android:layout_height="@dimen/activity_lockScreen_imageSize"
         android:background="@drawable/unlock_image"
         android:id="@+id/unlock"
         android:layout_alignTop="@+id/select"
