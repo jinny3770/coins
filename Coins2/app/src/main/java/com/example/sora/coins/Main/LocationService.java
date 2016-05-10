@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.example.sora.coins.R;
 import com.example.sora.coins.etc.APIKey;
 import com.example.sora.coins.etc.MyInfo;
+import com.example.sora.coins.etc.Settings;
 import com.skp.Tmap.TMapGpsManager;
 import com.skp.Tmap.TMapMarkerItem;
 import com.skp.Tmap.TMapPoint;
@@ -26,6 +27,7 @@ import java.util.Timer;
 
 import android.os.Handler;
 
+import java.util.concurrent.ExecutionException;
 import java.util.logging.LogRecord;
 
 public class LocationService extends Service implements Runnable {
@@ -35,6 +37,7 @@ public class LocationService extends Service implements Runnable {
     TMapGpsManager tMapGpsManager;
 
     MyInfo myInfo;
+    Settings settings;
 
     private int mStartId;
     private Handler mHandler;
@@ -46,7 +49,6 @@ public class LocationService extends Service implements Runnable {
     public void onCreate() {
         Log.d("111111Service", "onCreate() Call.");
         super.onCreate();
-        myInfo = MyInfo.getInstance();
         mHandler = new Handler();
         mIsRunning = false;
     }
@@ -59,6 +61,10 @@ public class LocationService extends Service implements Runnable {
             mHandler.postDelayed(this, TIMER_PERIOD);
             mIsRunning = true;
         }
+
+        myInfo = MyInfo.getInstance();
+        settings = Settings.getInstance();
+
         return START_REDELIVER_INTENT;
     }
 
@@ -97,10 +103,20 @@ public class LocationService extends Service implements Runnable {
 
             myInfo.setPoint(curLoca);
 
-            /* 위치 db에 update하는 부분
-            UpdateLocation updateLocation = new UpdateLocation();
-            updateLocation.execute(myInfo.getID(), Double.toString(lat), Double.toString(lon));
-            */
+            if(settings.getLogin()) {
+
+                Log.i("LoginSuccess", "login");
+                UpdateLocation updateLocation = new UpdateLocation();
+
+                try {
+                    String str = updateLocation.execute(myInfo.getID(), String.valueOf(lat), String.valueOf(lon)).get().toString();
+                    Log.i("UpdateLocation", str);
+                    
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
             Log.d("111111Long", String.valueOf(lon));
             Log.d("111111Lati", String.valueOf(lat));
             Log.d("111111Service", "" + mCounter);
