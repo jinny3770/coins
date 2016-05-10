@@ -30,8 +30,8 @@
 
                 <ImageButton
                     android:id="@+id/locaButton"
-                    android:layout_width="@dimen/icon_size"
-                    android:layout_height="@dimen/icon_size"
+                    android:layout_width="@dimen/iconSize"
+                    android:layout_height="@dimen/iconSize"
                     android:layout_margin="20dp"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentLeft="true"

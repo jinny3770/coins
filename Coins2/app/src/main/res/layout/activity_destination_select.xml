@@ -44,8 +44,8 @@
 
         <ImageButton
             android:id="@+id/desButton"
-            android:layout_width="@dimen/icon_size"
-            android:layout_height="@dimen/icon_size"
+            android:layout_width="@dimen/iconSize"
+            android:layout_height="@dimen/iconSize"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="@dimen/activity_destinationSelect_margin"
@@ -55,8 +55,8 @@
 
         <ImageButton
             android:id="@+id/sendButton"
-            android:layout_width="@dimen/icon_size"
-            android:layout_height="@dimen/icon_size"
+            android:layout_width="@dimen/iconSize"
+            android:layout_height="@dimen/iconSize"
             android:layout_below="@+id/desButton"
             android:layout_marginLeft="@dimen/activity_destinationSelect_margin"
             android:layout_marginTop="@dimen/activity_destinationSelect_margin_small"
