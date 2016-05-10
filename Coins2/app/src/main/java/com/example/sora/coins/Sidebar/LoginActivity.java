@@ -1,6 +1,7 @@
 package com.example.sora.coins.Sidebar;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,7 +14,6 @@ import android.widget.Toast;
 
 import com.example.sora.coins.etc.MyInfo;
 import com.example.sora.coins.R;
-import com.example.sora.coins.etc.Settings;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,13 +34,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     final static String loginURL = "http://52.79.124.54/login.php";
 
-    Settings settings;
-
-    EditText id, pw;
-    Button signup, login;
     MyInfo myInfo;
 
+    EditText id, pw;
+    Button login;
     TextView textView;
+
+    SharedPreferences loginPref;
+    SharedPreferences.Editor loginPrefEditor;
+
 
     LoginTask loginTask;
 
@@ -50,16 +52,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_login);
 
         myInfo = MyInfo.getInstance();
-        settings = Settings.getInstance();
 
         id = (EditText) findViewById(R.id.IDEdit);
         pw = (EditText) findViewById(R.id.PWEdit);
 
-        //signup = (Button) findViewById(R.id.signup);
         login = (Button) findViewById(R.id.login);
         textView = (TextView) findViewById(R.id.textView);
 
-        //signup.setOnClickListener(this);
+        loginPref = getSharedPreferences("Login", 0);
+        loginPrefEditor = loginPref.edit();
+
         login.setOnClickListener(this);
         textView.setOnClickListener(this);
     }
@@ -74,26 +76,72 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             case R.id.login:
 
-                if(LoginCheck()) {
+                if (LoginCheck()) {
                     loginTask = new LoginTask();
-                    loginTask.execute(id.getText().toString(), pw.getText().toString());
+                    try {
+                        String s = loginTask.execute(id.getText().toString(), pw.getText().toString()).get();
+                        myInfoParsing(s);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 break;
         }
     }
 
     boolean LoginCheck() {
-        if(id.getText().length() == 0) {
+        if (id.getText().length() == 0) {
             Toast.makeText(getApplicationContext(), "ID를 입력해주세요.", Toast.LENGTH_SHORT).show();
             return false;
         }
 
-        if(pw.getText().length() == 0) {
+        if (pw.getText().length() == 0) {
             Toast.makeText(LoginActivity.this, "PW를 입력해주세요.", Toast.LENGTH_SHORT).show();
             return false;
         }
 
         return true;
+    }
+
+
+    void myInfoParsing(String s) {
+
+        JSONObject jsonObj;
+        JSONArray jsonArray;
+
+
+        if (s.equals("fail")) {
+            Toast.makeText(LoginActivity.this, "비밀번호가 다릅니다.", Toast.LENGTH_LONG).show();
+        } else if (s.equals("not exist")) {
+            Toast.makeText(LoginActivity.this, "존재하지 않습니다.", Toast.LENGTH_LONG).show();
+        } else {
+
+            myInfo.setID(id.getText().toString());
+
+            try {
+                jsonArray = new JSONArray(s);
+                jsonObj = jsonArray.getJSONObject(0);
+
+                String name = jsonObj.getString("name");
+                String groupCode = jsonObj.getString("group_code");
+                myInfo.setName(name);
+                myInfo.setGroupCode(groupCode);
+
+                //id groupcode name point
+                loginPrefEditor.putString("ID", id.getText().toString());
+                loginPrefEditor.putString("PW", pw.getText().toString());
+                loginPrefEditor.putString("Name", name);
+                loginPrefEditor.putString("Code", groupCode);
+                loginPrefEditor.putBoolean("AutoLogin", true);
+                loginPrefEditor.commit();
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            finish();
+        }
     }
 
     class LoginTask extends AsyncTask<String, Void, String> {
@@ -136,41 +184,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 e.printStackTrace();
                 Log.e("error", e.getMessage());
                 return e.getMessage();
-            }
-        }
-
-
-        @Override
-        protected void onPostExecute(String s) {
-
-            JSONObject jsonObj;
-            JSONArray jsonArray;
-
-
-            if (s.equals("fail")) {
-                Toast.makeText(LoginActivity.this, "비밀번호가 다릅니다.", Toast.LENGTH_LONG).show();
-            } else if (s.equals("not exist")) {
-                Toast.makeText(LoginActivity.this, "존재하지 않습니다.", Toast.LENGTH_LONG).show();
-            } else {
-                myInfo.setID(id.getText().toString());
-
-                try {
-                    jsonArray = new JSONArray(s);
-
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        jsonObj = jsonArray.getJSONObject(i);
-                        myInfo.setName(jsonObj.getString("name"));
-                        myInfo.setGroupCode(jsonObj.getString("group_code"));
-                    }
-                    //myInfo.setName(jsonObj.getString("name"));
-                    //
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                settings.setLogin(true);
-                finish();
             }
         }
 

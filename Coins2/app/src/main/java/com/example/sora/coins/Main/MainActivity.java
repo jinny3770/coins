@@ -40,7 +40,6 @@ import com.example.sora.coins.Sidebar.SideWarningActivity;
 import com.example.sora.coins.etc.APIKey;
 import com.example.sora.coins.etc.MyInfo;
 import com.example.sora.coins.etc.PersonInfo;
-import com.example.sora.coins.etc.Settings;
 import com.google.android.gcm.GCMRegistrar;
 import com.skp.Tmap.TMapData;
 import com.skp.Tmap.TMapGpsManager;
@@ -91,7 +90,6 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
 
     // 내 정보
     MyInfo myInfo;
-    Settings settings;
 
 
     // 하단 가족 리스트뷰
@@ -116,31 +114,44 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
             stopService(intent);
         }
 
+
+        AutoLoginCheck();
+
         // 현재 위치 설정
         curLoca = tMapGpsManager.getLocation();
         showMyLocation();
 
 
         // 로그인 여부 확인 후 가족 리스트 불러오기
-        if (settings.getLogin()) {
+        if (myInfo.getID() != null) {
             if (flag) {
                 flag = false;
 
                 try {
                     String returnString = new LoadFamilyList().execute(myInfo.getGroupCode()).get();
+                    Log.i("FamilyLoading", returnString);
+
                     JSONArray jsonArray = new JSONArray(returnString);
+                    Log.i("FamilyLoading", Integer.toString(jsonArray.length()));
 
                     // ArrayList에 저장하고 Listview에 추가
-                    for (int i = 0; i < jsonArray.length(); i++) {
+                    for (int i = 0, j = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
                         PersonInfo pInfo = new PersonInfo();
 
-                        pInfo.setID(jsonObject.getString("id"));
-                        pInfo.setGroupCode(myInfo.getGroupCode());
-                        pInfo.setName(jsonObject.getString("name"));
-                        pInfo.setPoint(new TMapPoint(37.58141461906891, 127.00945944471735));
-                        family.add(pInfo);
-                        familyAdapter.addItem(getResources().getDrawable(R.drawable.ic_profile), family.get(i).getName(), pointToString(family.get(i).getPoint()));
+                        if(!jsonObject.getString("id").equals(myInfo.getID())) {
+
+                            Log.i("FamilyLoading", Integer.toString(i) + " : " + jsonObject.getString("id"));
+
+
+                            pInfo.setID(jsonObject.getString("id"));
+                            pInfo.setGroupCode(myInfo.getGroupCode());
+                            pInfo.setName(jsonObject.getString("name"));
+                            pInfo.setPoint(new TMapPoint(jsonObject.getDouble("latitude"), jsonObject.getDouble("longitude")));
+                            family.add(pInfo);
+                            familyAdapter.addItem(getResources().getDrawable(R.drawable.ic_profile), family.get(j).getName(), pointToString(family.get(j).getPoint()));
+                            j++;
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -162,6 +173,7 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
                 familyLoca.setIcon(bitmap);
                 familyLoca.setPosition((float) 0.5, (float) 1.0);
                 mapView.addMarkerItem("familyLocation", familyLoca);
+
             }
         });
     }
@@ -193,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
 
         // MyInfo instance 불러온다.
         myInfo = MyInfo.getInstance();
-        settings = Settings.getInstance();
+
 
         // 상단 액션바 & 리스너
         actionBar = getSupportActionBar();
@@ -281,15 +293,15 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
                 Intent intent;
 
                 switch (menuItem.getItemId()) {
-                    case R.id.side_login: // 로그인
-                        if (settings.getLogin()) {
+                    case R.id.side_login:
+                        // 로그인 되어있으면!
+                        if (myInfo.getID()!=null) {
                             intent = new Intent(getApplicationContext(), ProfileActivity.class);
                             startActivity(intent);
                         } else {
                             intent = new Intent(getApplicationContext(), LoginActivity.class);
                             startActivity(intent);
                         }
-
                         break;
 
                     case R.id.side_group: // 그룹 설정
@@ -373,6 +385,15 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
         return data.convertGpsToAddress(point.getLatitude(), point.getLongitude());
     }
 
+    public void AutoLoginCheck() {
+        SharedPreferences loginPref = getSharedPreferences("Login", 0);
+
+        if(loginPref.getBoolean("AutoLogin", false)){
+            myInfo.setName(loginPref.getString("Name", ""));
+            myInfo.setGroupCode(loginPref.getString("Code", "000000"));
+            myInfo.setID(loginPref.getString("ID", ""));
+        }
+    }
 
     class CustomOnclickListener implements View.OnClickListener {
         @Override

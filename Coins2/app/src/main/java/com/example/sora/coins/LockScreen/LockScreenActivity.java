@@ -5,14 +5,10 @@ import android.content.*;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.telephony.SmsManager;
-import android.util.Log;
 import android.view.*;
 import android.widget.*;
 
 import com.example.sora.coins.R;
-import com.example.sora.coins.etc.Settings;
-
-import java.util.ArrayList;
 
 /**
  * Created by Administrator on 2016-03-23.

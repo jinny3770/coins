@@ -58,7 +58,7 @@ public class DestinationListActivity extends AppCompatActivity
 
         swipe = (SwipeRefreshLayout) findViewById(R.id.swipeLayout);
         swipe.setOnRefreshListener(this);
-        
+
         listView = (ListView) findViewById(R.id.destinationList);
 
         addFloating = (FloatingActionButton) findViewById(R.id.addFloating);

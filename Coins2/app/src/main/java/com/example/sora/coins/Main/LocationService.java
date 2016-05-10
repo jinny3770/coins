@@ -2,33 +2,19 @@ package com.example.sora.coins.Main;
 
 import android.app.Service;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.media.MediaPlayer;
 import android.os.IBinder;
-import android.os.Looper;
-import android.os.Message;
-import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
-import com.example.sora.coins.R;
 import com.example.sora.coins.etc.APIKey;
 import com.example.sora.coins.etc.MyInfo;
-import com.example.sora.coins.etc.Settings;
 import com.skp.Tmap.TMapGpsManager;
-import com.skp.Tmap.TMapMarkerItem;
 import com.skp.Tmap.TMapPoint;
 import com.skp.Tmap.TMapView;
 
 import java.lang.Runnable;
-import java.util.Timer;
 
 import android.os.Handler;
-
-import java.util.concurrent.ExecutionException;
-import java.util.logging.LogRecord;
 
 public class LocationService extends Service implements Runnable {
 
@@ -37,7 +23,6 @@ public class LocationService extends Service implements Runnable {
     TMapGpsManager tMapGpsManager;
 
     MyInfo myInfo;
-    Settings settings;
 
     private int mStartId;
     private Handler mHandler;
@@ -63,7 +48,6 @@ public class LocationService extends Service implements Runnable {
         }
 
         myInfo = MyInfo.getInstance();
-        settings = Settings.getInstance();
 
         return START_REDELIVER_INTENT;
     }
@@ -100,7 +84,7 @@ public class LocationService extends Service implements Runnable {
 
             myInfo.setPoint(curLoca);
 
-            if(settings.getLogin()) {
+            if(myInfo.getID()!=null) {
 
                 Log.i("LoginSuccess", "login");
                 UpdateLocation updateLocation = new UpdateLocation();

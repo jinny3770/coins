@@ -14,9 +14,9 @@ public class PersonInfo {
 
 
     public PersonInfo() {
-        ID = new String();
-        name = new String();
-        groupCode = new String();
+        ID = null;
+        name = null;
+        groupCode = null;
     }
 
     public void setID(String ID) {

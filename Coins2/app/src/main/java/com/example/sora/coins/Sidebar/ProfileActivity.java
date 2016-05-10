@@ -1,5 +1,6 @@
 package com.example.sora.coins.Sidebar;
 
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,7 +13,6 @@ import android.widget.Toast;
 
 import com.example.sora.coins.etc.MyInfo;
 import com.example.sora.coins.R;
-import com.example.sora.coins.etc.Settings;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -34,7 +34,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     EditText nameEdit;
     Button logout, change;
 
-    Settings settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +41,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_profile);
 
         myinfo = MyInfo.getInstance();
-        settings = Settings.getInstance();
 
         ID = (TextView) findViewById(R.id.IDView);
         groupCode = (TextView) findViewById(R.id.groupCodeView);
@@ -73,7 +71,10 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
             case R.id.logoutButton :
                 myinfo.init();
-                settings.setLogin(false);
+                SharedPreferences loginPref = getSharedPreferences("Login", 0);
+                SharedPreferences.Editor loginPrefEditor = loginPref.edit();
+                loginPrefEditor.clear();
+                loginPrefEditor.commit();
                 finish();
                 break;
 
