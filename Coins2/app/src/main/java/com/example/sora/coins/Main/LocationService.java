@@ -81,9 +81,6 @@ public class LocationService extends Service implements Runnable {
         if (!mIsRunning) {
             Log.d("111111Service", "run after destroy");
             return;
-        } else if (mCounter > 50) {
-            Log.d("111111Service", "The count is " + mCounter + ", stop service");
-            stopSelf(mStartId);
         } else {
             tMapGpsManager = new TMapGpsManager(this);
             tMapGpsManager.setProvider(TMapGpsManager.NETWORK_PROVIDER);
@@ -111,7 +108,7 @@ public class LocationService extends Service implements Runnable {
                 try {
                     String str = updateLocation.execute(myInfo.getID(), String.valueOf(lat), String.valueOf(lon)).get().toString();
                     Log.i("UpdateLocation", str);
-                    
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

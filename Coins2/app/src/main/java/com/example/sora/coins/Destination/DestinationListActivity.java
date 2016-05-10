@@ -58,18 +58,19 @@ public class DestinationListActivity extends AppCompatActivity
 
         swipe = (SwipeRefreshLayout) findViewById(R.id.swipeLayout);
         swipe.setOnRefreshListener(this);
-
-        listAdapter = new DestinationListAdapter(this);
+        
         listView = (ListView) findViewById(R.id.destinationList);
-        listView.setAdapter(listAdapter);
 
         addFloating = (FloatingActionButton) findViewById(R.id.addFloating);
         addFloating.setOnClickListener(this);
     }
 
     @Override
-    protected void onPostResume() {
-        super.onPostResume();
+    protected void onResume() {
+        super.onResume();
+
+        listAdapter = new DestinationListAdapter(this);
+        listView.setAdapter(listAdapter);
 
         DestinationListInfo info;
         TMapPoint startP = null, endP = null;
