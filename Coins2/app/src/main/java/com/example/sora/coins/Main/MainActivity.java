@@ -73,6 +73,9 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
     TMapView mapView;
     TMapPoint curLoca;
     TMapMarkerItem myLoca;
+
+    ArrayList<TMapMarkerItem> familyMarker;
+
     TMapGpsManager tMapGpsManager;
     LinearLayout mapLayout;
     Bitmap bitmap;
@@ -147,9 +150,23 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
                             pInfo.setID(jsonObject.getString("id"));
                             pInfo.setGroupCode(myInfo.getGroupCode());
                             pInfo.setName(jsonObject.getString("name"));
-                            pInfo.setPoint(new TMapPoint(jsonObject.getDouble("latitude"), jsonObject.getDouble("longitude")));
+
+                            // 가족 위치 설정
+                            TMapPoint pPoint = new TMapPoint(jsonObject.getDouble("latitude"), jsonObject.getDouble("longitude"));
+                            pInfo.setPoint(pPoint);
+
+                            TMapMarkerItem marker = initFamilyMarker(pPoint);
+                            familyMarker.add(marker);
+                            mapView.addMarkerItem("family" + j, marker);
+
+
+                            // list에 추가
                             family.add(pInfo);
                             familyAdapter.addItem(getResources().getDrawable(R.drawable.ic_profile), family.get(j).getName(), pointToString(family.get(j).getPoint()));
+                            //familyMarker.add(pPoint);
+
+
+
                             j++;
                         }else{
                             myInfo.setPoint(new TMapPoint(jsonObject.getDouble("latitude"), jsonObject.getDouble("longitude")));
@@ -170,14 +187,8 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
         familyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                
                 mapView.setCenterPoint(family.get(position).getPoint().getLongitude(), family.get(position).getPoint().getLatitude());
-
-                TMapMarkerItem familyLoca = new TMapMarkerItem();
-                familyLoca.setVisible(familyLoca.VISIBLE);
-                familyLoca.setTMapPoint(family.get(position).getPoint());
-                familyLoca.setIcon(bitmap);
-                familyLoca.setPosition((float) 0.5, (float) 1.0);
-                mapView.addMarkerItem("familyLocation", familyLoca);
                 mapView.setTrackingMode(false);
 
             }
@@ -202,6 +213,7 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
 
         final String regID = GCMRegistrar.getRegistrationId(this);
 
+
         if ("".equals(regID)) {
             GCMRegistrar.register(this, "386569608668");
         } else {
@@ -212,6 +224,8 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
         // MyInfo instance 불러온다.
         myInfo = MyInfo.getInstance();
         myLoca = new TMapMarkerItem();
+
+        familyMarker = new ArrayList<TMapMarkerItem>();
 
         // 상단 액션바 & 리스너
         actionBar = getSupportActionBar();
@@ -372,6 +386,14 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
         //showMyLocation();
     }
 
+    TMapMarkerItem initFamilyMarker(TMapPoint point) {
+        TMapMarkerItem marker = new TMapMarkerItem();
+        marker.setVisible(marker.VISIBLE);
+        marker.setTMapPoint(point);
+        marker.setPosition((float) 0.5, (float) 1.0);
+        marker.setIcon(bitmap);
+        return marker;
+    }
 
     // 현재 위치 marker 설정
     protected void initMyLocation(TMapPoint mapPoint) {
