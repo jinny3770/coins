@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
 
         // 현재 위치 설정
         curLoca = tMapGpsManager.getLocation();
-        showMyLocation();
+        //showMyLocation();
 
 
         // 로그인 여부 확인 후 가족 리스트 불러오기
@@ -154,6 +154,8 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
                         }else{
                             myInfo.setPoint(new TMapPoint(jsonObject.getDouble("latitude"), jsonObject.getDouble("longitude")));
                             mapView.setLocationPoint(myInfo.getPoint().getLongitude(), myInfo.getPoint().getLatitude());
+
+                            initMyLocation(myInfo.getPoint());
                         }
                     }
                 } catch (Exception e) {
@@ -176,6 +178,7 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
                 familyLoca.setIcon(bitmap);
                 familyLoca.setPosition((float) 0.5, (float) 1.0);
                 mapView.addMarkerItem("familyLocation", familyLoca);
+                mapView.setTrackingMode(false);
 
             }
         });
@@ -208,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
 
         // MyInfo instance 불러온다.
         myInfo = MyInfo.getInstance();
-
+        myLoca = new TMapMarkerItem();
 
         // 상단 액션바 & 리스너
         actionBar = getSupportActionBar();
@@ -366,18 +369,18 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
         //mapView.setLocationPoint(curLoca.getLongitude(), curLoca.getLatitude());
         myLoca.setTMapPoint(curLoca);
         myInfo.setPoint(curLoca);
-        showMyLocation();
+        //showMyLocation();
     }
 
 
     // 현재 위치 marker 설정
-    protected void showMyLocation() {
+    protected void initMyLocation(TMapPoint mapPoint) {
         myLoca = new TMapMarkerItem();
         myLoca.setVisible(myLoca.VISIBLE);
 
-        myLoca.setTMapPoint(curLoca);
         myLoca.setIcon(bitmap);
         myLoca.setPosition((float) 0.5, (float) 1.0);
+        myLoca.setTMapPoint(mapPoint);
         mapView.addMarkerItem("myLocation", myLoca);
     }
 
@@ -466,8 +469,8 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
                     break;
 
                 case R.id.locaButton:
+                    mapView.setLocationPoint(myInfo.getPoint().getLongitude(), myInfo.getPoint().getLatitude());
                     mapView.setTrackingMode(true);
-                    showMyLocation();
                     break;
             }
         }
