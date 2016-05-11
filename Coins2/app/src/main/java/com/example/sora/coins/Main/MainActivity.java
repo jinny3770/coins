@@ -41,6 +41,7 @@ import com.example.sora.coins.etc.APIKey;
 import com.example.sora.coins.etc.MyInfo;
 import com.example.sora.coins.etc.PersonInfo;
 import com.google.android.gcm.GCMRegistrar;
+import com.skp.Tmap.TMapAddressInfo;
 import com.skp.Tmap.TMapData;
 import com.skp.Tmap.TMapGpsManager;
 import com.skp.Tmap.TMapMarkerItem;
@@ -143,7 +144,6 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
 
                             Log.i("FamilyLoading", Integer.toString(i) + " : " + jsonObject.getString("id"));
 
-
                             pInfo.setID(jsonObject.getString("id"));
                             pInfo.setGroupCode(myInfo.getGroupCode());
                             pInfo.setName(jsonObject.getString("name"));
@@ -151,6 +151,9 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
                             family.add(pInfo);
                             familyAdapter.addItem(getResources().getDrawable(R.drawable.ic_profile), family.get(j).getName(), pointToString(family.get(j).getPoint()));
                             j++;
+                        }else{
+                            myInfo.setPoint(new TMapPoint(jsonObject.getDouble("latitude"), jsonObject.getDouble("longitude")));
+                            mapView.setLocationPoint(myInfo.getPoint().getLongitude(), myInfo.getPoint().getLatitude());
                         }
                     }
                 } catch (Exception e) {
@@ -333,6 +336,12 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
         sideToggle.syncState();
     }
 
+    @Override
+    protected void onDestroy() {
+        tMapGpsManager.CloseGps();
+        super.onDestroy();
+    }
+
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -354,17 +363,10 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
     @Override
     public void onLocationChange(Location location) {
         curLoca = tMapGpsManager.getLocation();
-        mapView.setLocationPoint(curLoca.getLongitude(), curLoca.getLatitude());
+        //mapView.setLocationPoint(curLoca.getLongitude(), curLoca.getLatitude());
         myLoca.setTMapPoint(curLoca);
         myInfo.setPoint(curLoca);
         showMyLocation();
-    }
-
-
-    @Override
-    protected void onDestroy() {
-        tMapGpsManager.CloseGps();
-        super.onDestroy();
     }
 
 
@@ -382,7 +384,15 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
 
     public String pointToString(TMapPoint point) throws IOException, ParserConfigurationException, SAXException {
         TMapData data = new TMapData();
-        return data.convertGpsToAddress(point.getLatitude(), point.getLongitude());
+
+        TMapAddressInfo address = data.reverseGeocoding(point.getLatitude(), point.getLongitude(), "A00");
+        String str = address.strCity_do + " " + address.strGu_gun + " " + address.strLegalDong;
+
+        if(address.strBuildingName != null) {
+            str += (" " + address.strBuildingName);
+        }
+
+        return str;
     }
 
     public void AutoLoginCheck() {
