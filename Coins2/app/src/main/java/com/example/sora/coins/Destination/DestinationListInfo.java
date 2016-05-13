@@ -16,8 +16,10 @@ import java.util.Locale;
 public class DestinationListInfo extends DestinationInfo {
 
     String ID;
+    int code;
 
     String lineString;
+    String myLineString;
     TMapPolyLine myLine;
     ArrayList<TMapPoint> myLinePoint;
 
@@ -38,17 +40,30 @@ public class DestinationListInfo extends DestinationInfo {
         this.lineString = lineString;
     }
 
+    public void setMyLineString(String myLineString) {
+        this.myLineString = myLineString;
+    }
+
     public void addLinePoint(TMapPoint point) {
         line.addLinePoint(point);
         linePoint.add(point);
     }
 
-    public ArrayList<TMapPoint> getMyLinePoint(){
+    public void addMyLinePoint(TMapPoint point) {
+        myLine.addLinePoint(point);
+        myLinePoint.add(point);
+    }
+
+    public ArrayList<TMapPoint> getMyLinePoint() {
         return myLinePoint;
     }
 
     public TMapPolyLine getMyLine() {
         return myLine;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
     }
 
     public void setID(String ID) {
@@ -73,7 +88,10 @@ public class DestinationListInfo extends DestinationInfo {
         return dataFormat.format(resistDate).toString();
     }
 
-    //public
+    public int getCode() {
+        return code;
+    }
+
 
     public String getLineString() {
         return lineString;

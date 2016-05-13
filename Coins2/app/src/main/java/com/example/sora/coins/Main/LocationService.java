@@ -2,7 +2,10 @@ package com.example.sora.coins.Main;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.IBinder;
+import android.preference.Preference;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -29,16 +32,24 @@ public class LocationService extends Service implements Runnable {
     private boolean mIsRunning = false;
     private static final int TIMER_PERIOD = 2 * 1000;
     private static final int COUNT = 1;
+
+    private static TMapPoint T_MAP_POINT = null;
     private int mCounter;
+
+    SharedPreferences pref;
+    SharedPreferences.Editor prefEditor;
 
     public void onCreate() {
         Log.d("111111Service", "onCreate() Call.");
         super.onCreate();
         mHandler = new Handler();
         mIsRunning = false;
+
+
     }
 
     public int onStartCommand(Intent service, int flags, int startId) {
+
         Log.d("111111Service", "onStartCommand() Call.");
         mStartId = startId;
         mCounter = COUNT;
@@ -79,28 +90,49 @@ public class LocationService extends Service implements Runnable {
             mapView.setMapPosition(TMapView.POSITION_DEFAULT);
             mapView.setTrackingMode(true);
 
+            // 생략 가능
             double lon = curLoca.getLongitude();
             double lat = curLoca.getLatitude();
 
-            myInfo.setPoint(curLoca);
+            if(myInfo.getID()!=null && !curLoca.equals(T_MAP_POINT)) {
 
-            if(myInfo.getID()!=null) {
-
-                Log.i("LoginSuccess", "login");
                 UpdateLocation updateLocation = new UpdateLocation();
+                myInfo.setPoint(curLoca);
 
                 try {
                     String str = updateLocation.execute(myInfo.getID(), String.valueOf(lat), String.valueOf(lon)).get().toString();
-                    Log.i("UpdateLocation", str);
+                    Log.d("UpdateLocation", str);
 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
+                pref = getSharedPreferences("pref", 0);
+                prefEditor = pref.edit();
+
+                if(pref.getBoolean("destinationSet", false)) {
+
+                    int order = pref.getInt("pointOrder", 0);
+                    int code = pref.getInt("desCode", 0);
+
+                    Log.d("pref", Boolean.toString(pref.getBoolean("destinationSet", false)) + ", " + Integer.toString(code) + ", " + Integer.toString(order));
+
+                    UpdateForDestination ufd = new UpdateForDestination();
+                    ufd.execute(Integer.toString(code), Integer.toString(order),
+                            String.valueOf(lat), String.valueOf(lon));
+
+                    prefEditor.putInt("pointOrder", order+1);
+                    prefEditor.commit();
+
+                }
+                T_MAP_POINT = curLoca;
+
+                Log.d("111111Long", String.valueOf(lon));
+                Log.d("111111Lati", String.valueOf(lat));
+                Log.d("111111Service", "" + mCounter);
             }
 
-            Log.d("111111Long", String.valueOf(lon));
-            Log.d("111111Lati", String.valueOf(lat));
-            Log.d("111111Service", "" + mCounter);
+
             mCounter++;
             mHandler.postDelayed(this, TIMER_PERIOD);
         }
@@ -110,43 +142,7 @@ public class LocationService extends Service implements Runnable {
     public IBinder onBind(Intent service) {
         return null;
     }
+
+
+
 }
-
-/**
- * Created by sora on 2016-05-01.
- *//*
- *
-public class LocationService extends Service {
-    TMapView mapView;
-    TMapPoint curLoca;
-    TMapGpsManager tMapGpsManager;
-    @Override
-    public void onCreate() {
-        super.onCreate();
-    }
-
-    @Nullable
-    @Override
-    public IBinder onBind(Intent Service) {
-        return null;
-    }
-
-    public int onStartCommand(Intent Service, int flags, int startId)
-    {
-        mapView = new TMapView(this);
-        mapView.setSKPMapApiKey(APIKey.ApiKey);
-        mapView.setTrackingMode(true);
-        tMapGpsManager = new TMapGpsManager(this);
-        tMapGpsManager.setProvider(TMapGpsManager.NETWORK_PROVIDER);
-        tMapGpsManager.setMinTime(1000);
-        tMapGpsManager.setMinDistance(3);
-        tMapGpsManager.OpenGps();
-        curLoca = tMapGpsManager.getLocation();
-
-
-        Log.d("111111111111Long", String.valueOf(curLoca.getLongitude()));
-        Log.d("111111111111Lati", String.valueOf(curLoca.getLatitude()));
-        return START_REDELIVER_INTENT;
-    }
-
-}*/

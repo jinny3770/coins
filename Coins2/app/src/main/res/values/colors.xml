@@ -11,4 +11,8 @@
 
     <color name="mapButton">#88ffffff</color>
     <color name="enableFalseButton">#88848484</color>
+
+
+    <color name="myLineColor">#ffe133</color>
+    <color name="defalutLineColor">#ff4200</color>
 </resources>

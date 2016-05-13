@@ -57,17 +57,16 @@ import java.util.ArrayList;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-public class MainActivity extends AppCompatActivity implements TMapGpsManager.onLocationChangedCallback {
+public class MainActivity extends AppCompatActivity implements TMapGpsManager.onLocationChangedCallback, View.OnClickListener {
 
     private static final int defaultZoomLevel = 15;
     private static final int defaultMinDistance = 3;    // 단위 : m
-    private static final int defaultMinTime = 1000;     // 단위 : 1/1000s
+    private static final int defaultMinTime = 2000;     // 단위 : 1/1000s
 
 
     // 상단 액션바 관련 변수
     ActionBar actionBar;
     ImageButton chatButton, locaButton, shareButton, desButton;
-    CustomOnclickListener clickListener;
 
     // GPS 지도 관련 변수
     TMapView mapView;
@@ -95,6 +94,8 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
     // 내 정보
     MyInfo myInfo;
 
+
+    Boolean familyCheck;
 
     // 하단 가족 리스트뷰
     Boolean flag = true;
@@ -189,8 +190,10 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 
                 mapView.setCenterPoint(family.get(position).getPoint().getLongitude(), family.get(position).getPoint().getLatitude());
+                mapView.bringMarkerToFront(familyMarker.get(position));
                 mapView.setTrackingMode(false);
 
+                familyCheck = true;
             }
         });
     }
@@ -225,6 +228,8 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
         myInfo = MyInfo.getInstance();
         myLoca = new TMapMarkerItem();
 
+        familyCheck = false;
+
         familyMarker = new ArrayList<TMapMarkerItem>();
 
         // 상단 액션바 & 리스너
@@ -238,17 +243,16 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
         actionBar.setCustomView(customView); // 액션바 레이아웃 지정
         actionBar.setDisplayShowCustomEnabled(true); // 사용여부
 
-        clickListener = new CustomOnclickListener();
 
         chatButton = (ImageButton) findViewById(R.id.chatButton);
         shareButton = (ImageButton) findViewById(R.id.shareButton);
         locaButton = (ImageButton) findViewById(R.id.locaButton);
         desButton = (ImageButton) findViewById(R.id.destination);
 
-        chatButton.setOnClickListener(clickListener);
-        shareButton.setOnClickListener(clickListener);
-        locaButton.setOnClickListener(clickListener);
-        desButton.setOnClickListener(clickListener);
+        chatButton.setOnClickListener(this);
+        shareButton.setOnClickListener(this);
+        locaButton.setOnClickListener(this);
+        desButton.setOnClickListener(this);
 
 
         // GPS 지도 setting 및 관련 리스너
@@ -383,7 +387,11 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
         //mapView.setLocationPoint(curLoca.getLongitude(), curLoca.getLatitude());
         myLoca.setTMapPoint(curLoca);
         myInfo.setPoint(curLoca);
-        //showMyLocation();
+
+
+        if(!familyCheck) {
+            initMyLocation(curLoca);
+        }
     }
 
     TMapMarkerItem initFamilyMarker(TMapPoint point) {
@@ -430,71 +438,72 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
         }
     }
 
-    class CustomOnclickListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            final Intent intent;
+    @Override
+    public void onClick(View v) {
+        final Intent intent;
 
-            switch (v.getId()) {
+        switch (v.getId()) {
 
-                case R.id.chatButton:
-                    intent = new Intent(getApplicationContext(), ChatActivity.class);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.fade, R.anim.hold);
-                    break;
+            case R.id.chatButton:
+                intent = new Intent(getApplicationContext(), ChatActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.fade, R.anim.hold);
+                break;
 
-                case R.id.shareButton:
-                    intent = new Intent(getApplicationContext(), ChatActivity.class);
+            case R.id.shareButton:
+                intent = new Intent(getApplicationContext(), ChatActivity.class);
 
-                    new AlertDialog.Builder(MainActivity.this)
-                            .setTitle("WAY")
-                            .setMessage("내 위치를 채팅방에 공유?")
-                            .setCancelable(false)
-                            .setPositiveButton("예", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    curLoca = tMapGpsManager.getLocation();
-                                    mapView.setLocationPoint(curLoca.getLongitude(), curLoca.getLatitude());
-                                    myLoca.setTMapPoint(curLoca);
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("WAY")
+                        .setMessage("내 위치를 채팅방에 공유?")
+                        .setCancelable(false)
+                        .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                curLoca = tMapGpsManager.getLocation();
+                                mapView.setLocationPoint(curLoca.getLongitude(), curLoca.getLatitude());
+                                myLoca.setTMapPoint(curLoca);
 
-                                    double lat = myLoca.getTMapPoint().getLatitude();
-                                    double lon = myLoca.getTMapPoint().getLongitude();
-                                    String address = "";
+                                double lat = myLoca.getTMapPoint().getLatitude();
+                                double lon = myLoca.getTMapPoint().getLongitude();
+                                String address = "";
 
-                                    try {
-                                        address = pointToString(myLoca.getTMapPoint());
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-
-                                    Toast.makeText(getApplicationContext(), address, Toast.LENGTH_SHORT).show(); // 테스트
-                                    intent.putExtra("Latitude", lat);
-                                    intent.putExtra("Longitude", lon);
-                                    intent.putExtra("address", address);
-                                    intent.putExtra("Check", 1);
-                                    startActivity(intent);
-                                    overridePendingTransition(R.anim.fade, R.anim.hold);
+                                try {
+                                    address = pointToString(myLoca.getTMapPoint());
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                 }
-                            })
-                            .setNegativeButton("놉", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                }
-                            })
-                            .create()
-                            .show();
-                    break;
 
-                case R.id.destination:
-                    intent = new Intent(getApplicationContext(), DestinationListActivity.class);
-                    startActivity(intent);
-                    break;
+                                Toast.makeText(getApplicationContext(), address, Toast.LENGTH_SHORT).show(); // 테스트
+                                intent.putExtra("Latitude", lat);
+                                intent.putExtra("Longitude", lon);
+                                intent.putExtra("address", address);
+                                intent.putExtra("Check", 1);
+                                startActivity(intent);
+                                overridePendingTransition(R.anim.fade, R.anim.hold);
+                            }
+                        })
+                        .setNegativeButton("놉", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        })
+                        .create()
+                        .show();
+                break;
 
-                case R.id.locaButton:
-                    mapView.setLocationPoint(myInfo.getPoint().getLongitude(), myInfo.getPoint().getLatitude());
-                    mapView.setTrackingMode(true);
-                    break;
-            }
+            case R.id.destination:
+                intent = new Intent(getApplicationContext(), DestinationListActivity.class);
+                startActivity(intent);
+                break;
+
+            case R.id.locaButton:
+                mapView.setLocationPoint(myInfo.getPoint().getLongitude(), myInfo.getPoint().getLatitude());
+                mapView.bringMarkerToFront(myLoca);
+                mapView.setTrackingMode(true);
+                break;
         }
     }
+
+
 }

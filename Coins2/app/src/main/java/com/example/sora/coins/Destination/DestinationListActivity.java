@@ -2,6 +2,7 @@ package com.example.sora.coins.Destination;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -89,12 +90,14 @@ public class DestinationListActivity extends AppCompatActivity
                 String id = obj.getString("id");
                 String type = obj.getString("type");
                 int time = obj.getInt("time");
+                int code = obj.getInt("code");
                 int distance = obj.getInt("distance");
                 String resist = obj.getString("resist");
                 info = new DestinationListInfo(id, time, distance, type, resist);
 
                 String lineString = obj.getString("points");
                 info.setLineString(lineString);
+                info.setCode(code);
 
                 JSONArray pointArray = obj.getJSONArray("points");
 
@@ -112,6 +115,14 @@ public class DestinationListActivity extends AppCompatActivity
                     info.addLinePoint(p);
                 }
 
+                /*
+                for(int j=0; j<myPointArray.length(); j++) {
+                    JSONArray point = myPointArray.getJSONArray(j);
+                    TMapPoint p = new TMapPoint(point.getDouble(0), point.getDouble(1));
+                    info.addMyLinePoint(p);
+                }
+                */
+
                 listAdapter.addItem(type, startP, endP, id);
                 destinationListInfos.add(info);
             }
@@ -126,9 +137,11 @@ public class DestinationListActivity extends AppCompatActivity
 
                 Intent intent = new Intent(getApplicationContext(), DestinationViewActivity.class);
                 intent.putExtra("lineString", destinationListInfos.get(position).getLineString());
+                //intent.putExtra("realLineString", destinationListInfos.get(position).getMyLinePoint());
 
                 System.out.println(destinationListInfos.get(position).getDepartureTime());
 
+                intent.putExtra("code", destinationListInfos.get(position).getCode());
                 intent.putExtra("departureTime", destinationListInfos.get(position).getDepartureTime());
                 intent.putExtra("arriveTime", destinationListInfos.get(position).getArriveTime());
                 intent.putExtra("time", destinationListInfos.get(position).getTime());
@@ -153,6 +166,14 @@ public class DestinationListActivity extends AppCompatActivity
                                     DeleteDestinations deleteDestinations = new DeleteDestinations();
                                     deleteDestinations.execute(myInfo.getID());
                                     listAdapter.remove(position);
+
+                                    SharedPreferences pref = getSharedPreferences("pref", 0);
+                                    SharedPreferences.Editor prefEditor = pref.edit();
+
+                                    prefEditor.putBoolean("destinationSet", false);
+                                    prefEditor.remove("desCode");
+                                    prefEditor.remove("pointOrder");
+                                    prefEditor.commit();
                                 }
                             })
                             .setNegativeButton("No", null).create().show();

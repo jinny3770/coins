@@ -2,6 +2,7 @@ package com.example.sora.coins.Destination;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -72,6 +73,8 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
 
     TMapData tMapData;
 
+    SharedPreferences pref;
+    SharedPreferences.Editor prefEditor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +82,9 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
         setContentView(R.layout.activity_destination_select);
 
         myInfo = MyInfo.getInstance();
+
+        pref = getSharedPreferences("pref", 0);
+        prefEditor = pref.edit();
 
         currentTime = new Date();
         tMapData = new TMapData();
@@ -171,9 +177,19 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
 
-                    ResistDestination resistDestination = new ResistDestination();
-                    resistDestination.execute(destinationInfo);
+                    if(pref.getBoolean("destinationSet", false)) {
 
+                        Log.d("destinationSet", Boolean.toString(pref.getBoolean("destinationSet", false)));
+
+                        ResistDestination resistDestination = new ResistDestination();
+                        resistDestination.execute(destinationInfo);
+
+                    }
+                    else{
+                        Log.d("destinationSet", Boolean.toString(pref.getBoolean("destinationSet", false)));
+                        Toast.makeText(getApplicationContext(), "이미 등록 된 목적지가 있습니다.", Toast.LENGTH_LONG).show();
+                        finish();
+                    }
                 }
             });
 
@@ -367,13 +383,15 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
 
         BufferedReader reader = null;
 
+
+
         @Override
         protected String doInBackground(DestinationInfo... params) {
 
             DestinationInfo info = params[0];
 
             try {
-                //URL url = new URL(resistURL);
+
                 URL url = new URL(resistURL);
 
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -404,14 +422,18 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
         @Override
         protected void onPostExecute(String s) {
 
-            if (s.equals("exist")) {
-                Toast.makeText(getApplicationContext(), "이미 등록 된 목적지가 있습니다.", Toast.LENGTH_LONG).show();
-                finish();
-
-            } else if (s.equals("fail")) {
+             if (s.equals("fail")) {
                 Toast.makeText(getApplicationContext(), "등록에 실패했습니다.", Toast.LENGTH_LONG).show();
 
-            } else if (s.equals("success")) {
+            } else {
+
+                prefEditor.putBoolean("destinationSet", true);
+                prefEditor.putInt("desCode", Integer.parseInt(s));
+                prefEditor.putInt("pointOrder", 2);
+                prefEditor.commit();
+
+                Log.d("prefCheck", Boolean.toString(pref.getBoolean("destinationSet", false)) + ", "
+                        + Integer.toString(pref.getInt("desCode", 0)));
                 Toast.makeText(getApplicationContext(), "등록되었습니다.", Toast.LENGTH_LONG).show();
                 finish();
             }
@@ -451,7 +473,7 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
         obj.put("DISTANCE", info.getDistance());
         obj.put("TYPE", info.getType());
 
-        for (int i = 0; i < points.size(); i++) {
+        for (int i = 0; i < points.size()-1; i++) {
 
             TMapPoint p = points.get(i);
             JSONArray tmp = new JSONArray();
