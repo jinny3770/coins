@@ -1,10 +1,13 @@
 package com.example.sora.coins.Main;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -14,15 +17,16 @@ import java.net.URLEncoder;
 /**
  * Created by sora on 2016-05-12.
  */
-public class UpdateForDestination extends AsyncTask<String, Void, Void> {
+public class UpdateForDestination extends AsyncTask<String, Void, String> {
 
     private static final String resistURL = "http://52.79.124.54/myPointResist.php";
 
     int code, order;
     double latitude, longitude;
+    BufferedReader reader = null;
 
     @Override
-    protected Void doInBackground(String... params) {
+    protected String doInBackground(String... params) {
 
         code = Integer.parseInt(params[0]);
         order = Integer.parseInt(params[1]);
@@ -42,17 +46,22 @@ public class UpdateForDestination extends AsyncTask<String, Void, Void> {
             conn.setDoInput(true);
 
             String data = URLEncoder.encode("json", "UTF-8") + "=" + URLEncoder.encode(makeJson(), "UTF-8");
+            Log.d("updateForDestination", data);
 
             OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
             wr.write(data);
             wr.flush();
 
+            reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String result = reader.readLine();
+            return result;
+
         } catch (Exception e) {
             e.printStackTrace();
+            return e.toString();
         }
-
-        return null;
     }
+
 
 
     private String makeJson() throws JSONException {
@@ -64,6 +73,7 @@ public class UpdateForDestination extends AsyncTask<String, Void, Void> {
         obj.put("latitude", latitude);
         obj.put("longitude", longitude);
 
+        Log.d("updateForDestination", obj.toString());
         return obj.toString();
     }
 

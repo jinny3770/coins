@@ -16,6 +16,7 @@ import com.skp.Tmap.TMapPoint;
 import com.skp.Tmap.TMapView;
 
 import java.lang.Runnable;
+import java.util.concurrent.ExecutionException;
 
 import android.os.Handler;
 
@@ -30,7 +31,7 @@ public class LocationService extends Service implements Runnable {
     private int mStartId;
     private Handler mHandler;
     private boolean mIsRunning = false;
-    private static final int TIMER_PERIOD = 2 * 1000;
+    private static final int TIMER_PERIOD = 5 * 1000;
     private static final int COUNT = 1;
 
     private static TMapPoint T_MAP_POINT = null;
@@ -94,44 +95,54 @@ public class LocationService extends Service implements Runnable {
             double lon = curLoca.getLongitude();
             double lat = curLoca.getLatitude();
 
-            if(myInfo.getID()!=null && !curLoca.equals(T_MAP_POINT)) {
 
-                UpdateLocation updateLocation = new UpdateLocation();
-                myInfo.setPoint(curLoca);
+            if (curLoca.getLatitude() != 0 && curLoca.getLongitude() != 0) {
 
-                try {
-                    String str = updateLocation.execute(myInfo.getID(), String.valueOf(lat), String.valueOf(lon)).get().toString();
-                    Log.d("UpdateLocation", str);
+                if (myInfo.getID() != null && !curLoca.equals(T_MAP_POINT)) {
 
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                    UpdateLocation updateLocation = new UpdateLocation();
+                    myInfo.setPoint(curLoca);
 
-                pref = getSharedPreferences("pref", 0);
-                prefEditor = pref.edit();
+                    try {
+                        String str = updateLocation.execute(myInfo.getID(), String.valueOf(lat), String.valueOf(lon)).get().toString();
+                        Log.d("UpdateLocation", str);
 
-                if(pref.getBoolean("destinationSet", false)) {
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
+                    pref = getSharedPreferences("pref", 0);
+                    prefEditor = pref.edit();
                     int order = pref.getInt("pointOrder", 0);
                     int code = pref.getInt("desCode", 0);
 
                     Log.d("pref", Boolean.toString(pref.getBoolean("destinationSet", false)) + ", " + Integer.toString(code) + ", " + Integer.toString(order));
 
-                    UpdateForDestination ufd = new UpdateForDestination();
-                    ufd.execute(Integer.toString(code), Integer.toString(order),
-                            String.valueOf(lat), String.valueOf(lon));
+                    if (pref.getBoolean("destinationSet", false)) {
 
-                    prefEditor.putInt("pointOrder", order+1);
-                    prefEditor.commit();
+                        Log.d("pref", Boolean.toString(pref.getBoolean("destinationSet", false)) + ", " + Integer.toString(code) + ", " + Integer.toString(order));
 
+                        UpdateForDestination ufd = new UpdateForDestination();
+                        try {
+                            String str = ufd.execute(Integer.toString(code), Integer.toString(order),
+                                    String.valueOf(lat), String.valueOf(lon)).get();
+
+                            Log.d("updatePoint", str);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        prefEditor.putInt("pointOrder", order + 1);
+                        prefEditor.commit();
+
+                    }
+                    T_MAP_POINT = curLoca;
                 }
-                T_MAP_POINT = curLoca;
-
-                Log.d("111111Long", String.valueOf(lon));
-                Log.d("111111Lati", String.valueOf(lat));
-                Log.d("111111Service", "" + mCounter);
             }
 
+            Log.d("111111Long", String.valueOf(lon));
+            Log.d("111111Lati", String.valueOf(lat));
+            Log.d("111111Service", "" + mCounter);
 
             mCounter++;
             mHandler.postDelayed(this, TIMER_PERIOD);
@@ -142,7 +153,6 @@ public class LocationService extends Service implements Runnable {
     public IBinder onBind(Intent service) {
         return null;
     }
-
 
 
 }

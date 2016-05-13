@@ -177,7 +177,7 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
 
-                    if(pref.getBoolean("destinationSet", false)) {
+                    if(!pref.getBoolean("destinationSet", false)) {
 
                         Log.d("destinationSet", Boolean.toString(pref.getBoolean("destinationSet", false)));
 

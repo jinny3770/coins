@@ -101,7 +101,8 @@ public class DestinationViewActivity extends AppCompatActivity {
             String str = loadMyPoint.execute(code).get();
             Log.d("loadMyPoint", str);
 
-            JSONArray jsonArray = new JSONArray(str);
+            JSONObject jsonObject = new JSONObject(str);
+            JSONArray jsonArray =  jsonObject.getJSONArray("points");
 
             for(int i=0; i<jsonArray.length(); i++) {
                 JSONArray arr = jsonArray.getJSONArray(i);
@@ -115,8 +116,8 @@ public class DestinationViewActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        myLine.setLineColor(Color.YELLOW);
-        myLine.setLineWidth(5);
+        myLine.setLineWidth(10);
+        myLine.setLineColor(Color.BLUE);
         mapView.addTMapPolyLine("myLine", myLine);
 
         super.onResume();

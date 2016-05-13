@@ -166,8 +166,6 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
                             familyAdapter.addItem(getResources().getDrawable(R.drawable.ic_profile), family.get(j).getName(), pointToString(family.get(j).getPoint()));
                             //familyMarker.add(pPoint);
 
-
-
                             j++;
                         }else{
                             myInfo.setPoint(new TMapPoint(jsonObject.getDouble("latitude"), jsonObject.getDouble("longitude")));
@@ -388,9 +386,8 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
         myLoca.setTMapPoint(curLoca);
         myInfo.setPoint(curLoca);
 
-
         if(!familyCheck) {
-            initMyLocation(curLoca);
+            mapView.setLocationPoint(curLoca.getLatitude(), curLoca.getLongitude());
         }
     }
 
