@@ -9,6 +9,7 @@ import android.preference.Preference;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.example.sora.coins.Destination.DeleteDestinations;
 import com.example.sora.coins.etc.APIKey;
 import com.example.sora.coins.etc.MyInfo;
 import com.skp.Tmap.TMapGpsManager;
@@ -97,15 +98,17 @@ public class LocationService extends Service implements Runnable {
 
 
             if (curLoca.getLatitude() != 0 && curLoca.getLongitude() != 0) {
+                Log.d("service", "service enter");
 
                 if (myInfo.getID() != null && !curLoca.equals(T_MAP_POINT)) {
 
+                    Log.d("service", "service Excute");
                     UpdateLocation updateLocation = new UpdateLocation();
                     myInfo.setPoint(curLoca);
 
                     try {
                         String str = updateLocation.execute(myInfo.getID(), String.valueOf(lat), String.valueOf(lon)).get().toString();
-                        Log.d("UpdateLocation", str);
+                        Log.d("service", "update Location");
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -113,12 +116,30 @@ public class LocationService extends Service implements Runnable {
 
                     pref = getSharedPreferences("pref", 0);
                     prefEditor = pref.edit();
-                    int order = pref.getInt("pointOrder", 0);
-                    int code = pref.getInt("desCode", 0);
 
-                    Log.d("pref", Boolean.toString(pref.getBoolean("destinationSet", false)) + ", " + Integer.toString(code) + ", " + Integer.toString(order));
+                    Log.d("service", "pref_destinationSet : " + Boolean.toString(pref.getBoolean("destinationSet", false)));
 
                     if (pref.getBoolean("destinationSet", false)) {
+
+                        float latitude = pref.getFloat("endPointLatitude", 0);
+                        float longitude = pref.getFloat("endPointLongitude", 0);
+                        int order = pref.getInt("pointOrder", 0);
+                        int code = pref.getInt("desCode", 0);
+
+                        if(distanceCalc(latitude, longitude, curLoca.getLatitude(), curLoca.getLongitude())) {
+
+                            Log.d("service", "delete destination");
+                            DeleteDestinations deleteDestinations = new DeleteDestinations();
+                            deleteDestinations.execute(myInfo.getID());
+
+                            prefEditor.remove("destinationSet");
+                            prefEditor.remove("pointOrder");
+                            prefEditor.remove("desCode");
+                            prefEditor.remove("endPointLatitude");
+                            prefEditor.remove("endPointLongitude");
+                            prefEditor.commit();
+                        }
+
 
                         Log.d("pref", Boolean.toString(pref.getBoolean("destinationSet", false)) + ", " + Integer.toString(code) + ", " + Integer.toString(order));
 
@@ -154,5 +175,30 @@ public class LocationService extends Service implements Runnable {
         return null;
     }
 
+    public boolean distanceCalc(float endPointLatitude, float endPointLongitude, double latitude, double longitude) {
+
+        double dis, ret;
+
+        double Earth_r = 6371000.0;
+        double Rad = Math.PI/180;
+
+        double radEndLati = Rad * endPointLatitude;
+        double radMyLati = Rad * latitude;
+        double radDist = Rad * (longitude - endPointLongitude);
+
+        dis = Math.sin(radEndLati) * Math.sin(radMyLati);
+        dis = dis + Math.cos(radEndLati) * Math.cos(radMyLati) * Math.cos(radDist);
+
+        ret = Earth_r * Math.acos(dis);
+
+        double rslt = Math.round(Math.round(ret));
+        Log.d("distanceCalc", Double.toString(rslt));
+
+        if(rslt < 10) {
+
+            return true;
+        }
+        else return false;
+    }
 
 }

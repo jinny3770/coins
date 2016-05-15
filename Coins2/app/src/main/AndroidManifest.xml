@@ -108,7 +108,8 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".Sidebar.SideGroupActivity" />
+        <activity android:name=".Sidebar.SideGroupActivity"
+            android:theme="@style/Theme.AppCompat"/>
         <activity android:name=".Sidebar.SideSettingActivity" />
         <activity android:name=".Sidebar.SideWarningActivity" />
         <activity android:name=".Sidebar.LoginActivity" />

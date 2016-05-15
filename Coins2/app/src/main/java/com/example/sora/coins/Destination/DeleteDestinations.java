@@ -1,6 +1,7 @@
 package com.example.sora.coins.Destination;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -19,6 +20,8 @@ public class DeleteDestinations extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... params) {
+
+        Log.d("deleteDetinations", "excute Delete");
 
         try {
             URL url = new URL(deleteURL);
