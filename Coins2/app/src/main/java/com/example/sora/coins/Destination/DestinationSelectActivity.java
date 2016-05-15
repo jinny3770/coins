@@ -62,6 +62,8 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
     LinearLayout mapLayout;
     TMapView mapView;
 
+    TMapPoint endPoint;
+
     MyInfo myInfo;
     ImageButton desButton, sendButton;
 
@@ -177,15 +179,14 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
 
-                    if(!pref.getBoolean("destinationSet", false)) {
+                    if (!pref.getBoolean("destinationSet", false)) {
 
                         Log.d("destinationSet", Boolean.toString(pref.getBoolean("destinationSet", false)));
 
                         ResistDestination resistDestination = new ResistDestination();
                         resistDestination.execute(destinationInfo);
 
-                    }
-                    else{
+                    } else {
                         Log.d("destinationSet", Boolean.toString(pref.getBoolean("destinationSet", false)));
                         Toast.makeText(getApplicationContext(), "이미 등록 된 목적지가 있습니다.", Toast.LENGTH_LONG).show();
                         finish();
@@ -225,7 +226,7 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                TMapPoint startPoint, endPoint;
+                TMapPoint startPoint;
 
                 startPoint = myInfo.getPoint();
                 endPoint = mapView.getCenterPoint();
@@ -352,7 +353,7 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
 
                         TMapPoint point = new TMapPoint(cooArray.getDouble(1), cooArray.getDouble(0));
 
-                        if(!destinationInfo.compareLastPoint(point)) {
+                        if (!destinationInfo.compareLastPoint(point)) {
                             destinationInfo.addLinePoint(point);
                         }
 
@@ -363,7 +364,7 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
                             JSONArray obj = cooArray.getJSONArray(i);
                             TMapPoint point = new TMapPoint(obj.getDouble(1), obj.getDouble(0));
 
-                            if(!destinationInfo.compareLastPoint(point)) {
+                            if (!destinationInfo.compareLastPoint(point)) {
                                 destinationInfo.addLinePoint(point);
                             }
 
@@ -382,7 +383,6 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
     class ResistDestination extends AsyncTask<DestinationInfo, Void, String> {
 
         BufferedReader reader = null;
-
 
 
         @Override
@@ -422,7 +422,7 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
         @Override
         protected void onPostExecute(String s) {
 
-             if (s.equals("fail")) {
+            if (s.equals("fail")) {
                 Toast.makeText(getApplicationContext(), "등록에 실패했습니다.", Toast.LENGTH_LONG).show();
 
             } else {
@@ -430,6 +430,9 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
                 prefEditor.putBoolean("destinationSet", true);
                 prefEditor.putInt("desCode", Integer.parseInt(s));
                 prefEditor.putInt("pointOrder", 2);
+                prefEditor.putFloat("endPointLatitude", (float)endPoint.getLatitude());
+                prefEditor.putFloat("endPointLongitude", (float)endPoint.getLongitude());
+
                 prefEditor.commit();
 
                 Log.d("prefCheck", Boolean.toString(pref.getBoolean("destinationSet", false)) + ", "
@@ -473,7 +476,7 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
         obj.put("DISTANCE", info.getDistance());
         obj.put("TYPE", info.getType());
 
-        for (int i = 0; i < points.size()-1; i++) {
+        for (int i = 0; i < points.size() - 1; i++) {
 
             TMapPoint p = points.get(i);
             JSONArray tmp = new JSONArray();

@@ -11,6 +11,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.sora.coins.R;
+import com.example.sora.coins.etc.RegID;
+import com.google.android.gcm.GCMRegistrar;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -105,6 +107,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 String ID = (String) params[0];
                 String PW = (String) params[1];
                 String name = (String) params[2];
+                String gcm_code = GCMRegistrar.getRegistrationId(getApplicationContext());
 
                 //String urlString = Integer.toString(R.string.signUpURL);
 
@@ -122,7 +125,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
                 data = URLEncoder.encode("ID", "UTF-8") + "=" + URLEncoder.encode(ID, "UTF-8")
                         + "&" + URLEncoder.encode("PW", "UTF-8") + "=" + URLEncoder.encode(PW, "UTF-8")
-                        + "&" + URLEncoder.encode("name", "UTF-8") + "=" + URLEncoder.encode(name, "UTF-8");
+                        + "&" + URLEncoder.encode("name", "UTF-8") + "=" + URLEncoder.encode(name, "UTF-8")
+                        + "&" + URLEncoder.encode("gcm", "UTF-8") + "=" + URLEncoder.encode(gcm_code, "UTF-8");
 
 
 

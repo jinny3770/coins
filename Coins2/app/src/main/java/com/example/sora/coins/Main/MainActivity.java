@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
         AutoLoginCheck();
 
         // 현재 위치 설정
-        curLoca = tMapGpsManager.getLocation();
+        curLoca = tMapGpsManager2.getLocation();
         //showMyLocation();
 
 

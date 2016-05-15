@@ -21,6 +21,7 @@ import com.skp.Tmap.TMapView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
 
 /**
@@ -109,19 +110,11 @@ public class DestinationListActivity extends AppCompatActivity
                     if(j == 0) {
                         startP = p;
                     }
-                    else if(j == pointArray.length()-1) {
+                    if(j == pointArray.length()-1) {
                         endP = p;
                     }
                     info.addLinePoint(p);
                 }
-
-                /*
-                for(int j=0; j<myPointArray.length(); j++) {
-                    JSONArray point = myPointArray.getJSONArray(j);
-                    TMapPoint p = new TMapPoint(point.getDouble(0), point.getDouble(1));
-                    info.addMyLinePoint(p);
-                }
-                */
 
                 listAdapter.addItem(type, startP, endP, id);
                 destinationListInfos.add(info);
@@ -173,6 +166,8 @@ public class DestinationListActivity extends AppCompatActivity
                                     prefEditor.putBoolean("destinationSet", false);
                                     prefEditor.remove("desCode");
                                     prefEditor.remove("pointOrder");
+                                    prefEditor.remove("endPointLatitude");
+                                    prefEditor.remove("endPointLongitude");
                                     prefEditor.commit();
                                 }
                             })
