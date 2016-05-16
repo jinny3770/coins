@@ -38,6 +38,7 @@
         <activity
             android:name=".Main.MainActivity"
             android:excludeFromRecents="true"
+            android:theme="@style/Theme.AppCompat"
             android:taskAffinity=""></activity>
 
         <activity

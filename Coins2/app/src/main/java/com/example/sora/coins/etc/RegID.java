@@ -3,17 +3,34 @@ package com.example.sora.coins.etc;
 /**
  * Created by Administrator on 2016-05-09.
  */
+
 public class RegID
 {
-    static String regID;
+    public static RegID regID;
+    static String id;
 
-    public void setRegID(String regID)
+    private RegID()
     {
-        RegID.regID = regID;
+        super();
+    }
+
+    public static synchronized RegID getInstance()
+    {
+        if (regID == null)
+        {
+            regID = new RegID();
+        }
+
+        return regID;
     }
 
     public String getRegID()
     {
-        return regID;
+        return id;
+    }
+
+    public void setRegID(String id)
+    {
+        RegID.id = id;
     }
 }

@@ -2,6 +2,7 @@ package com.example.sora.coins.Destination;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -22,6 +23,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.sora.coins.Main.LocationService;
 import com.example.sora.coins.etc.APIKey;
 import com.example.sora.coins.etc.MyInfo;
 import com.example.sora.coins.R;
@@ -43,8 +45,11 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -77,6 +82,7 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
 
     SharedPreferences pref;
     SharedPreferences.Editor prefEditor;
+    public static Integer Dochack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,6 +180,17 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
 
             time.setText("소요 시간은 " + destinationInfo.getStringTime() + "초 이며,");
             distance.setText("예상 이동거리는 " + destinationInfo.getStringDistance() + "m 입니다.");
+
+            long timet = System.currentTimeMillis();
+            DateFormat df = new SimpleDateFormat("HHmmss", Locale.KOREA); // HH=24h, hh=12h
+            String str = df.format(timet);
+            Integer Now;
+            Now = Integer.parseInt(str);
+
+
+            Dochack = destinationInfo.getTime() + Integer.parseInt(str);
+            Intent service = new Intent(this, LocationService.class);           //추가!!
+            startService(service);
 
             builder.setPositiveButton("Send", new DialogInterface.OnClickListener() {
                 @Override

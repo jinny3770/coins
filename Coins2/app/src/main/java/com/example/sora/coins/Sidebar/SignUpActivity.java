@@ -128,8 +128,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                         + "&" + URLEncoder.encode("name", "UTF-8") + "=" + URLEncoder.encode(name, "UTF-8")
                         + "&" + URLEncoder.encode("gcm", "UTF-8") + "=" + URLEncoder.encode(gcm_code, "UTF-8");
 
-
-
                 OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
                 wr.write(data);
                 wr.flush();

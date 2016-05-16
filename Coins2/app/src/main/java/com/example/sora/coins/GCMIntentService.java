@@ -11,6 +11,7 @@ import com.example.sora.coins.Chat.SendBirdChannelListActivity;
 import com.example.sora.coins.Chat.SendBirdMessagingChannelListActivity;
 import com.example.sora.coins.Main.MainActivity;
 
+import com.example.sora.coins.etc.MyInfo;
 import com.google.android.gcm.GCMBaseIntentService;
 import com.sendbird.android.SendBird;
 
@@ -23,7 +24,9 @@ public class GCMIntentService extends GCMBaseIntentService
     private static final String tag = "GCMIntentService";
     private static final String projectID = "massive-dynamo-127407";
 
-    private static void generateNotification(Context context, String message)
+    MyInfo myInfo = MyInfo.getInstance();
+
+    public static void generateNotification(Context context, String message)
     {
         int icon = R.drawable.ic_drawer;
         long time = System.currentTimeMillis();
@@ -62,7 +65,7 @@ public class GCMIntentService extends GCMBaseIntentService
     protected void onMessage(Context context, Intent intent)
     {
         Log.d(tag, " 메시지 수신.");
-        generateNotification(context, "쨘");
+        generateNotification(context, myInfo.getName() + "님께서 도착지에 도착하지 못하였습니다.");
     }
 
     /* 에러 발생시 */

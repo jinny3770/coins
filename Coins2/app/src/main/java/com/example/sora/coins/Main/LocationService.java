@@ -10,16 +10,33 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.example.sora.coins.Destination.DeleteDestinations;
+import com.example.sora.coins.Destination.DestinationSelectActivity;
+import com.example.sora.coins.GCMIntentService;
 import com.example.sora.coins.etc.APIKey;
 import com.example.sora.coins.etc.MyInfo;
+import com.example.sora.coins.etc.RegID;
+import com.example.sora.coins.gcm.MyGcmListenerService;
+import com.google.android.gcm.server.Constants;
+import com.google.android.gcm.server.Message;
+import com.google.android.gcm.server.Result;
+import com.google.android.gcm.server.Sender;
 import com.skp.Tmap.TMapGpsManager;
 import com.skp.Tmap.TMapPoint;
 import com.skp.Tmap.TMapView;
 
 import java.lang.Runnable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 import android.os.Handler;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import com.example.sora.coins.etc.RegID;
+import com.example.sora.coins.etc.MyInfo;
 
 public class LocationService extends Service implements Runnable {
 
@@ -35,11 +52,19 @@ public class LocationService extends Service implements Runnable {
     private static final int TIMER_PERIOD = 5 * 1000;
     private static final int COUNT = 1;
 
+    int check=1;
+
     private static TMapPoint T_MAP_POINT = null;
     private int mCounter;
 
     SharedPreferences pref;
     SharedPreferences.Editor prefEditor;
+
+
+    RegID regID;
+    private Result result;
+    private Message message;
+    private final Sender sender = new Sender("AIzaSyAfClZJckVp_ZFNWWdl_kVOJFX2qzoP18s");
 
     public void onCreate() {
         Log.d("111111Service", "onCreate() Call.");
@@ -163,8 +188,74 @@ public class LocationService extends Service implements Runnable {
 
             Log.d("111111Long", String.valueOf(lon));
             Log.d("111111Lati", String.valueOf(lat));
-            Log.d("111111Service", "" + mCounter);
 
+
+            long time = System.currentTimeMillis();
+            DateFormat df = new SimpleDateFormat("HHmmss", Locale.KOREA); // HH=24h, hh=12h
+            String str = df.format(time);
+            Integer Now, Duration;
+            Now = Integer.parseInt(str);
+            Duration = Now;
+            Log.e("Current Time : ", str);
+            try {
+                Duration = DestinationSelectActivity.Dochack - Now;
+                Log.d("Duration!!!!!!! Result ", ""+Duration);
+            }catch (NullPointerException e) {
+            }
+
+            Log.d("Duration!!!!!!! Fail ", ""+Duration);
+            Log.d("111111Service", "" + mCounter);
+            if (Duration < -20 && check==1) {
+                check=0;
+                message = new Message.Builder().addData("message", "pupupupu").build();
+
+                regID = RegID.getInstance();
+                myInfo = MyInfo.getInstance();
+                try
+                {
+                    String returnString = new LoadFamilyList().execute(myInfo.getGroupCode()).get();
+                    JSONArray jsonArray = new JSONArray(returnString);
+
+                    for (int i = 0; i < jsonArray.length(); i++)
+                    {
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        String code = jsonObject.getString("GCMCode");
+
+                        if (code != null && code != regID.getRegID())
+                        {
+                            result = sender.send(message, code, 5);
+                        }
+                    }
+                }
+
+                catch (Exception e)
+                {
+                }
+
+                if (result.getMessageId() != null)
+                {
+                    try
+                    {
+                        System.out.println("푸쉬 테스트");
+                    }
+
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+
+                else
+                {
+                    String error = result.getErrorCodeName();
+                    System.out.println(error);
+
+                    if (Constants.ERROR_INTERNAL_SERVER_ERROR.equals(error))
+                    {
+                        System.out.println("구글 서버 에러");
+                    }
+                }
+            }
             mCounter++;
             mHandler.postDelayed(this, TIMER_PERIOD);
         }

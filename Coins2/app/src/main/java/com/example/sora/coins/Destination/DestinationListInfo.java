@@ -1,5 +1,7 @@
 package com.example.sora.coins.Destination;
 
+import android.util.Log;
+
 import com.skp.Tmap.TMapPoint;
 import com.skp.Tmap.TMapPolyLine;
 
@@ -76,9 +78,11 @@ public class DestinationListInfo extends DestinationInfo {
 
     public String getArriveTime() {
 
-        long departureTime = resistDate.getTime() + time;
+        Date depDate = new Date(resistDate.getTime() + (long)time * 1000);
+        Log.d("getArriveTime", "resistDate : " + resistDate.getTime());
+        Log.d("getArriveTime", "time : " + time);
+        Log.d("getArriveTime", "depDate : " + (resistDate.getTime() + time));
 
-        Date depDate = new Date(departureTime);
 
         return dataFormat.format(depDate);
     }

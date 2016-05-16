@@ -59,7 +59,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 public class MainActivity extends AppCompatActivity implements TMapGpsManager.onLocationChangedCallback, View.OnClickListener {
 
-    private static final int defaultZoomLevel = 15;
+    private static final int defaultZoomLevel = 17;
     private static final int defaultMinDistance = 3;    // 단위 : m
     private static final int defaultMinTime = 2000;     // 단위 : 1/1000s
 
@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
         AutoLoginCheck();
 
         // 현재 위치 설정
-        curLoca = tMapGpsManager2.getLocation();
+        curLoca = tMapGpsManager.getLocation();
         //showMyLocation();
 
 
@@ -387,7 +387,7 @@ public class MainActivity extends AppCompatActivity implements TMapGpsManager.on
         myInfo.setPoint(curLoca);
 
         if(!familyCheck) {
-            mapView.setLocationPoint(curLoca.getLatitude(), curLoca.getLongitude());
+            initMyLocation(curLoca);
         }
     }
 
