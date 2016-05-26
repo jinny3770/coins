@@ -172,6 +172,7 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
                 if (searchText.getText().toString().length() > 0) {
                     TMapData tmapData = new TMapData();
 
+
                     for (int i = 0; i < markerList.size(); i++) {
                         mapView.removeMarkerItem2(markerList.get(i).getID());
                     }
@@ -182,6 +183,7 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
 
                             mapView.removeAllTMapPOIItem();
                             mapView.removeAllMarkerItem();
+                            mapView.removeTMapPath();
 
                             for (int i = 0; i < arrayList.size(); i++) {
 
@@ -190,7 +192,7 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
                                 Log.d("arrayList", "name : " + tmp.getPOIName());
                                 Log.d("arrayList", "lon : " + tmp.getPOIPoint().getLongitude() + ", lat : " + tmp.getPOIPoint().getLatitude());
 
-                                MarkerOverlay overlay = new MarkerOverlay(getApplicationContext(), mapView);
+                                MarkerOverlay overlay = new MarkerOverlay(getApplicationContext(), mapView, tmp.getPOIName());
 
                                 overlay.setID(tmp.getPOIID());
                                 overlay.setName(tmp.getPOIName());
@@ -341,8 +343,8 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
             time = (TextView) dialogView.findViewById(R.id.timeView);
             distance = (TextView) dialogView.findViewById(R.id.distanceView);
 
-            time.setText("소요 시간은 " + destinationInfo.getStringTime() + "초 이며,");
-            distance.setText("예상 이동거리는 " + destinationInfo.getStringDistance() + "m 입니다.");
+            time.setText("소요 시간은 " + transformTime(destinationInfo.getTime()) + " 이며,");
+            distance.setText("예상 이동거리는 " + transformDistance(destinationInfo.getDistance()) + "km 입니다.");
 
             long timet = System.currentTimeMillis();
             DateFormat df = new SimpleDateFormat("HHmmss", Locale.KOREA); // HH=24h, hh=12h
@@ -481,5 +483,28 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
 
         data = URLEncoder.encode("json", "UTF-8") + "=" + URLEncoder.encode(obj.toString(), "UTF-8");
         return data;
+    }
+
+    String transformDistance (int distance) {
+
+        double kmDis = distance /1000.0;
+        String str = String.format("%.1f", kmDis);
+
+        return str;
+    }
+
+    String transformTime (int time) {
+
+        int hour = time/3600;
+        int minute = time / 60;
+
+        String str = "";
+
+        if(hour != 0)
+            str += Integer.toString(hour) + "시간 ";
+
+        str += Integer.toString(minute) + "분";
+
+        return str;
     }
 }

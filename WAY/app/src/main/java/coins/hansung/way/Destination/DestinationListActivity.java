@@ -148,8 +148,10 @@ public class DestinationListActivity extends AppCompatActivity
                 intent.putExtra("arriveTime", destinationListInfos.get(position).getArriveTime());
                 Log.d("listActivity", "arrive : " + destinationListInfos.get(position).getArriveTime());
 
+                intent.putExtra("type", destinationListInfos.get(position).getType());
                 intent.putExtra("time", destinationListInfos.get(position).getTime());
                 startActivity(intent);
+
                 overridePendingTransition(R.anim.fade, R.anim.hold);
 
             }

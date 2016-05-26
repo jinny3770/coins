@@ -1,10 +1,14 @@
 package coins.hansung.way.Destination;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -30,15 +34,17 @@ public class DestinationViewActivity extends AppCompatActivity {
     TMapPolyLine polyLine;
     TMapPolyLine myLine;
 
+    String type;
     String arriveTimeString;
     String departureTimeString;
     int time;
     int code;
 
 
+    ImageView typeView;
     TextView arriveTimeText;
     TextView departureTimeText;
-    TextView aroundTime;
+
     LinearLayout linearLayout;
 
     @Override
@@ -49,7 +55,6 @@ public class DestinationViewActivity extends AppCompatActivity {
 
         departureTimeText = (TextView) findViewById(R.id.departureTimeText);
         arriveTimeText = (TextView) findViewById(R.id.arriveTimeText);
-        aroundTime = (TextView) findViewById(R.id.aroundTime);
         linearLayout = (LinearLayout) findViewById(R.id.desMapView);
 
 
@@ -62,7 +67,7 @@ public class DestinationViewActivity extends AppCompatActivity {
 
             System.out.println(intent.getStringExtra("lineString"));
             polyLine = lineParsing(intent.getStringExtra("lineString"));
-            //myLine = lineParsing(intent.getStringExtra("realLineString"));
+            type = intent.getStringExtra("type");
             departureTimeString = intent.getStringExtra("departureTime");
             arriveTimeString = intent.getStringExtra("arriveTime");
             time = intent.getIntExtra("time", 0);
@@ -72,17 +77,33 @@ public class DestinationViewActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        //polyLine.setLineColor(Color.rgb(255,42, 00));
-        // myLine.setLineColor(Color.rgb(255, 225, 33));
+        Bitmap arrival = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.ic_arrival);
+        Bitmap departure = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.ic_departure);
+
+
+        mapView.setTMapPathIcon(departure, arrival);
         mapView.addTMapPath(polyLine);
-        //mapView.addTMapPolyLine("myLine", myLine);
-        //mapView.addTMapPath(myLine);
         mapView.setZoomLevel(15);
         mapView.setCenterPoint(centerPoint.getLongitude(), centerPoint.getLatitude());
 
-        departureTimeText.setText("출발 시간 : " + departureTimeString);
-        arriveTimeText.setText("도착 예정 시간 : " + arriveTimeString);
-        aroundTime.setText("소요 시간 : " + (time / 60) + "분 예상");
+
+        typeView = (ImageView) findViewById(R.id.desImage);
+
+        switch (type) {
+            case "car" :
+                typeView.setImageResource(R.drawable.ic_local_taxi_white_24dp);
+                break;
+
+            case "bicycle" :
+                typeView.setImageResource(R.drawable.ic_directions_bike_white_24dp);
+                break;
+
+            case "walk" :
+                typeView.setImageResource(R.drawable.ic_directions_walk_white_24dp);
+                break;
+        }
+        departureTimeText.setText("출발 : " + departureTimeString);
+        arriveTimeText.setText("도착 : " + arriveTimeString);
 
         linearLayout.addView(mapView);
 

@@ -2,46 +2,52 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
     android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/desMapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="horizontal" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
-        <RelativeLayout
+        <ImageView
+            android:id="@+id/desImage"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="@dimen/default_margin" />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_margin="@dimen/default_margin"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/departureTimeText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/activity_destinationShape_margin"
-                android:textSize="@dimen/activity_destinationShape_TextSize" />
+                android:textColor="@color/white"
+                android:textSize="@dimen/default_text_size" />
 
             <TextView
-                android:id="@+id/aroundTime"
+                android:id="@+id/arriveTimeText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
                 android:layout_margin="@dimen/activity_destinationShape_margin"
-                android:textSize="@dimen/activity_destinationShape_TextSize" />
-        </RelativeLayout>
+                android:textColor="@color/white"
+                android:textSize="@dimen/default_text_size" />
 
-        <TextView
-            android:id="@+id/arriveTimeText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/activity_destinationShape_margin"
-            android:textSize="@dimen/activity_destinationShape_TextSize" />
+        </LinearLayout>
+
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/desMapView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
-    </LinearLayout>
 </LinearLayout>
