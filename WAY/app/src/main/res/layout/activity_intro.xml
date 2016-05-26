@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/intro_background" />
+
+    <LinearLayout
+        android:id="@+id/messaging_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btn_account"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btn_start_messaging"
+            android:layout_marginTop="150dp"
+            android:background="@drawable/round_button1"
+            android:minWidth="220dp"
+            android:text="가입하기"
+            android:textSize="16dp"
+            android:textColor="@drawable/button_click"
+            android:textColorHighlight="@drawable/button_click"
+            android:textColorLink="@drawable/button_click" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/round_button2"
+        android:layout_marginTop="30dp"
+        android:minWidth="220dp"
+        android:text="이미 아이디가 있으세요?"
+        android:textSize="16dp"
+        android:textColor="@drawable/button_click"
+        android:textColorHighlight="@drawable/button_click"
+        android:textColorLink="@drawable/button_click"
+        android:layout_below="@+id/messaging_container"
+        android:layout_alignStart="@+id/messaging_container"/>
+</RelativeLayout>

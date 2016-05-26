@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#2d80c6</color>
+    <color name="colorPrimaryDark">#134673</color>
+    <color name="colorAccent">#a5cd7a</color>
+    <!--<color name="colorAccent">#26a69a</color>-->
+    <!--<color name="colorAccent">#4ba5a0</color>-->
+
+    <color name="white">#ffffff</color>
+
+
+    <color name="colorPrimaryOpacity">#652d80c6</color>
+    <color name="colorPrimaryOpacity2">#802d80c6</color>
+    <color name="mapButton">#88ffffff</color>
+    <color name="enableFalseButton">#88848484</color>
+</resources>

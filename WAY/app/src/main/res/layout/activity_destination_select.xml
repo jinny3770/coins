@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/destinationView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_weight="1"
+            android:background="@color/colorPrimaryOpacity2"
+            android:orientation="horizontal">
+
+            <Spinner
+                android:id="@+id/selectSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_destinationSelect_margin_small"
+                android:layout_marginRight="@dimen/activity_destinationSelect_margin_small"
+                android:entries="@array/spinner_item" />
+
+
+            <EditText
+                android:id="@+id/searchText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_destinationSelect_margin_small"
+                android:layout_marginRight="@dimen/activity_destinationSelect_margin"
+                android:layout_weight="1"
+                android:hint="목적지를 검색하세요."
+                android:textColor="@color/white"
+                android:textColorHint="@color/white" />
+
+
+            <TextView
+                android:id="@+id/searchButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="@dimen/default_margin"
+                android:background="@drawable/search_button_layout"
+                android:clickable="true"
+                android:paddingTop="@dimen/default_margin_small"
+                android:paddingBottom="@dimen/default_margin_small"
+                android:paddingRight="@dimen/default_margin"
+                android:paddingLeft="@dimen/default_margin"
+                android:text="검색"
+                android:textColor="@color/white"
+                android:textSize="@dimen/default_text_size" />
+
+    </LinearLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

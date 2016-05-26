@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#f3f3f3">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="20dp"
+        android:textSize="15dp"
+        android:text="비상연락처를 선택해 주세요."
+        android:textColor="#000000"
+        android:id="@+id/textView2" />
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="330dp"
+        android:layout_marginTop="60dp"
+        android:layout_gravity="start"
+        android:layout_weight="1"
+        android:divider="#00000000"
+        android:dividerHeight="1dip"
+        android:id="@+id/alertList">
+    </ListView>
+
+
+    <EditText
+        android:layout_width="100dp"
+        android:layout_height="45dp"
+        android:background="@drawable/textview_warning"
+        android:layout_marginLeft="20dp"
+        android:hint="이름"
+        android:padding="10dp"
+        android:textSize="15dp"
+        android:id="@+id/name"
+        android:layout_below="@+id/alertList">
+    </EditText>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@drawable/textview_warning"
+        android:layout_marginEnd="20dp"
+        android:padding="10dp"
+        android:hint="전화번호"
+        android:textSize="15dp"
+        android:id="@+id/phone"
+        android:layout_alignTop="@+id/name"
+        android:layout_toEndOf="@+id/name"
+        android:layout_marginStart="10dp">
+    </EditText>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_weight="4"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="55dp"
+        android:layout_alignTop="@+id/name"
+        android:text="직접 입력하기"
+        android:id="@+id/register"
+        android:textColor="#ffffff"
+        android:textSize="16dp"
+        android:background="@drawable/button_warning"
+
+        android:layout_centerHorizontal="true">
+    </Button>
+</RelativeLayout>

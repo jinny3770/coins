@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/intro_background_nomark"
+    tools:context=".SideMenu.ProfileActivity">
+
+    <TextView
+        android:id="@+id/signupTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:text="@string/strProfile"
+        android:textColor="#ffffff"
+        android:textSize="16dp" />
+
+    <ImageView
+        android:id="@+id/createProfileImage"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_below="@+id/signupTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/profile"
+        android:scaleType="fitXY" />
+
+    <ImageView
+        android:id="@+id/createCancelImage"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignTop="@+id/createProfileImage"
+        android:layout_toEndOf="@+id/createProfileImage"
+        android:background="@drawable/profile_cancel" />
+
+
+    <EditText
+        android:id="@+id/createSurname"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignStart="@+id/createEmail"
+        android:layout_below="@+id/createProfileImage"
+        android:layout_marginTop="15dp"
+        android:layout_toStartOf="@+id/createName"
+        android:layout_weight="1"
+        android:background="@drawable/textview"
+        android:hint="성"
+        android:paddingLeft="10dp"
+        android:singleLine="true"
+        android:textColor="@drawable/button_click"
+        android:textColorHighlight="@drawable/button_click"
+        android:textColorLink="@drawable/button_click"
+        android:textSize="16dp" />
+
+    <EditText
+        android:id="@+id/createName"
+        android:layout_width="120dp"
+        android:layout_height="50dp"
+        android:layout_alignEnd="@+id/createEmail"
+        android:layout_below="@+id/createProfileImage"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/textview"
+        android:hint="이름"
+        android:paddingLeft="10dp"
+        android:singleLine="true"
+        android:textColor="@drawable/button_click"
+        android:textColorHighlight="@drawable/button_click"
+        android:textColorLink="@drawable/button_click"
+        android:textSize="16dp" />
+
+    <EditText
+        android:id="@+id/createEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignEnd="@+id/createCancelImage"
+        android:layout_alignStart="@+id/signupTextView"
+        android:layout_below="@+id/createSurname"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/textview"
+        android:hint="이메일"
+        android:paddingLeft="10dp"
+        android:singleLine="true"
+        android:textColor="@drawable/button_click"
+        android:textColorHighlight="@drawable/button_click"
+        android:textColorLink="@drawable/button_click"
+        android:textSize="16dp" />
+
+    <Button
+        android:id="@+id/createProfileButton"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignEnd="@+id/createEmail"
+        android:layout_alignStart="@+id/createEmail"
+        android:layout_below="@+id/createEmail"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/round_button1"
+        android:text="프로필 생성"
+        android:textAlignment="center"
+        android:textColor="@drawable/button_click"
+        android:textColorHighlight="@drawable/button_click"
+        android:textColorLink="@drawable/button_click"
+        android:textSize="16dp" />
+</RelativeLayout>

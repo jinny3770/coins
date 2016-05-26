@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_arrive"
+            android:icon="@drawable/ic_arrive_alarm"
+            android:title="도착알림" />
+        <item
+            android:id="@+id/nav_chat"
+            android:icon="@drawable/ic_chatting"
+            android:title="채팅하기" />
+        <item
+            android:id="@+id/nav_group"
+            android:icon="@drawable/ic_group"
+            android:title="그룹관리" />
+        <item
+            android:id="@+id/nav_setting"
+            android:icon="@drawable/ic_settings"
+            android:title="설정" />
+        <item
+            android:id="@+id/nav_appInfo"
+            android:icon="@drawable/ic_info"
+            android:title="앱정보" />
+    </group>
+
+</menu>
