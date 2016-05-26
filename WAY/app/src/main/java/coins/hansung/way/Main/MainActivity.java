@@ -64,6 +64,7 @@ import coins.hansung.way.SideMenu.LoginActivity;
 import coins.hansung.way.SideMenu.ProfileActivity;
 import coins.hansung.way.SideMenu.SettingsActivity;
 import coins.hansung.way.etc.APIKey;
+import coins.hansung.way.etc.Family;
 import coins.hansung.way.etc.MyInfo;
 import coins.hansung.way.etc.PersonInfo;
 
@@ -101,7 +102,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     Boolean flag = true;
     Boolean familyCheck = false;
     ListView familyList;
+    Family familyInstance;
     ArrayList<PersonInfo> family;
+
     FamilyListViewAdapter familyAdapter;
     ArrayList<TMapMarkerItem> familyMarker;
     int familyIndex;
@@ -604,10 +607,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     void loadFamilyList() {
         // 가족 List
+
         familyList = (ListView) findViewById(R.id.familyList);
         familyAdapter = new FamilyListViewAdapter(this);
         familyMarker = new ArrayList<TMapMarkerItem>();
-        family = new ArrayList<PersonInfo>();
+        familyInstance = Family.getInstance();
+        family = familyInstance.getFamilyArray();
 
         // family List Load
         // flag = ?????????? ㅅㅂ...ㅎㅎ
@@ -645,6 +650,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     pInfo.setID(jsonObject.getString("id"));
                     pInfo.setGroupCode(myinfo.getGroupCode());
                     pInfo.setName(jsonObject.getString("name"));
+                    pInfo.setPhoneNumber(jsonObject.getString("phoneNumber"));
 
                     String str = jsonObject.getString("gps");
                     if (str.equals("1")) pInfo.setGpsSig(true);

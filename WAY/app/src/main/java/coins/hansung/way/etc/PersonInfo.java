@@ -13,6 +13,7 @@ public class PersonInfo {
     private TMapPoint point;
     private Boolean gpsSig;
 
+    private String phoneNumber;
 
     public PersonInfo() {
         ID = null;
@@ -40,6 +41,8 @@ public class PersonInfo {
         this.gpsSig = gpsSig;
     }
 
+    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
+
     public String getID() {
         return ID;
     }
@@ -59,4 +62,6 @@ public class PersonInfo {
     public Boolean getGpsSig() {
         return gpsSig;
     }
+
+    public String getPhoneNumber() { return phoneNumber; }
 }
