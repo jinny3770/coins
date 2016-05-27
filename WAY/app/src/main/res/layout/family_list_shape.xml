@@ -41,17 +41,7 @@
             android:layout_marginRight="@dimen/default_margin"
             android:textColor="@color/white"
             android:text="ON"/>
-
-        <TextView
-            android:id="@+id/familyDistance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/familyLoca"
-            android:layout_alignParentRight="true"
-            android:layout_marginLeft="@dimen/default_margin_small"
-            android:layout_marginRight="@dimen/default_margin"
-            android:textColor="@color/white"
-            android:text="거리 : XX"/>
+        
 
     </RelativeLayout>
 
