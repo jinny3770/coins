@@ -14,6 +14,7 @@ public class Links {
     public static final String bicycleURL = "https://apis.skplanetx.com/tmap/routes/bicycle?version=1";
     public static final String carURL = "https://apis.skplanetx.com/tmap/routes?version=1";
     public static final String resistURL = serverURL + "/destinationsResist.php";
+    public static final String signupURL = serverURL + "/signup.php";
 
     public static final String myPointResistURL = serverURL + "/myPointResist.php";
     public static final String loadFamilyURL = serverURL + "/loadFamilyList.php";

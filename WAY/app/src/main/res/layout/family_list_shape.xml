@@ -41,7 +41,7 @@
             android:layout_marginRight="@dimen/default_margin"
             android:textColor="@color/white"
             android:text="ON"/>
-        
+
 
     </RelativeLayout>
 

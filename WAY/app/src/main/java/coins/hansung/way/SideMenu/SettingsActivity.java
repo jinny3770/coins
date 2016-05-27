@@ -20,6 +20,7 @@ import coins.hansung.way.Main.MainActivity;
 import coins.hansung.way.R;
 import coins.hansung.way.etc.Links;
 import coins.hansung.way.etc.MyInfo;
+import android.support.v7.app.AppCompatActivity;
 
 
 public class SettingsActivity extends PreferenceActivity implements OnPreferenceClickListener{
@@ -31,7 +32,6 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.pref_settings);
-
         myInfo = MyInfo.getInstance();
 
         setOnPreferenceChange(findPreference("gps"));
@@ -116,7 +116,6 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         // 도움말 선택시
         if(preference.getKey().equals("warning"))
         {
-            Log.d("saldkfjlew", "warningstart");
             Intent intent = new Intent(this, WarningActivity.class);
             startActivityForResult(intent, 0);
         }

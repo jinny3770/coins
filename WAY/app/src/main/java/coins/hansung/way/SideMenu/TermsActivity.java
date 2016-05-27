@@ -2,8 +2,10 @@ package coins.hansung.way.SideMenu;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -11,62 +13,135 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.regex.Pattern;
 
+import coins.hansung.way.Intro.IntroMain;
 import coins.hansung.way.Main.MainActivity;
 import coins.hansung.way.R;
+import coins.hansung.way.etc.Links;
 
 /**
  * Created by Administrator on 2016-05-25.
  */
-public class TermsActivity extends AppCompatActivity implements View.OnClickListener
-{
-    EditText phoneNumber;
+public class TermsActivity extends AppCompatActivity implements View.OnClickListener {
+    EditText phoneEditText;
     CheckBox check1, check2;
     Button signup;
-    String surName, name, email;
+    String name, id, password;
+    String str;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_terms);
 
-        phoneNumber = (EditText) findViewById(R.id.phoneNumber);
+        phoneEditText = (EditText) findViewById(R.id.phoneNumber);
+
         check1 = (CheckBox) findViewById(R.id.check1);
         check2 = (CheckBox) findViewById(R.id.check2);
         signup = (Button) findViewById(R.id.signupButton);
         signup.setOnClickListener(this);
 
         Intent intent = getIntent();
-        surName = intent.getStringExtra("surname");
         name = intent.getStringExtra("name");
-        email = intent.getStringExtra("email");
+        id = intent.getStringExtra("id");
+        password = intent.getStringExtra("password");
+
+        Log.d("resultTerm", name + ", " + id + ", " + password);
     }
 
     @Override
-    public void onClick(View v)
-    {
-        if (check1.isChecked() && check2.isChecked())
-        {
-            Intent intent = new Intent(this, MainActivity.class);
-        }
+    public void onClick(View v) {
+        Intent intent = new Intent(this, IntroMain.class);
+        String phone = makePhoneNumber(phoneEditText.getText().toString());
 
-        else
-        {
+        if (phone == null) {
+            Toast.makeText(getApplicationContext(), "연락처 방식이 올바르지 않습니다.", Toast.LENGTH_SHORT).show();
+        } else if (!check1.isChecked() || !check2.isChecked()) {
             Toast.makeText(getApplicationContext(), "이용약관 및 개인정보 취급방침에 동의해주세요.", Toast.LENGTH_SHORT).show();
+        } else {
+            SendInfoTask task = new SendInfoTask(name, id, password, phone);
+            try {
+                str = task.execute().get().toString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (str.equals("exist")) {
+                Toast.makeText(getApplicationContext(), "중복 된 아이디입니다.", Toast.LENGTH_SHORT).show();
+            } else {
+                finish();
+                overridePendingTransition(R.anim.fade, R.anim.hold);
+            }
         }
     }
 
-    public static String makePhoneNumber(String phoneNumber)
-    {
+    public static String makePhoneNumber(String phoneNumber) {
         String rule = "(\\d{3})(\\d{3,4})(\\d{4})";
+        String rule2 = "(\\d{3})-(\\d{3,4})-(\\d{4})";
 
-        if (!Pattern.matches(rule, phoneNumber))
-        {
+        if (!Pattern.matches(rule, phoneNumber) && !Pattern.matches(rule2, phoneNumber)) {
             return null;
         }
 
         return phoneNumber.replaceAll(rule, "$1-$2-$3");
+    }
+
+    public class SendInfoTask extends AsyncTask<Void, Void, String> {
+        String name, id, password, phoneNumber;
+        BufferedReader reader = null;
+
+        SendInfoTask(String name, String id, String password, String phoneNumber) {
+            this.name = name;
+            this.id = id;
+            this.password = password;
+            this.phoneNumber = phoneNumber;
+            Log.d("resultTask", name + ", " + id + ", " + password + ", " + phoneNumber);
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            try {
+                URL url = new URL(Links.signupURL);
+
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("POST");
+
+                conn.setReadTimeout(10000);
+                conn.setConnectTimeout(15000);
+
+                conn.setDoOutput(true);
+                conn.setDoInput(true);
+
+                String sendData = URLEncoder.encode("name", "UTF-8") + "=" + URLEncoder.encode(name, "UTF-8") + "&" +
+                        URLEncoder.encode("ID", "UTF-8") + "=" + URLEncoder.encode(id, "UTF-8") + "&" +
+                        URLEncoder.encode("PW", "UTF-8") + "=" + URLEncoder.encode(password, "UTF-8") + "&" +
+                        URLEncoder.encode("phoneNumber", "UTF-8") + "=" + URLEncoder.encode(phoneNumber, "UTF-8");
+
+                Log.e("result", sendData);
+
+                OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
+                writer.write(sendData);
+                writer.flush();
+                Log.e("result", "S");
+
+                reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+                String line = reader.readLine();
+
+                return line;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("result", "e : " + e.getMessage());
+                return e.toString();
+
+            }
+        }
     }
 }

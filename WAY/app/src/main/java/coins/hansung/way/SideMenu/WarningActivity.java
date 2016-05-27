@@ -164,9 +164,12 @@ public class WarningActivity extends AppCompatActivity
     public static String makePhoneNumber(String phone)
     {
         String regExample = "(\\d{3})(\\d{3,4})(\\d{4})";
+        String regExample2 = "(\\d{3})-(\\d{3,4})-(\\d{4})";
 
-        if (!Pattern.matches(regExample, phone))
+        if (!Pattern.matches(regExample, phone) && !Pattern.matches(regExample2, phone))
+        {
             return null;
+        }
 
         return phone.replaceAll(regExample, "$1-$2-$3");
     }

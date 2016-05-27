@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,7 +19,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 {
     final int REQ = 100;
     ImageView profileView, cancelView;
-    EditText surname, name, email;
+    EditText name, id, password, passwordRepeat;
     Button createProfile;
 
     @Override
@@ -30,9 +31,12 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         // 초기화 및 리스너 지정
         profileView = (ImageView) findViewById(R.id.createProfileImage);
         cancelView = (ImageView) findViewById(R.id.createCancelImage);
-        surname = (EditText) findViewById(R.id.createSurname);
+
         name = (EditText) findViewById(R.id.createName);
-        email = (EditText) findViewById(R.id.createEmail);
+        id = (EditText) findViewById(R.id.createID);
+        password = (EditText) findViewById(R.id.createPassword);
+        passwordRepeat = (EditText) findViewById(R.id.createPasswordRepeat);
+
         createProfile = (Button) findViewById(R.id.createProfileButton);
 
         profileView.setOnClickListener(this);
@@ -62,26 +66,28 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.createProfileButton: // 프로필 생성
                 intent = new Intent(this, TermsActivity.class);
 
-                String strSurname = surname.getText().toString();
                 String strName = name.getText().toString();
-                String strEmail = email.getText().toString();
+                String strID = id.getText().toString();
+                String strPassword = password.getText().toString();
+                String strPasswordRepeat = passwordRepeat.getText().toString();
 
-                /*Drawable drawable = profileView.getBackground();
-                Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();*/
-
-                if (strSurname.equals("") || strName.equals("") || strEmail.equals(""))
+                if (strName.equals("") || strID.equals("") || strPassword.equals("") || strPasswordRepeat.equals(""))
                 {
                     Toast.makeText(getApplicationContext(), "프로필을 채워주세요.", Toast.LENGTH_SHORT).show();
                 }
 
+                else if (!strPassword.equals(strPasswordRepeat))
+                {
+                    Toast.makeText(getApplicationContext(), "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
+                }
+
                 else
                 {
-                    intent.putExtra("surname", strSurname);
                     intent.putExtra("name", strName);
-                    intent.putExtra("email", strEmail);
-                    /*intent.putExtra("profile", (Bitmap) bitmap);
+                    intent.putExtra("id", strID);
+                    intent.putExtra("password", strPassword);
 
-                    Log.e("result", bitmap.toString());*/
+                    Log.d("result", strName + ", " + strID + ", " + strPassword + ", " + strPasswordRepeat);
                     startActivity(intent);
                     overridePendingTransition(R.anim.fade, R.anim.hold);
                 }
