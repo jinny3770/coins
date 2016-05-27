@@ -30,6 +30,9 @@ import coins.hansung.way.etc.Links;
  * Created by Administrator on 2016-05-25.
  */
 public class TermsActivity extends AppCompatActivity implements View.OnClickListener {
+
+    final int TERM_REQ = 13;
+
     EditText phoneEditText;
     CheckBox check1, check2;
     Button signup;
@@ -75,6 +78,9 @@ public class TermsActivity extends AppCompatActivity implements View.OnClickList
             if (str.equals("exist")) {
                 Toast.makeText(getApplicationContext(), "중복 된 아이디입니다.", Toast.LENGTH_SHORT).show();
             } else {
+
+                Intent outIntent = new Intent(getApplicationContext(), SignUpActivity.class);
+                setResult(RESULT_OK);
                 finish();
                 overridePendingTransition(R.anim.fade, R.anim.hold);
             }

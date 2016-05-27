@@ -27,7 +27,7 @@ import coins.hansung.way.R;
  * Created by sora on 2016-05-21.
  */
 public class LockScreenActivity extends AppCompatActivity implements View.OnTouchListener{
-	private Thread thread;
+    private Thread thread;
     private String numbers[];
     private int initX, offsetX;
     private TextView timeView;
@@ -39,11 +39,12 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnTouc
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lock_screen); // 잠금화면 레이아웃
+        setContentView(R.layout.activity_lockscreen); // 잠금화면 레이아웃
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
 
         // 시계 출력
         timeView = (TextView) findViewById(R.id.time);
+
         thread = new Thread()
         {
             @Override
@@ -62,7 +63,7 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnTouc
                             {
                                 long time = System.currentTimeMillis();
                                 Date date = new Date(time);
-                                SimpleDateFormat data = new SimpleDateFormat("yyyy.MM.dd\n HH:mm:ss");
+                                SimpleDateFormat data = new SimpleDateFormat("\nyyyy.MM.dd\nHH : mm : ss");
                                 String strTime = data.format(date);
                                 timeView.setText(strTime);
                             }

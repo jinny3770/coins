@@ -18,6 +18,7 @@ import coins.hansung.way.R;
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener
 {
     final int REQ = 100;
+    final int TERM_REQ = 13;
     ImageView profileView, cancelView;
     EditText name, id, password, passwordRepeat;
     Button createProfile;
@@ -88,13 +89,14 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                     intent.putExtra("password", strPassword);
 
                     Log.d("result", strName + ", " + strID + ", " + strPassword + ", " + strPasswordRepeat);
-                    startActivity(intent);
+                    startActivityForResult(intent, TERM_REQ);
                     overridePendingTransition(R.anim.fade, R.anim.hold);
                 }
 
                 break;
         }
     }
+
 
     // 프로필 사진 선택
     @Override
@@ -114,6 +116,13 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 {
                     e.printStackTrace();
                 }
+            }
+        }
+
+        else if (requestCode == TERM_REQ) {
+            if(resultCode == RESULT_OK) {
+                Log.d("SignUpActivity", "OK");
+                finish();
             }
         }
     }

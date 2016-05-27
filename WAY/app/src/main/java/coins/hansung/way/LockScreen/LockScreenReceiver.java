@@ -5,6 +5,7 @@ import android.app.KeyguardManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 
 /**
@@ -40,11 +41,13 @@ public class LockScreenReceiver extends BroadcastReceiver
 
     public void reenableKeyguard()
     {
+        Log.e("reenable", "reenable");
         keyLock.reenableKeyguard();
     }
 
     public void disableKeyguard()
     {
+        Log.e("disable", "disable");
         keyLock.disableKeyguard();
     }
 }
