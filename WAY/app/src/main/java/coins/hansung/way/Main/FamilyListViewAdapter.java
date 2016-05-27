@@ -25,6 +25,8 @@ public class FamilyListViewAdapter extends BaseAdapter{
     public FamilyListViewAdapter(Context mContext) {
         super();
         this.myContext = mContext;
+
+
     }
 
     @Override

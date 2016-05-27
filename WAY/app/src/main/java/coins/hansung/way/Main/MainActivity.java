@@ -65,6 +65,7 @@ import coins.hansung.way.SideMenu.ProfileActivity;
 import coins.hansung.way.SideMenu.SettingsActivity;
 import coins.hansung.way.etc.APIKey;
 import coins.hansung.way.etc.Family;
+import coins.hansung.way.etc.FamilyMarkerResource;
 import coins.hansung.way.etc.MyInfo;
 import coins.hansung.way.etc.PersonInfo;
 
@@ -87,8 +88,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     SharedPreferences.Editor loginPrefEditor;
 
 
-    // login / profile 헤더 클릭
-    LayoutInflater inflater;
     View afterLoginView;
 
 
@@ -104,6 +103,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ListView familyList;
     Family familyInstance;
     ArrayList<PersonInfo> family;
+
+
+    FamilyMarkerResource familyMarkerResource;
+    ArrayList<Integer> familyMarkerResourceList;
+    ArrayList<Bitmap> familyMarkerBitmap;
+
 
     FamilyListViewAdapter familyAdapter;
     ArrayList<TMapMarkerItem> familyMarker;
@@ -192,7 +197,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(myinfo.getID() != null) {
+                if (myinfo.getID() != null) {
                     loadFamilyList();
                 }
             }
@@ -238,6 +243,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         service = new Intent(this, LocationService.class);
         startService(service);
 
+
+        familyMarkerResource = new FamilyMarkerResource();
+        familyMarkerResourceList = familyMarkerResource.getFamilyMarkerBitmap();
+        familyMarkerBitmap = new ArrayList<>();
+
+        for(int i=0; i<familyMarkerResourceList.size(); i++) {
+            Bitmap bitmap = BitmapFactory.decodeResource(getApplicationContext().getResources(), familyMarkerResourceList.get(i));
+            familyMarkerBitmap.add(bitmap);
+        }
+
+
         myMarkerBitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_action_place);
         setMyMarker(myLocation);
 
@@ -247,7 +263,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         LayoutInflater inflater = getLayoutInflater();
 
-        /* Header view inflate */
+
+
+        myinfo = MyInfo.getInstance();
+        myinfo.setID(loginPref.getString("ID", null));
+        myinfo.setGroupCode(loginPref.getString("Code", "000000"));
+        myinfo.setName(loginPref.getString("Name", null));
+
+
         afterLoginView = inflater.inflate(R.layout.nav_header_main, null);
         afterLoginView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -257,10 +280,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 overridePendingTransition(R.anim.fade, R.anim.hold);
             }
         });
-
         profileID = (TextView) afterLoginView.findViewById(R.id.mainProfileID);
         profileName = (TextView) afterLoginView.findViewById(R.id.mainProfileName);
-        myinfo = MyInfo.getInstance();
+        profileID.setText(myinfo.getID());
+        profileName.setText(myinfo.getName());
 
 
         // 현재 위치 추적 버튼
@@ -364,25 +387,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             adapter.enableForegroundDispatch(this, pendingIntent, intentFilters, techLists);
         }
 
-        /*// 프로필 변경
-        SharedPreferences pref = getSharedPreferences("pref", 0);
-        String name = pref.getString("fixName", "");
-        Log.e("name", name);
-        Log.e("name", name);Log.e("name", name);Log.e("name", name);Log.e("name", name);Log.e("name", name);
-        profileName.setText(name);
-
-
-
-        if (!name.equals(myinfo.getName()) && !name.equals(""))
-        {
-            myinfo.setName(name);
-            profileName.setText(name);
-        }*/
-
-        /* 상황에 따라서 nav Header를 다르게 표현 할 수 있도록 함 */
         navigationView.removeHeaderView(navigationView.getHeaderView(0));
 
-        Log.d("Login", "pref : " + loginPref.getBoolean("AutoLogin", false));
         /* 자동 로그인이 되어 있으면*/
         if (loginPref.getBoolean("AutoLogin", false)) {
             Log.d("Login", "pref : true, into first if");
@@ -405,6 +411,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             if (defaultPref.getBoolean("gps", true)) {
                 loadFamilyList();
+                setMyMarker(myinfo.getPoint());
 
                 new Handler().post(new Runnable() {
                     @Override
@@ -592,6 +599,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         myMarker.setPosition((float) 0.5, (float) 1.0);
         myMarker.setTMapPoint(mapPoint);
         mapView.addMarkerItem("myMarker", myMarker);
+        mapView.bringMarkerToFront(myMarker);
     }
 
     @Override
@@ -602,6 +610,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (!familyCheck)
             mapView.setLocationPoint(point.getLongitude(), point.getLatitude());
 
+        mapView.bringMarkerToFront(myMarker);
         setMyMarker(point);
     }
 
@@ -615,7 +624,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         family = familyInstance.getFamilyArray();
 
         // family List Load
-        // flag = ?????????? ㅅㅂ...ㅎㅎ
+        // flag = ??????????...ㅎㅎ
         flag = false;
         familyList.setAdapter(familyAdapter);
         familyList.setOnItemClickListener(new AdapterView.OnItemClickListener()
@@ -664,6 +673,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     pInfo.setPoint(pPoint);
 
                     TMapMarkerItem marker = initFamilyMarker(pPoint);
+                    marker.setIcon(familyMarkerBitmap.get(j));
                     familyMarker.add(marker);
                     mapView.addMarkerItem("family" + j, marker);
 
@@ -674,7 +684,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                     LoadLocationString loadLocationString = new LoadLocationString();
                     familyLocationString = loadLocationString.execute(family.get(familyIndex).getPoint()).get();
-                    familyAdapter.addItem(getResources().getDrawable(R.drawable.ic_profile),
+                    familyAdapter.addItem(getResources().getDrawable(familyMarkerResourceList.get(j)),
                             family.get(familyIndex).getName(), familyLocationString, family.get(familyIndex).getGpsSig());
 
                     j++;
