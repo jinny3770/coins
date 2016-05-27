@@ -44,11 +44,14 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         fixProfile = (Button) findViewById(R.id.fixProfileButton);
 
+
+
         profileView.setOnClickListener(this);
         cancelView.setOnClickListener(this);
         fixProfile.setOnClickListener(this);
 
         myinfo = MyInfo.getInstance();
+        name.setText(myinfo.getName());
         id.setText(myinfo.getID());
     }
 
@@ -90,11 +93,13 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
                 else
                 {
+                    /*
                     SharedPreferences pref = getSharedPreferences("pref", 0);
                     SharedPreferences.Editor editor = pref.edit();
                     editor.putString("fixName", strName);
                     editor.putString("fixPassword", strPassword);
                     editor.commit();
+                    */
                     finish();
                 }
 

@@ -61,6 +61,7 @@
         android:paddingLeft="10dp"
         android:layout_marginTop="10dp"
         android:singleLine="true"
+        android:editable="false"
         android:textColor="@drawable/button_click"
         android:textColorHighlight="@drawable/button_click"
         android:textColorLink="@drawable/button_click"

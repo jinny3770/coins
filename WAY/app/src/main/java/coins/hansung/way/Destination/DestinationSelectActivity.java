@@ -82,9 +82,10 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
     EditText searchText;
     TextView searchButton;
     Spinner spinner;
-    Integer[] spinnerImages = {R.drawable.ic_directions_walk_white_24dp, R.drawable.ic_directions_bike_white_24dp, 
-								R.drawable.ic_local_taxi_white_24dp};
-    
+
+    Integer[] spinnerImages = {R.drawable.ic_directions_walk_white_24dp, R.drawable.ic_directions_bike_white_24dp,
+            R.drawable.ic_local_taxi_white_24dp};
+
 
     DestinationInfo destinationInfo;
     Date currentTime;
@@ -130,7 +131,7 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
 
         Bitmap departure = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.ic_departure);
         Bitmap arrival = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.ic_arrival);
-        marker = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.red);
+        marker = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.ic_action_place);
 
         mapView.setTMapPathIcon(departure, arrival);
 
@@ -185,81 +186,91 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
                             mapView.removeAllMarkerItem();
                             mapView.removeTMapPath();
 
-                            for (int i = 0; i < arrayList.size(); i++) {
+                            Log.d("arrayList Size", Integer.toString(arrayList.size()));
 
-                                TMapPOIItem tmp = arrayList.get(i);
-                                Log.d("arrayList", "id : " + tmp.getPOIID());
-                                Log.d("arrayList", "name : " + tmp.getPOIName());
-                                Log.d("arrayList", "lon : " + tmp.getPOIPoint().getLongitude() + ", lat : " + tmp.getPOIPoint().getLatitude());
+                            if (arrayList.size() > 0) {
+                                for (int i = 0; i < arrayList.size(); i++) {
 
-                                MarkerOverlay overlay = new MarkerOverlay(getApplicationContext(), mapView, tmp.getPOIName());
+                                    TMapPOIItem tmp = arrayList.get(i);
+                                    Log.d("arrayList", "id : " + tmp.getPOIID());
+                                    Log.d("arrayList", "name : " + tmp.getPOIName());
+                                    Log.d("arrayList", "lon : " + tmp.getPOIPoint().getLongitude() + ", lat : " + tmp.getPOIPoint().getLatitude());
 
-                                overlay.setID(tmp.getPOIID());
-                                overlay.setName(tmp.getPOIName());
-                                overlay.setTMapPoint(tmp.getPOIPoint());
-                                overlay.setIcon(marker);
-                                overlay.setPosition((float) 0.5, (float) 1.0);
+                                    MarkerOverlay overlay = new MarkerOverlay(getApplicationContext(), mapView, tmp.getPOIName());
 
-                                markerList.add(overlay);
-                                mapView.addMarkerItem2(tmp.getPOIID(), overlay);
+                                    overlay.setID(tmp.getPOIID());
+                                    overlay.setName(tmp.getPOIName());
+                                    overlay.setTMapPoint(tmp.getPOIPoint());
+                                    overlay.setIcon(marker);
+                                    overlay.setPosition((float) 0.5, (float) 1.0);
 
+                                    markerList.add(overlay);
+                                    mapView.addMarkerItem2(tmp.getPOIID(), overlay);
+
+                                }
+
+                                mapView.setCenterPoint(arrayList.get(0).getPOIPoint().getLongitude(), arrayList.get(0).getPOIPoint().getLatitude());
+                                mapView.setOnMarkerClickEvent(new TMapView.OnCalloutMarker2ClickCallback() {
+                                    @Override
+                                    public void onCalloutMarker2ClickEvent(String s, TMapMarkerItem2 tMapMarkerItem2) {
+
+                                        for (int i = 0; i < markerList.size(); i++) {
+                                            mapView.removeMarkerItem2(markerList.get(i).getID());
+                                        }
+
+                                        new Handler().post(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                resistAlarm.setVisibility(View.VISIBLE);
+                                            }
+                                        });
+
+                                        endPoint = tMapMarkerItem2.getTMapPoint();
+
+                                        String url = null;
+                                        String sLati = Double.toString(myInfo.getPoint().getLatitude());
+                                        String sLong = Double.toString(myInfo.getPoint().getLongitude());
+                                        String eLati = Double.toString(tMapMarkerItem2.getTMapPoint().getLatitude());
+                                        String eLong = Double.toString(tMapMarkerItem2.getTMapPoint().getLongitude());
+                                        String type = null;
+
+
+                                        switch (spinner.getSelectedItemPosition()) {
+
+                                            case 0:
+                                                url = Links.walkURL;
+                                                type = "walk";
+                                                break;
+
+                                            case 1:
+                                                url = Links.bicycleURL;
+                                                type = "bicycle";
+                                                break;
+
+                                            case 2:
+                                                url = Links.carURL;
+                                                type = "car";
+                                                break;
+                                        }
+
+                                        RouteTask routeTask = new RouteTask();
+                                        try {
+                                            beforeRoute(routeTask.execute(url, sLati, sLong, eLati, eLong, type).get().toString(), type);
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
+
+                                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                                imm.hideSoftInputFromWindow(searchText.getWindowToken(), 0);
                             }
 
-                            mapView.setCenterPoint(arrayList.get(0).getPOIPoint().getLongitude(), arrayList.get(0).getPOIPoint().getLatitude());
-                            mapView.setOnMarkerClickEvent(new TMapView.OnCalloutMarker2ClickCallback() {
-                                @Override
-                                public void onCalloutMarker2ClickEvent(String s, TMapMarkerItem2 tMapMarkerItem2) {
+                            else{
+                                ToastTask toastTask = new ToastTask();
+                                toastTask.execute();
 
-                                    for (int i = 0; i < markerList.size(); i++) {
-                                        mapView.removeMarkerItem2(markerList.get(i).getID());
-                                    }
-
-                                    new Handler().post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            resistAlarm.setVisibility(View.VISIBLE);
-                                        }
-                                    });
-
-                                    endPoint = tMapMarkerItem2.getTMapPoint();
-
-                                    String url = null;
-                                    String sLati = Double.toString(myInfo.getPoint().getLatitude());
-                                    String sLong = Double.toString(myInfo.getPoint().getLongitude());
-                                    String eLati = Double.toString(tMapMarkerItem2.getTMapPoint().getLatitude());
-                                    String eLong = Double.toString(tMapMarkerItem2.getTMapPoint().getLongitude());
-                                    String type = null;
-
-
-                                    switch (spinner.getSelectedItemPosition()) {
-
-                                        case 0:
-                                            url = Links.walkURL;
-                                            type = "walk";
-                                            break;
-
-                                        case 1:
-                                            url = Links.bicycleURL;
-                                            type = "bicycle";
-                                            break;
-
-                                        case 2:
-                                            url = Links.carURL;
-                                            type = "car";
-                                            break;
-                                    }
-
-                                    RouteTask routeTask = new RouteTask();
-                                    try {
-                                        beforeRoute(routeTask.execute(url, sLati, sLong, eLati, eLong, type).get().toString(), type);
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            });
-
-                            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                            imm.hideSoftInputFromWindow(searchText.getWindowToken(), 0);
+                            }
                         }
                     });
                 }
@@ -326,7 +337,6 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
     }
 
 
-
     private AppCompatDialog sendDialogMaker() {
 
         TextView time, distance;
@@ -385,8 +395,6 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
             return null;
         }
     }
-
-
 
 
     class ResistDestination extends AsyncTask<DestinationInfo, Void, String> {
@@ -485,26 +493,39 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
         return data;
     }
 
-    String transformDistance (int distance) {
+    String transformDistance(int distance) {
 
-        double kmDis = distance /1000.0;
+        double kmDis = distance / 1000.0;
         String str = String.format("%.1f", kmDis);
 
         return str;
     }
 
-    String transformTime (int time) {
+    String transformTime(int time) {
 
-        int hour = time/3600;
+        int hour = time / 3600;
         int minute = time / 60;
 
         String str = "";
 
-        if(hour != 0)
+        if (hour != 0)
             str += Integer.toString(hour) + "시간 ";
 
         str += Integer.toString(minute) + "분";
 
         return str;
+    }
+
+    class ToastTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            Toast.makeText(getApplicationContext(), "정보가 없습니다.", Toast.LENGTH_SHORT).show();
+        }
     }
 }

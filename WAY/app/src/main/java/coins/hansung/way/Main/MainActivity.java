@@ -254,7 +254,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
 
-        myMarkerBitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_action_place);
+        myMarkerBitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.black);
         setMyMarker(myLocation);
 
         /* preference 정의 */
