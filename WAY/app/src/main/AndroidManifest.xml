@@ -118,7 +118,8 @@
 
         <activity android:name=".Chat.SendBirdMemberListActivity" />
 
-        <activity android:name=".LockScreen.LockScreenActivity" />
+        <activity android:name=".LockScreen.LockScreenActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <service
             android:name=".LockScreen.LockScreenService"

@@ -20,8 +20,22 @@
         android:layout_height="70dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="120dp"
+        android:layout_marginBottom="80dp"
         android:background="@drawable/select_image" />
+    <ImageView
+        android:id="@+id/select_right"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:background="@drawable/select_right"
+        android:layout_alignTop="@+id/unlock"
+        android:layout_toEndOf="@+id/select" />
+    <ImageView
+        android:id="@+id/select_left"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:background="@drawable/select_left"
+        android:layout_alignTop="@+id/alert"
+        android:layout_toStartOf="@+id/select" />
 
     <ImageView
         android:id="@+id/unlock"

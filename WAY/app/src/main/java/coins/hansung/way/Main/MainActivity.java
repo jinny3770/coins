@@ -53,6 +53,7 @@ import java.util.List;
 import coins.hansung.way.Chat.ChattingActivity;
 import coins.hansung.way.Destination.DestinationListActivity;
 import coins.hansung.way.Intro.IntroMain;
+import coins.hansung.way.LockScreen.LockScreenService;
 import coins.hansung.way.NFC.NdefMessageParsing;
 import coins.hansung.way.NFC.ParsingRecord;
 import coins.hansung.way.NFC.ReadNFC;
@@ -388,6 +389,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         navigationView.removeHeaderView(navigationView.getHeaderView(0));
+
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        Intent intent = new Intent(getApplicationContext(), LockScreenService.class);
+        Log.e("Lock Boolean", String.valueOf(pref.getBoolean("lock", true)));
+
+        if (pref.getBoolean("lock", true))
+        {
+            Log.e("LockScreen", "Start");
+            startService(intent);
+        }
+
+        else
+        {
+            Log.e("LockScreen", "Stop");
+            stopService(intent);
+        }
 
         /* 자동 로그인이 되어 있으면*/
         if (loginPref.getBoolean("AutoLogin", false)) {

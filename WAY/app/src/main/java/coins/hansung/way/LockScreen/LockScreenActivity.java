@@ -5,10 +5,12 @@ import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.SmsManager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -32,7 +34,10 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnTouc
     private int initX, offsetX;
     private TextView timeView;
     private static MediaPlayer alertPlayer;
-    private ImageView alert, select, unlock;
+    float select_x;
+    int x_bang, x2_bang;
+    ImageView select;
+    Drawable alert, unlock;
     final private int screens[] = new int[] {R.drawable.screen1, R.drawable.screen2, R.drawable.screen3, R.drawable.screen4, R.drawable.screen5, R.drawable.screen6, R.drawable.screen7};
 
 
@@ -85,10 +90,13 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnTouc
         myLayout.setBackgroundResource(screens[random]);
 
         alertPlayer = MediaPlayer.create(this, R.raw.alert);
-        alert = (ImageView) findViewById(R.id.alert);
+        alert = ((ImageView) findViewById(R.id.alert)).getBackground();
+        unlock = ((ImageView) findViewById(R.id.unlock)).getBackground();
         select = (ImageView) findViewById(R.id.select);
-        unlock = (ImageView) findViewById(R.id.unlock);
         initX = select.getWidth();
+        select_x = select.getX();
+        alert.setAlpha(0);
+        unlock.setAlpha(0);
         select.setOnTouchListener(this);
 
         SharedPreferences pref = getSharedPreferences("pref", 0);
@@ -113,10 +121,21 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnTouc
 
             case MotionEvent.ACTION_MOVE:
                 select.setTranslationX(x - offsetX);
-                check(select, alert, unlock);
+                check(select);
+                x_bang = (Math.abs((int)(select_x - select.getX())))/2;
+                x2_bang = (Math.abs((int)(select_x - select.getX())))/2;
+                Log.d("Asdfsadfdsf", "x_bang : " + x_bang);
+                if (x_bang>255) x_bang=255;
+                alert.setAlpha(255-x_bang);
+                if (x2_bang<255) x2_bang=255;
+                if (300-x2_bang<100 && 300-x2_bang>0) x2_bang=255;
+                unlock.setAlpha(x2_bang-255);
                 break;
 
             case MotionEvent.ACTION_UP:
+                alert.setAlpha(0);
+                unlock.setAlpha(0);
+                Log.d("adsdlfsflje", "ddem");
                 select.setTranslationX(initX);
                 break;
         }
@@ -135,15 +154,15 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnTouc
         return super.onKeyDown(keyCode, event);
     }
 
-    public void check(View select, View alert, View unlock)
+    public void check(View select)
     {
-        if (select.getX() < alert.getX() + 25)
+        if (select.getX() < 55.0)
         {
             alertPlayer.start();
             sendSMS(numbers, "<WAY> 위급상황입니다.");
             select.setTranslationX(initX);
             finish();
-        } else if (select.getX() > unlock.getX() - 25) {
+        } else if (select.getX() > 1135.0) {
             select.setTranslationX(initX);
             finish();
         }
