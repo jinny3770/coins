@@ -26,7 +26,7 @@ public class ChattingActivity extends FragmentActivity{
      Please carefully read "Push notifications" section in SendBird Android documentation
      */
     final String appId = "65502478-E77E-41D0-A636-4D5DEE969EEA"; /* Sample SendBird Application */
-    String userId = SendBirdChatActivity.Helper.generateDeviceUUID(ChattingActivity.this); /* Generate Device UUID */
+    String userId = ChatActivity.Helper.generateDeviceUUID(ChattingActivity.this); /* Generate Device UUID */
     String userName = myInfo.getName(); /* Generate User Nickname  + userId.substring(0, 5)*/
 
     @Override
@@ -101,8 +101,8 @@ public class ChattingActivity extends FragmentActivity{
     }
 
     private void startChat(String channelUrl) {
-        Intent intent = new Intent(ChattingActivity.this, SendBirdChatActivity.class);
-        Bundle args = SendBirdChatActivity.makeSendBirdArgs(appId, userId, userName, channelUrl);
+        Intent intent = new Intent(ChattingActivity.this, ChatActivity.class);
+        Bundle args = ChatActivity.makeSendBirdArgs(appId, userId, userName, channelUrl);
 
         intent.putExtras(args);
 
@@ -111,8 +111,8 @@ public class ChattingActivity extends FragmentActivity{
     }
 
     private void startUserList() {
-        Intent intent = new Intent(ChattingActivity.this, SendBirdUserListActivity.class);
-        Bundle args = SendBirdUserListActivity.makeSendBirdArgs(appId, userId, userName);
+        Intent intent = new Intent(ChattingActivity.this, UserListActivity.class);
+        Bundle args = UserListActivity.makeSendBirdArgs(appId, userId, userName);
         intent.putExtras(args);
 
         startActivityForResult(intent, REQUEST_SENDBIRD_USER_LIST_ACTIVITY);
@@ -120,8 +120,8 @@ public class ChattingActivity extends FragmentActivity{
     }
 
     private void startMessaging(String [] targetUserIds) {
-        Intent intent = new Intent(ChattingActivity.this, SendBirdMessagingActivity.class);
-        Bundle args = SendBirdMessagingActivity.makeMessagingStartArgs(appId, userId, userName, targetUserIds);
+        Intent intent = new Intent(ChattingActivity.this, MessagingActivity.class);
+        Bundle args = MessagingActivity.makeMessagingStartArgs(appId, userId, userName, targetUserIds);
         intent.putExtras(args);
 
         startActivityForResult(intent, REQUEST_SENDBIRD_MESSAGING_ACTIVITY);
@@ -129,8 +129,8 @@ public class ChattingActivity extends FragmentActivity{
     }
 
     private void joinMessaging(String channelUrl) {
-        Intent intent = new Intent(ChattingActivity.this, SendBirdMessagingActivity.class);
-        Bundle args = SendBirdMessagingActivity.makeMessagingJoinArgs(appId, userId, userName, channelUrl);
+        Intent intent = new Intent(ChattingActivity.this, MessagingActivity.class);
+        Bundle args = MessagingActivity.makeMessagingJoinArgs(appId, userId, userName, channelUrl);
         intent.putExtras(args);
 
         startActivityForResult(intent, REQUEST_SENDBIRD_MESSAGING_ACTIVITY);
@@ -138,8 +138,8 @@ public class ChattingActivity extends FragmentActivity{
     }
 
     private void startMessagingChannelList(Double Long, Double Lati, Integer Check, String address) {
-        Intent intent = new Intent(ChattingActivity.this, SendBirdMessagingChannelListActivity.class);
-        Bundle args = SendBirdMessagingChannelListActivity.makeSendBirdArgs(appId, userId, userName);
+        Intent intent = new Intent(ChattingActivity.this, MessagingChannelListActivity.class);
+        Bundle args = MessagingChannelListActivity.makeSendBirdArgs(appId, userId, userName);
         intent.putExtras(args);
         intent.putExtra("Longitude", Long);
         intent.putExtra("Latitude", Lati);

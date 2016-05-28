@@ -2,50 +2,54 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/myLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#666666">
 
     <ImageView
         android:id="@+id/alert"
-        android:layout_width="@dimen/activity_lockScreen_imageSize"
-        android:layout_height="@dimen/activity_lockScreen_imageSize"
-        android:layout_alignBottom="@+id/select"
-        android:layout_alignParentStart="true"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:layout_marginRight="@dimen/activity_lockScreen_margin_small"
-        android:layout_marginStart="20dp"
-        android:background="@drawable/alert_image" />
+        android:background="@drawable/alert_image"
+        android:layout_alignTop="@+id/unlock"
+        android:layout_toStartOf="@+id/select_left" />
 
     <ImageView
         android:id="@+id/select"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="80dp"
         android:background="@drawable/select_image" />
     <ImageView
         android:id="@+id/select_right"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:background="@drawable/select_right"
-        android:layout_alignTop="@+id/unlock"
-        android:layout_toEndOf="@+id/select" />
+        android:layout_alignBottom="@+id/unlock"
+        android:layout_toEndOf="@+id/select"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="5dp" />
     <ImageView
         android:id="@+id/select_left"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:background="@drawable/select_left"
-        android:layout_alignTop="@+id/alert"
-        android:layout_toStartOf="@+id/select" />
+        android:layout_alignTop="@+id/select_right"
+        android:layout_toStartOf="@+id/select"
+        android:layout_marginLeft="20dp" />
 
     <ImageView
         android:id="@+id/unlock"
         android:layout_width="@dimen/activity_lockScreen_imageSize"
         android:layout_height="@dimen/activity_lockScreen_imageSize"
-        android:layout_alignBottom="@+id/select"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="20dp"
         android:layout_marginLeft="@dimen/activity_lockScreen_margin_small"
-        android:background="@drawable/unlock_image" />
+        android:background="@drawable/unlock_image"
+        android:layout_alignParentBottom="true"
+        android:layout_toEndOf="@+id/select_right"
+        android:layout_marginStart="35dp"
+        android:layout_marginBottom="95dp" />
 
     <TextView
         android:id="@+id/time"

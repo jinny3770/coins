@@ -55,7 +55,7 @@ public class MyGcmListenerService extends GcmListenerService {
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.sendbird_ic_launcher)
+                .setSmallIcon(R.drawable.chat_ic_launcher)
                 .setContentTitle("WAY")
                 .setContentText(message)
                 .setAutoCancel(true)

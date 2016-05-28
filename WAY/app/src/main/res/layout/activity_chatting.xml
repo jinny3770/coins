@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:src="@drawable/sendbird_img_bg_default" />
+        android:src="@drawable/img_bg_default" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -33,7 +33,7 @@
         android:layout_height="120dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="60dp"
-        android:src="@drawable/sendbird_img_logo" />
+        android:src="@drawable/img_logo" />
 
     <LinearLayout
         android:id="@+id/messaging_container"

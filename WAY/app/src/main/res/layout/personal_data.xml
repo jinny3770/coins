@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#f3f3f3">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="20dp"
+        android:gravity="center_horizontal"
+        android:textSize="25dp"
+        android:text="Way 개인정보 취급 방침"
+        android:textColor="#000000"
+        android:id="@+id/textView1" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="넌 뭔데 이걸 계속 끝까지 읽고 앉은건지 모르겠지만 진짜 할짓없는 병신인건 확실하구나 병신아. 한번만 보면 되는걸 왜 2개를 다 보고 앉았니? 병신같은새끼. 이건 마치 너거들이 한화보다 더 병신이라는걸 인정하는 부분같은데 맞냐? ㅇㅈ하십니까?"
+        android:layout_below="@+id/textView1"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:textSize="18dp"
+        android:layout_alignParentStart="true"
+        android:id="@+id/textView" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:text="니들 : 예 ㅇㅈ합니다."
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/injungbutton"/>
+
+
+</RelativeLayout>

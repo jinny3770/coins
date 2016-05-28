@@ -128,6 +128,7 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnTouc
                 if (x_bang>255) x_bang=255;
                 alert.setAlpha(255-x_bang);
                 if (x2_bang<255) x2_bang=255;
+                if (x2_bang>500) x2_bang=510;
                 if (300-x2_bang<100 && 300-x2_bang>0) x2_bang=255;
                 unlock.setAlpha(x2_bang-255);
                 break;

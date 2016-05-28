@@ -63,6 +63,7 @@ import coins.hansung.way.SideMenu.AppInfoActivity;
 import coins.hansung.way.SideMenu.GroupManageActivity;
 import coins.hansung.way.SideMenu.LoginActivity;
 import coins.hansung.way.SideMenu.ProfileActivity;
+import coins.hansung.way.SideMenu.ProfileIntroActivity;
 import coins.hansung.way.SideMenu.SettingsActivity;
 import coins.hansung.way.etc.APIKey;
 import coins.hansung.way.etc.Family;
@@ -276,7 +277,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         afterLoginView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                Intent intent = new Intent(getApplicationContext(), ProfileIntroActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.fade, R.anim.hold);
             }
@@ -759,5 +760,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return str;
         }
     }
-    //public class CustomScrollableViewHelper extends ScrolllableViewHelper {}
+
 }

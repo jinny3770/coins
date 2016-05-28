@@ -10,6 +10,8 @@
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
+    <string name="dirrhks"><u><b>이용약관</b></u></string>
+    <string name="rodlswjdqh"><u><b>개인정보 취급방침</b></u></string>
     <string name="prompt_password">Password</string>
     <string name="prompt_password_repeat">Password</string>
     <string name="action_sign_in">로그인</string>

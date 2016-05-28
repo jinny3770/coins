@@ -122,10 +122,20 @@ public class LocationService extends Service implements Runnable {
             mapView.setMapPosition(TMapView.POSITION_DEFAULT);
             mapView.setTrackingMode(true);
 
+            double getLat = 0, getLong = 0;
+            try{
+                getLat = curLoca.getLatitude();
+            }catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+            try{
+                getLong = curLoca.getLongitude();
+            }catch (NullPointerException e) {
+                e.printStackTrace();
+            }
 
 
-
-            if (curLoca.getLatitude() != 0 && curLoca.getLongitude() != 0) {
+            if (getLat != 0 && getLong != 0) {
                 Log.d("service", "service enter");
 
                 if (myInfo.getID() != null && !curLoca.equals(T_MAP_POINT)) {
@@ -154,7 +164,7 @@ public class LocationService extends Service implements Runnable {
                         int order = pref.getInt("pointOrder", 0);
                         int code = pref.getInt("desCode", 0);
 
-                        if(distanceCalc(latitude, longitude, curLoca.getLatitude(), curLoca.getLongitude())) {
+                        if(distanceCalc(latitude, longitude, getLat, getLong)) {
 
                             Log.d("service", "delete destination");
                             DeleteDestinations deleteDestinations = new DeleteDestinations();

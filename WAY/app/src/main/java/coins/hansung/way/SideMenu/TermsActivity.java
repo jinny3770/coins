@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -33,11 +34,14 @@ public class TermsActivity extends AppCompatActivity implements View.OnClickList
 
     final int TERM_REQ = 13;
 
-    EditText phoneEditText;
-    CheckBox check1, check2;
+    public static EditText phoneEditText;
+    TextView check1text, check2text;
+    public static CheckBox check1, check2;
     Button signup;
     String name, id, password;
     String str;
+    boolean termbut=false;
+    boolean persbut=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +51,9 @@ public class TermsActivity extends AppCompatActivity implements View.OnClickList
         phoneEditText = (EditText) findViewById(R.id.phoneNumber);
 
         check1 = (CheckBox) findViewById(R.id.check1);
+        check1text = (TextView) findViewById(R.id.check1text);
         check2 = (CheckBox) findViewById(R.id.check2);
+        check2text = (TextView) findViewById(R.id.check2text);
         signup = (Button) findViewById(R.id.signupButton);
         signup.setOnClickListener(this);
 
@@ -57,33 +63,61 @@ public class TermsActivity extends AppCompatActivity implements View.OnClickList
         password = intent.getStringExtra("password");
 
         Log.d("resultTerm", name + ", " + id + ", " + password);
+        check1text.setOnClickListener(this);
+        check2text.setOnClickListener(this);
+
+        Intent termOU = getIntent();
+        termbut = termOU.getBooleanExtra("termbut", false);
+        if (termbut == true) {
+            check1.setChecked(true);
+        }
+        Intent PersonD = getIntent();
+        persbut = PersonD.getBooleanExtra("persbut", false);
+        if (persbut == true) {
+            check2.setChecked(true);
+        }
     }
 
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent(this, IntroMain.class);
-        String phone = makePhoneNumber(phoneEditText.getText().toString());
 
-        if (phone == null) {
-            Toast.makeText(getApplicationContext(), "연락처 방식이 올바르지 않습니다.", Toast.LENGTH_SHORT).show();
-        } else if (!check1.isChecked() || !check2.isChecked()) {
-            Toast.makeText(getApplicationContext(), "이용약관 및 개인정보 취급방침에 동의해주세요.", Toast.LENGTH_SHORT).show();
-        } else {
-            SendInfoTask task = new SendInfoTask(name, id, password, phone);
-            try {
-                str = task.execute().get().toString();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            if (str.equals("exist")) {
-                Toast.makeText(getApplicationContext(), "중복 된 아이디입니다.", Toast.LENGTH_SHORT).show();
-            } else {
+        switch (v.getId())
+        {
+            case R.id.signupButton:
+                Intent intent = new Intent(this, IntroMain.class);
+                String phone = makePhoneNumber(phoneEditText.getText().toString());
 
-                Intent outIntent = new Intent(getApplicationContext(), SignUpActivity.class);
-                setResult(RESULT_OK);
-                finish();
-                overridePendingTransition(R.anim.fade, R.anim.hold);
-            }
+                if (phone == null) {
+                    Toast.makeText(getApplicationContext(), "연락처 방식이 올바르지 않습니다.", Toast.LENGTH_SHORT).show();
+                } else if (!check1.isChecked() || !check2.isChecked()) {
+                    Toast.makeText(getApplicationContext(), "이용약관 및 개인정보 취급방침에 동의해주세요.", Toast.LENGTH_SHORT).show();
+                } else {
+                    SendInfoTask task = new SendInfoTask(name, id, password, phone);
+                    try {
+                        str = task.execute().get().toString();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    if (str.equals("exist")) {
+                        Toast.makeText(getApplicationContext(), "중복된 아이디입니다.", Toast.LENGTH_SHORT).show();
+                    } else {
+
+                        Intent outIntent = new Intent(getApplicationContext(), SignUpActivity.class);
+                        Toast.makeText(TermsActivity.this, "가입이 완료되었습니다.", Toast.LENGTH_SHORT);
+                        setResult(RESULT_OK);
+                        finish();
+                        overridePendingTransition(R.anim.fade, R.anim.hold);
+                    }
+                }
+                break;
+            case R.id.check1text:
+                Intent terms = new Intent(TermsActivity.this, TermsOfUse.class);
+                startActivity(terms);
+                break;
+            case R.id.check2text:
+                Intent Personal = new Intent(TermsActivity.this, PersonalData.class);
+                startActivity(Personal);
+                break;
         }
     }
 

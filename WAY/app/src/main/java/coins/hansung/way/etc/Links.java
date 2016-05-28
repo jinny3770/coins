@@ -20,5 +20,8 @@ public class Links {
     public static final String loadFamilyURL = serverURL + "/loadFamilyList.php";
     public static final String updateLocationURL = serverURL + "/updateLocation.php";
 
+    public static final String pwChangeURL = serverURL + "/pwChange.php";
+    public static final String nameChangeURL = serverURL + "/nameChange.php";
+
     public static final String updateGpsSigURL = serverURL + "/updateGpsSignal.php";
 }

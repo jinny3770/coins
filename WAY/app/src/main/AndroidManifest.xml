@@ -16,7 +16,7 @@
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.NFC" />
 
     <application
@@ -25,107 +25,96 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".Main.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
-	    </activity>
-
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SideMenu.ProfileActivity"
-            android:parentActivityName=".Main.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
-
+            android:parentActivityName=".SideMenu.ProfileIntroActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Intro.IntroMain"
-            android:theme="@style/AppTheme.NoActionBar"/>
-
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SideMenu.GroupManageActivity"
             android:parentActivityName=".Main.MainActivity"
-            android:theme="@style/AppTheme"/>
-
-        <activity android:name=".SideMenu.TermsActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
-
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".SideMenu.TermsActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleInstance"
+            android:taskAffinity=""
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SideMenu.AppInfoActivity"
             android:parentActivityName=".Main.MainActivity" />
-
-        <activity android:name=".Destination.DestinationListActivity"
-            android:parentActivityName=".Main.MainActivity"/>
-
+        <activity
+            android:name=".Destination.DestinationListActivity"
+            android:parentActivityName=".Main.MainActivity" />
         <activity
             android:name=".Destination.DestinationSelectActivity"
             android:parentActivityName=".Destination.DestinationListActivity"
             android:theme="@style/AppTheme.Dest" />
-
         <activity
             android:name=".Destination.DestinationViewActivity"
             android:parentActivityName=".Destination.DestinationListActivity" />
-
         <activity
             android:name=".SideMenu.LoginActivity"
             android:label="@string/title_activity_login"
             android:parentActivityName=".Main.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
-
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SideMenu.SignUpActivity"
             android:parentActivityName=".SideMenu.LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
-
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Chat.ChattingActivity"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
-            android:theme="@style/AppTheme.NoActionBar"
             android:configChanges="orientation|screenSize"
-            android:parentActivityName=".Main.MainActivity">
-
+            android:parentActivityName=".Main.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
             <intent-filter>
-                <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="text/plain"/>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="text/plain" />
             </intent-filter>
-
             <intent-filter>
-                <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:scheme="http"/>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="http" />
             </intent-filter>
         </activity>
-
         <activity
-            android:name=".Chat.SendBirdChatActivity"
+            android:name=".Chat.ChatActivity"
             android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
-
         <activity
-            android:name=".Chat.SendBirdUserListActivity"
+            android:name=".Chat.UserListActivity"
             android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
-
         <activity
-            android:name=".Chat.SendBirdMessagingActivity"
+            android:name=".Chat.MessagingActivity"
             android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
-
         <activity
-            android:name=".Chat.SendBirdMessagingChannelListActivity"
+            android:name=".Chat.MessagingChannelListActivity"
             android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
-
-        <activity android:name=".Chat.SendBirdMemberListActivity" />
-
-        <activity android:name=".LockScreen.LockScreenActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".Chat.MemberListActivity" />
+        <activity
+            android:name=".LockScreen.LockScreenActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <service
             android:name=".LockScreen.LockScreenService"
             android:enabled="true"
             android:exported="true" />
-
         <service
             android:name=".Main.LocationService"
             android:enabled="true"
@@ -136,19 +125,37 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".SideMenu.SettingsActivity"
+        <activity
+            android:name=".SideMenu.SettingsActivity"
             android:parentActivityName=".Main.MainActivity"
             android:theme="@style/AppTheme" />
-	    
-        <activity android:name=".SideMenu.WarningActivity"
+        <activity
+            android:name=".SideMenu.WarningActivity"
             android:parentActivityName=".SideMenu.SettingsActivity"
             android:theme="@style/AppTheme" />
+        <activity
+            android:name=".SideMenu.TermsOfUse"
+            android:parentActivityName=".SideMenu.TermsActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".SideMenu.PersonalData"
+            android:parentActivityName=".SideMenu.TermsActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".SideMenu.ProfileIntroActivity"
+            android:parentActivityName=".Main.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity android:name=".SideMenu.PasswordActivity"
+            android:parentActivityName=".SideMenu.ProfileIntroActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
     </application>
+
 </manifest>

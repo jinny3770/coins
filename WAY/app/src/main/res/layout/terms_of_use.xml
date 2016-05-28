@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#f3f3f3">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="20dp"
+        android:gravity="center_horizontal"
+        android:textSize="25dp"
+        android:text="Way 이용약관"
+        android:textColor="#000000"
+        android:id="@+id/textView1" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="안녕 병신들아? 난 이 앱을 만든 병신이라고해. 너도 병신 나도 병신 개같은 병신세상에 온걸 환영해 병신들아. 나도 솔직히 병신이지만 이걸 쓰는 너거들은 훨씬더 병신이라 생각해 ㅇㅈ? ㅇㅈ하면 버튼을 눌러 병신아"
+        android:layout_below="@+id/textView1"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:textSize="18dp"
+        android:layout_alignParentStart="true"
+        android:id="@+id/textView" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:text="ㅇㅈ합니다."
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/injungbutton"/>
+
+
+</RelativeLayout>

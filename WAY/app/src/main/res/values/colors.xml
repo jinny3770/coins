@@ -7,10 +7,12 @@
     <!--<color name="colorAccent">#4ba5a0</color>-->
 
     <color name="white">#ffffff</color>
-
+    <color name="gray">#787878</color>
 
     <color name="colorPrimaryOpacity">#652d80c6</color>
     <color name="colorPrimaryOpacity2">#802d80c6</color>
     <color name="mapButton">#88ffffff</color>
     <color name="enableFalseButton">#88848484</color>
+
+
 </resources>
