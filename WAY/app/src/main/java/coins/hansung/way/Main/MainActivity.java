@@ -429,7 +429,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             if (defaultPref.getBoolean("gps", true)) {
                 loadFamilyList();
-                setMyMarker(myinfo.getPoint());
+                //setMyMarker(myinfo.getPoint());
 
                 new Handler().post(new Runnable() {
                     @Override
