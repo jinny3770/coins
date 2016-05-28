@@ -1,7 +1,6 @@
-package coins.hansung.way.SideMenu;
+package coins.hansung.way.Intro;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,7 +9,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,8 +20,6 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.regex.Pattern;
 
-import coins.hansung.way.Intro.IntroMain;
-import coins.hansung.way.Main.MainActivity;
 import coins.hansung.way.R;
 import coins.hansung.way.etc.Links;
 
@@ -32,11 +28,12 @@ import coins.hansung.way.etc.Links;
  */
 public class TermsActivity extends AppCompatActivity implements View.OnClickListener {
 
-    final int TERM_REQ = 13;
+    final int TERM_REQ = 1;
+    final int PERSON_REQ = 2;
 
-    public static EditText phoneEditText;
+    public EditText phoneEditText;
     TextView check1text, check2text;
-    public static CheckBox check1, check2;
+    public CheckBox check1, check2;
     Button signup;
     String name, id, password;
     String str;
@@ -63,19 +60,10 @@ public class TermsActivity extends AppCompatActivity implements View.OnClickList
         password = intent.getStringExtra("password");
 
         Log.d("resultTerm", name + ", " + id + ", " + password);
+
         check1text.setOnClickListener(this);
         check2text.setOnClickListener(this);
 
-        Intent termOU = getIntent();
-        termbut = termOU.getBooleanExtra("termbut", false);
-        if (termbut == true) {
-            check1.setChecked(true);
-        }
-        Intent PersonD = getIntent();
-        persbut = PersonD.getBooleanExtra("persbut", false);
-        if (persbut == true) {
-            check2.setChecked(true);
-        }
     }
 
     @Override
@@ -112,12 +100,26 @@ public class TermsActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.check1text:
                 Intent terms = new Intent(TermsActivity.this, TermsOfUse.class);
-                startActivity(terms);
+                startActivityForResult(terms, TERM_REQ);
                 break;
             case R.id.check2text:
                 Intent Personal = new Intent(TermsActivity.this, PersonalData.class);
-                startActivity(Personal);
+                startActivityForResult(Personal, PERSON_REQ);
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if(requestCode == TERM_REQ) {
+            if(resultCode == RESULT_OK)
+                check1.setChecked(true);
+        }
+        else if(requestCode == PERSON_REQ){
+            if(resultCode == RESULT_OK) {
+                check2.setChecked(true);
+            }
         }
     }
 

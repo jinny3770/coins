@@ -7,10 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import coins.hansung.way.Main.MainActivity;
 import coins.hansung.way.R;
-import coins.hansung.way.SideMenu.LoginActivity;
-import coins.hansung.way.SideMenu.SignUpActivity;
 
 /**
  * Created by Administrator on 2016-05-23.

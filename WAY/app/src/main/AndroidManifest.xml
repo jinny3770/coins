@@ -28,7 +28,9 @@
         <activity
             android:name=".Main.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".Main.MainActivity" />
+
         <activity
             android:name=".SideMenu.ProfileActivity"
             android:parentActivityName=".SideMenu.ProfileIntroActivity"
@@ -41,7 +43,7 @@
             android:parentActivityName=".Main.MainActivity"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".SideMenu.TermsActivity"
+            android:name=".Intro.TermsActivity"
             android:excludeFromRecents="true"
             android:launchMode="singleInstance"
             android:taskAffinity=""
@@ -60,13 +62,13 @@
             android:name=".Destination.DestinationViewActivity"
             android:parentActivityName=".Destination.DestinationListActivity" />
         <activity
-            android:name=".SideMenu.LoginActivity"
+            android:name=".Intro.LoginActivity"
             android:label="@string/title_activity_login"
             android:parentActivityName=".Main.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".SideMenu.SignUpActivity"
-            android:parentActivityName=".SideMenu.LoginActivity"
+            android:name=".Intro.SignUpActivity"
+            android:parentActivityName=".Intro.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Chat.ChattingActivity"
@@ -140,12 +142,12 @@
             android:parentActivityName=".SideMenu.SettingsActivity"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".SideMenu.TermsOfUse"
-            android:parentActivityName=".SideMenu.TermsActivity"
+            android:name=".Intro.TermsOfUse"
+            android:parentActivityName=".Intro.TermsActivity"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".SideMenu.PersonalData"
-            android:parentActivityName=".SideMenu.TermsActivity"
+            android:name=".Intro.PersonalData"
+            android:parentActivityName=".Intro.TermsActivity"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".SideMenu.ProfileIntroActivity"

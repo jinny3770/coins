@@ -1,4 +1,4 @@
-package coins.hansung.way.SideMenu;
+package coins.hansung.way.Intro;
 
 import android.content.SharedPreferences;
 import android.os.AsyncTask;

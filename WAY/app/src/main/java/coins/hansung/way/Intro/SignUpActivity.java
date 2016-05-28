@@ -1,4 +1,4 @@
-package coins.hansung.way.SideMenu;
+package coins.hansung.way.Intro;
 
 import android.app.Activity;
 import android.content.Intent;
