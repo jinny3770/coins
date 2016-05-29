@@ -1,6 +1,7 @@
 package coins.hansung.way.Main;
 
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -13,6 +14,7 @@ import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.NfcF;
 import android.os.AsyncTask;
+import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -46,6 +48,13 @@ import com.skp.Tmap.TMapView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,6 +74,7 @@ import coins.hansung.way.SideMenu.SettingsActivity;
 import coins.hansung.way.etc.APIKey;
 import coins.hansung.way.etc.Family;
 import coins.hansung.way.etc.FamilyMarkerResource;
+import coins.hansung.way.etc.Links;
 import coins.hansung.way.etc.MyInfo;
 import coins.hansung.way.etc.PersonInfo;
 
@@ -163,26 +173,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         pendingIntent = PendingIntent.getActivity(this, 0, this.getIntent().setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
         IntentFilter ndefFilter = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
 
-        try
-        {
+        try {
             ndefFilter.addDataType("*/*");
-        }
-
-        catch (IntentFilter.MalformedMimeTypeException e)
-        {
+        } catch (IntentFilter.MalformedMimeTypeException e) {
             throw new RuntimeException("fail", e);
         }
 
-        intentFilters = new IntentFilter[] {ndefFilter, };
-        techLists = new String[][] {new String[] {NfcF.class.getName()}};
+        intentFilters = new IntentFilter[]{ndefFilter,};
+        techLists = new String[][]{new String[]{NfcF.class.getName()}};
         Intent passedIntent = getIntent();
 
-        if (passedIntent != null)
-        {
+        if (passedIntent != null) {
             String actionString = passedIntent.getAction();
 
-            if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(actionString))
-            {
+            if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(actionString)) {
                 processTag(passedIntent);
             }
         }
@@ -251,7 +255,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         familyMarkerResourceList = familyMarkerResource.getFamilyMarkerBitmap();
         familyMarkerBitmap = new ArrayList<>();
 
-        for(int i=0; i<familyMarkerResourceList.size(); i++) {
+        for (int i = 0; i < familyMarkerResourceList.size(); i++) {
             Bitmap bitmap = BitmapFactory.decodeResource(getApplicationContext().getResources(), familyMarkerResourceList.get(i));
             familyMarkerBitmap.add(bitmap);
         }
@@ -265,7 +269,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         loginPrefEditor = loginPref.edit();
 
         LayoutInflater inflater = getLayoutInflater();
-
 
 
         myinfo = MyInfo.getInstance();
@@ -352,31 +355,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    protected void onPause()
-    {
+    protected void onPause() {
         super.onPause();
 
-        if (adapter != null)
-        {
+        if (adapter != null) {
             adapter.disableForegroundDispatch(this);
         }
     }
 
     @Override
-    protected void onNewIntent(Intent passedIntent)
-    {
+    protected void onNewIntent(Intent passedIntent) {
         super.onNewIntent(passedIntent);
 
         Tag tag = passedIntent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
 
-        if (tag != null)
-        {
+        if (tag != null) {
             byte tagID[] = tag.getId();
             Log.e("태그 ID : ", toHexString(tagID) + "\n");
         }
 
-        if (passedIntent != null)
-        {
+        if (passedIntent != null) {
             processTag(passedIntent);
         }
     }
@@ -396,14 +394,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Intent intent = new Intent(getApplicationContext(), LockScreenService.class);
         Log.e("Lock Boolean", String.valueOf(pref.getBoolean("lock", true)));
 
-        if (pref.getBoolean("lock", true))
-        {
+        if (pref.getBoolean("lock", true)) {
             Log.e("LockScreen", "Start");
             startService(intent);
-        }
-
-        else
-        {
+        } else {
             Log.e("LockScreen", "Stop");
             stopService(intent);
         }
@@ -415,6 +409,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             myinfo.setID(loginPref.getString("ID", null));
             myinfo.setGroupCode(loginPref.getString("Code", "000000"));
             myinfo.setName(loginPref.getString("Name", null));
+
+            int batteryP = getBatteryPercentage(getApplicationContext());
+            UploadBattery uploadBattery = new UploadBattery();
+            uploadBattery.execute(batteryP);
 
             // handler 이용하여 profile view 띄우기
             new Handler().post(new Runnable() {
@@ -454,7 +452,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 });
 
-                if(service != null)
+                if (service != null)
                     stopService(service);
             }
 
@@ -462,9 +460,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         /* 자동 로그인이 되어 있지 않으면*/
         else {
             Intent intro = new Intent(getApplicationContext(), IntroMain.class);
-            startActivity(intro);
+            startActivityForResult(intro, 10);
             overridePendingTransition(R.anim.fade, R.anim.hold);
-            finish();
         }
     }
 
@@ -476,18 +473,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        }
-        else if (intervalTime >= 0 && FINSH_INTERVAL_TIME >= intervalTime)
-        {
+        } else if (intervalTime >= 0 && FINSH_INTERVAL_TIME >= intervalTime) {
             super.onBackPressed();
             Log.d("press back twice time.", "exit the process");
             finish();
 
-        }
-        else
-        {
+        } else {
             backPressedTime = tempTime;
-            Toast.makeText(getApplicationContext(),"'뒤로'버튼을 한 번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "'뒤로'버튼을 한 번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -553,12 +546,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    private void processTag(Intent passedIntent)
-    {
+    private void processTag(Intent passedIntent) {
         Parcelable rawMessage[] = passedIntent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
 
-        if (rawMessage == null)
-        {
+        if (rawMessage == null) {
             return;
         }
 
@@ -567,12 +558,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NdefMessage message[];
 
-        if (rawMessage != null)
-        {
+        if (rawMessage != null) {
             message = new NdefMessage[rawMessage.length];
 
-            for (int i = 0; i < rawMessage.length; i++)
-            {
+            for (int i = 0; i < rawMessage.length; i++) {
                 message[i] = (NdefMessage) rawMessage[i];
                 showTag(message[i]);
             }
@@ -580,12 +569,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    public static String toHexString(byte data[])
-    {
+    public static String toHexString(byte data[]) {
         StringBuilder stringBuilder = new StringBuilder();
 
-        for (int i = 0; i < data.length; ++i)
-        {
+        for (int i = 0; i < data.length; ++i) {
             stringBuilder.append(CHARS.charAt((data[i] >> 4) & 0x0F)).append(CHARS.charAt(data[i] & 0x0F));
         }
 
@@ -593,20 +580,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    private int showTag(NdefMessage message)
-    {
+    private int showTag(NdefMessage message) {
         List<ParsingRecord> records = NdefMessageParsing.parse(message);
         final int size = records.size();
 
-        for (int i = 0; i < size; i++)
-        {
+        for (int i = 0; i < size; i++) {
             ParsingRecord record = records.get(i);
 
             int recordType = record.getType();
             String recordString = "";
 
-            if (recordType == ParsingRecord.TYPE_TEXT)
-            {
+            if (recordType == ParsingRecord.TYPE_TEXT) {
                 recordString = ((TextRecord) record).getText();
             }
 
@@ -659,8 +643,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // flag = ??????????...ㅎㅎ
         flag = false;
         familyList.setAdapter(familyAdapter);
-        familyList.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
+        familyList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mapView.setCenterPoint(family.get(position).getPoint().getLongitude(), family.get(position).getPoint().getLatitude());
@@ -693,7 +676,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     pInfo.setName(jsonObject.getString("name"));
                     pInfo.setPhoneNumber(jsonObject.getString("phoneNumber"));
 
+                    pInfo.setBattery(jsonObject.getInt("battery"));
+
                     String str = jsonObject.getString("gps");
+
                     if (str.equals("1")) pInfo.setGpsSig(true);
                     else pInfo.setGpsSig(false);
 
@@ -717,7 +703,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     LoadLocationString loadLocationString = new LoadLocationString();
                     familyLocationString = loadLocationString.execute(family.get(familyIndex).getPoint()).get();
                     familyAdapter.addItem(getResources().getDrawable(familyMarkerResourceList.get(j)),
-                            family.get(familyIndex).getName(), familyLocationString, family.get(familyIndex).getGpsSig());
+                            family.get(familyIndex).getName(), familyLocationString, family.get(familyIndex).getGpsSig(), family.get(familyIndex).getBattery());
 
                     j++;
                 } else {
@@ -751,6 +737,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mapView.addMarkerItem("myLocation", myMarker);
     }
 
+    public static int getBatteryPercentage(Context context) {
+        Intent batteryStatus = context.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        int level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+        int scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+
+        float batteryPct = level / (float) scale;
+        return (int) (batteryPct * 100);
+    }
 
     class LoadLocationString extends AsyncTask<TMapPoint, Void, String> {
         @Override
@@ -772,6 +766,60 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
             return str;
+        }
+    }
+
+    class UploadBattery extends AsyncTask<Integer, Void, String> {
+
+        URL url;
+        String data;
+        int battery;
+
+
+        @Override
+        protected String doInBackground(Integer... params) {
+
+            try {
+
+                battery = params[0];
+
+                url = new URL(Links.uploadBatteryURL);
+
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("POST");
+
+                conn.setReadTimeout(10000);
+                conn.setConnectTimeout(15000);
+
+                conn.setDoOutput(true);
+                conn.setDoInput(true);
+
+                data = URLEncoder.encode("ID", "UTF-8") + "=" + URLEncoder.encode(myinfo.getID(), "UTF-8") + "&" +
+                        URLEncoder.encode("Battery", "UTF-8") + "=" + URLEncoder.encode(Float.toString(battery), "UTF-8");
+
+
+                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+                wr.write(data);
+                wr.flush();
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                String str = reader.readLine();
+
+                return str;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("UploadBattery", e.getMessage());
+                return e.getMessage();
+            }
+
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            if (s.equals("fail")) {
+                Toast.makeText(getApplicationContext(), "배터리 잔량 업데이트에 실패했습니다.", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

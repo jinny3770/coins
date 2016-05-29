@@ -1,6 +1,7 @@
 package coins.hansung.way.Intro;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +23,7 @@ import java.util.regex.Pattern;
 
 import coins.hansung.way.R;
 import coins.hansung.way.etc.Links;
+import coins.hansung.way.etc.UploadImage;
 
 /**
  * Created by Administrator on 2016-05-25.
@@ -37,8 +39,8 @@ public class TermsActivity extends AppCompatActivity implements View.OnClickList
     Button signup;
     String name, id, password;
     String str;
-    boolean termbut=false;
-    boolean persbut=false;
+
+    Bitmap image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +61,11 @@ public class TermsActivity extends AppCompatActivity implements View.OnClickList
         id = intent.getStringExtra("id");
         password = intent.getStringExtra("password");
 
+        image = (Bitmap)intent.getParcelableExtra("image");
+
+
         Log.d("resultTerm", name + ", " + id + ", " + password);
+
 
         check1text.setOnClickListener(this);
         check2text.setOnClickListener(this);
@@ -81,6 +87,8 @@ public class TermsActivity extends AppCompatActivity implements View.OnClickList
                     Toast.makeText(getApplicationContext(), "이용약관 및 개인정보 취급방침에 동의해주세요.", Toast.LENGTH_SHORT).show();
                 } else {
                     SendInfoTask task = new SendInfoTask(name, id, password, phone);
+
+
                     try {
                         str = task.execute().get().toString();
                     } catch (Exception e) {
@@ -89,7 +97,6 @@ public class TermsActivity extends AppCompatActivity implements View.OnClickList
                     if (str.equals("exist")) {
                         Toast.makeText(getApplicationContext(), "중복된 아이디입니다.", Toast.LENGTH_SHORT).show();
                     } else {
-
                         Intent outIntent = new Intent(getApplicationContext(), SignUpActivity.class);
                         Toast.makeText(TermsActivity.this, "가입이 완료되었습니다.", Toast.LENGTH_SHORT);
                         setResult(RESULT_OK);

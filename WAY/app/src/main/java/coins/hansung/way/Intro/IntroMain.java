@@ -60,6 +60,10 @@ public class IntroMain extends AppCompatActivity implements View.OnClickListener
 
         if (intervalTime >= 0 && FINSH_INTERVAL_TIME >= intervalTime)
         {
+            moveTaskToBack(true);
+            finish();
+            android.os.Process.killProcess(android.os.Process.myPid());
+
             super.onBackPressed();
         }
 

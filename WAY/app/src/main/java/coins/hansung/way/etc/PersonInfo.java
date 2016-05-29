@@ -12,6 +12,7 @@ public class PersonInfo {
     private String groupCode;
     private TMapPoint point;
     private Boolean gpsSig;
+    private int battery;
 
     private String phoneNumber;
 
@@ -41,7 +42,13 @@ public class PersonInfo {
         this.gpsSig = gpsSig;
     }
 
-    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setBattery(int battery) {
+        this.battery = battery;
+    }
 
     public String getID() {
         return ID;
@@ -63,5 +70,11 @@ public class PersonInfo {
         return gpsSig;
     }
 
-    public String getPhoneNumber() { return phoneNumber; }
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public int getBattery() {
+        return battery;
+    }
 }

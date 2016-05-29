@@ -58,6 +58,7 @@ public class FamilyListViewAdapter extends BaseAdapter{
             holder.name = (TextView) convertView.findViewById(R.id.familyName);
             holder.loca = (TextView) convertView.findViewById(R.id.familyLoca);
             holder.gps = (TextView) convertView.findViewById(R.id.gpsSignal);
+            holder.battery = (TextView) convertView.findViewById(R.id.familyBattery);
 
             convertView.setTag(holder);
         } else {
@@ -75,16 +76,18 @@ public class FamilyListViewAdapter extends BaseAdapter{
 
         holder.name.setText(myData.name);
         holder.loca.setText(myData.loca);
+        holder.battery.setText(myData.battery + "%");
 
         return convertView;
     }
 
-    public void addItem(Drawable icon, String name, String loca, Boolean signal) {
+    public void addItem(Drawable icon, String name, String loca, Boolean signal, int battery) {
 
         FamilyListData addInfo = new FamilyListData();
         addInfo.icon = icon;
         addInfo.name = name;
         addInfo.loca = loca;
+        addInfo.battery = battery;
 
         if (signal) addInfo.gps = "ON";
         else addInfo.gps = "OFF";

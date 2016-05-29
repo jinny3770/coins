@@ -13,6 +13,7 @@ public class FamilyListData {
     String name;
     String loca;
     String gps;
+    int battery;
 
     public static final Comparator<FamilyListData> comparator = new Comparator<FamilyListData>() {
         private final Collator collator = Collator.getInstance();
