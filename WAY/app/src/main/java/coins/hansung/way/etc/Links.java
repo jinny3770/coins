@@ -24,4 +24,6 @@ public class Links {
     public static final String nameChangeURL = serverURL + "/nameChange.php";
 
     public static final String updateGpsSigURL = serverURL + "/updateGpsSignal.php";
+
+    public static final String uploadImageURL = serverURL + "/uploadImage.php";
 }

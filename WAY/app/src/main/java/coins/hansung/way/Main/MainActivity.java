@@ -145,6 +145,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static final int TYPE_URI = 2;
     public static final String CHARS = "0123456789ABCDEF";
 
+    // 종료 관련 변수
+    private final long FINSH_INTERVAL_TIME = 2000;
+    private long backPressedTime = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -460,17 +464,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Intent intro = new Intent(getApplicationContext(), IntroMain.class);
             startActivity(intro);
             overridePendingTransition(R.anim.fade, R.anim.hold);
+            finish();
         }
     }
 
 
     @Override
     public void onBackPressed() {
+        long tempTime = System.currentTimeMillis();
+        long intervalTime = tempTime - backPressedTime;
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
+        }
+        else if (intervalTime >= 0 && FINSH_INTERVAL_TIME >= intervalTime)
+        {
             super.onBackPressed();
+            Log.d("press back twice time.", "exit the process");
+            finish();
+
+        }
+        else
+        {
+            backPressedTime = tempTime;
+            Toast.makeText(getApplicationContext(),"'뒤로'버튼을 한 번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT).show();
         }
     }
 
