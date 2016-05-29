@@ -2,8 +2,10 @@ package coins.hansung.way.Intro;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +19,7 @@ import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 
+
 import coins.hansung.way.R;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener
@@ -26,6 +29,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     ImageView profileView, cancelView;
     EditText name, id, password, passwordRepeat;
     Button createProfile;
+
+    String imagePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -60,12 +65,14 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 intent = new Intent(Intent.ACTION_PICK);
                 intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
                 intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
                 startActivityForResult(intent, REQ);
                 overridePendingTransition(R.anim.fade, R.anim.hold);
                 break;
 
             case R.id.createCancelImage: // 프로필 사진 취소
                 profileView.setImageResource(R.drawable.profile);
+                imagePath = null;
                 break;
 
             case R.id.createProfileButton: // 프로필 생성
@@ -92,6 +99,11 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                     intent.putExtra("id", strID);
                     intent.putExtra("password", strPassword);
 
+                    if(imagePath != null) {
+                        Log.d("imagePath", imagePath.toString());
+                        intent.putExtra("imagePath", imagePath);
+                    }
+
                     Log.d("result", strName + ", " + strID + ", " + strPassword + ", " + strPasswordRepeat);
                     startActivityForResult(intent, TERM_REQ);
                     overridePendingTransition(R.anim.fade, R.anim.hold);
@@ -112,6 +124,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             {
                 try
                 {
+                    Uri uri = data.getData();
+                    imagePath = imageUriToString(uri);
+
                     Bitmap profileBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
                     profileView.setImageBitmap(profileBitmap);
                 }
@@ -130,4 +145,15 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             }
         }
     }
+
+    String imageUriToString(Uri uri) {
+        String[] projection = { MediaStore.Images.Media.DATA };
+
+        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+
+        return cursor.getString(column_index);
+    }
+
 }

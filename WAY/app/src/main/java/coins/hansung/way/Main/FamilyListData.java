@@ -1,5 +1,6 @@
 package coins.hansung.way.Main;
 
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
 import java.text.Collator;
@@ -14,6 +15,7 @@ public class FamilyListData {
     String loca;
     String gps;
     int battery;
+    Bitmap profileImage;
 
     public static final Comparator<FamilyListData> comparator = new Comparator<FamilyListData>() {
         private final Collator collator = Collator.getInstance();

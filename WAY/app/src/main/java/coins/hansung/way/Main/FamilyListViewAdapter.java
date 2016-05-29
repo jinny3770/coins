@@ -1,6 +1,7 @@
 package coins.hansung.way.Main;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,11 +55,12 @@ public class FamilyListViewAdapter extends BaseAdapter{
             LayoutInflater inflater = (LayoutInflater) myContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.family_list_shape, null);
 
-            holder.icon = (ImageView) convertView.findViewById(R.id.familyPicture);
+            holder.icon = (ImageView) convertView.findViewById(R.id.familyMarker);
             holder.name = (TextView) convertView.findViewById(R.id.familyName);
             holder.loca = (TextView) convertView.findViewById(R.id.familyLoca);
             holder.gps = (TextView) convertView.findViewById(R.id.gpsSignal);
             holder.battery = (TextView) convertView.findViewById(R.id.familyBattery);
+            holder.profileImage = (ImageView) convertView.findViewById(R.id.familyProfileImage);
 
             convertView.setTag(holder);
         } else {
@@ -74,20 +76,23 @@ public class FamilyListViewAdapter extends BaseAdapter{
             holder.icon.setVisibility(View.GONE);
         }
 
+        holder.gps.setText(myData.gps);
         holder.name.setText(myData.name);
         holder.loca.setText(myData.loca);
         holder.battery.setText(myData.battery + "%");
+        holder.profileImage.setImageBitmap(myData.profileImage);
 
         return convertView;
     }
 
-    public void addItem(Drawable icon, String name, String loca, Boolean signal, int battery) {
+    public void addItem(Drawable icon, String name, String loca, Boolean signal, int battery, Bitmap profileImage) {
 
         FamilyListData addInfo = new FamilyListData();
         addInfo.icon = icon;
         addInfo.name = name;
         addInfo.loca = loca;
         addInfo.battery = battery;
+        addInfo.profileImage = profileImage;
 
         if (signal) addInfo.gps = "ON";
         else addInfo.gps = "OFF";

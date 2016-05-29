@@ -33,6 +33,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -48,15 +49,18 @@ import com.skp.Tmap.TMapView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import coins.hansung.way.Chat.ChattingActivity;
 import coins.hansung.way.Destination.DestinationListActivity;
@@ -102,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     // profile 이름, id textView 및 handler
     TextView profileName, profileID;
+    ImageView profileImage;
 
 
     MyInfo myinfo;
@@ -290,6 +295,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         profileName = (TextView) afterLoginView.findViewById(R.id.mainProfileName);
         profileID.setText(myinfo.getID());
         profileName.setText(myinfo.getName());
+        profileImage = (ImageView) afterLoginView.findViewById(R.id.mainProfileImage);
 
 
         // 현재 위치 추적 버튼
@@ -420,8 +426,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 public void run() {
                     profileID.setText(myinfo.getID());
                     profileName.setText(myinfo.getName());
+
+                    try {
+                        LoadImage loadImage = new LoadImage();
+                        Bitmap bitmap = loadImage.execute(myinfo.getID()).get();
+
+                        myinfo.setProfileImage(bitmap);
+                        profileImage.setImageBitmap(bitmap);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
                 }
             });
+
+
             navigationView.addHeaderView(afterLoginView);
 
             //initMyLocation(tMapGpsManager.getLocation());
@@ -675,7 +695,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     pInfo.setGroupCode(myinfo.getGroupCode());
                     pInfo.setName(jsonObject.getString("name"));
                     pInfo.setPhoneNumber(jsonObject.getString("phoneNumber"));
-
                     pInfo.setBattery(jsonObject.getInt("battery"));
 
                     String str = jsonObject.getString("gps");
@@ -683,8 +702,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     if (str.equals("1")) pInfo.setGpsSig(true);
                     else pInfo.setGpsSig(false);
 
-                    //pInfo.setGpsSig();
+                    Log.d("GPSSignal", pInfo.getGpsSig().toString());
 
+                    LoadImage loadImage = new LoadImage();
+                    Bitmap bitmap = loadImage.execute(pInfo.getID()).get();
+
+                    if(bitmap == null)
+                        bitmap = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.person);
+
+                    //pInfo
 
                     // 가족 위치 설정
                     TMapPoint pPoint = new TMapPoint(jsonObject.getDouble("latitude"), jsonObject.getDouble("longitude"));
@@ -703,7 +729,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     LoadLocationString loadLocationString = new LoadLocationString();
                     familyLocationString = loadLocationString.execute(family.get(familyIndex).getPoint()).get();
                     familyAdapter.addItem(getResources().getDrawable(familyMarkerResourceList.get(j)),
-                            family.get(familyIndex).getName(), familyLocationString, family.get(familyIndex).getGpsSig(), family.get(familyIndex).getBattery());
+                            family.get(familyIndex).getName(), familyLocationString, family.get(familyIndex).getGpsSig(), family.get(familyIndex).getBattery(), bitmap);
 
                     j++;
                 } else {
@@ -823,4 +849,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+
+    class LoadImage extends AsyncTask<String, Void, Bitmap> {
+
+        Bitmap bm;
+
+        @Override
+        protected Bitmap doInBackground(String... params) {
+
+            try {
+                URL url = new URL(Links.serverURL + "/profileImage/" + params[0] + ".jpg");
+                Log.d("LoadImage", url.toString());
+
+                URLConnection conn = url.openConnection();
+                conn.connect();
+
+                BufferedInputStream bis = new BufferedInputStream(conn.getInputStream());
+                bm = BitmapFactory.decodeStream(bis);
+                bis.close();
+
+                return bm;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("LoadImage", e.getMessage());
+                return null;
+            }
+
+        }
+    }
 }

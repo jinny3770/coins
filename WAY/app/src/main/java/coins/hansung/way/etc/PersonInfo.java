@@ -1,5 +1,7 @@
 package coins.hansung.way.etc;
 
+import android.graphics.Bitmap;
+
 import com.skp.Tmap.TMapPoint;
 
 /**
@@ -13,6 +15,7 @@ public class PersonInfo {
     private TMapPoint point;
     private Boolean gpsSig;
     private int battery;
+    private Bitmap profileImage;
 
     private String phoneNumber;
 
@@ -50,6 +53,8 @@ public class PersonInfo {
         this.battery = battery;
     }
 
+    public void setProfileImage(Bitmap profileImage) { this.profileImage = profileImage; }
+
     public String getID() {
         return ID;
     }
@@ -77,4 +82,6 @@ public class PersonInfo {
     public int getBattery() {
         return battery;
     }
+
+    public Bitmap getProfileImage() { return profileImage; }
 }

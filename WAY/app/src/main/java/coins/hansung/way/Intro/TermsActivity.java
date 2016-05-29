@@ -14,6 +14,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -23,8 +26,6 @@ import java.util.regex.Pattern;
 
 import coins.hansung.way.R;
 import coins.hansung.way.etc.Links;
-import coins.hansung.way.etc.UploadImage;
-
 /**
  * Created by Administrator on 2016-05-25.
  */
@@ -40,7 +41,7 @@ public class TermsActivity extends AppCompatActivity implements View.OnClickList
     String name, id, password;
     String str;
 
-    Bitmap image;
+    String imagePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +62,9 @@ public class TermsActivity extends AppCompatActivity implements View.OnClickList
         id = intent.getStringExtra("id");
         password = intent.getStringExtra("password");
 
-        image = (Bitmap)intent.getParcelableExtra("image");
+        imagePath = intent.getStringExtra("imagePath");
 
-
+        Log.d("resultTerm", "imagePath : " + imagePath);
         Log.d("resultTerm", name + ", " + id + ", " + password);
 
 
@@ -88,7 +89,6 @@ public class TermsActivity extends AppCompatActivity implements View.OnClickList
                 } else {
                     SendInfoTask task = new SendInfoTask(name, id, password, phone);
 
-
                     try {
                         str = task.execute().get().toString();
                     } catch (Exception e) {
@@ -97,6 +97,10 @@ public class TermsActivity extends AppCompatActivity implements View.OnClickList
                     if (str.equals("exist")) {
                         Toast.makeText(getApplicationContext(), "중복된 아이디입니다.", Toast.LENGTH_SHORT).show();
                     } else {
+
+                        UploadImage uploadImage = new UploadImage();
+                        uploadImage.execute(id, imagePath);
+
                         Intent outIntent = new Intent(getApplicationContext(), SignUpActivity.class);
                         Toast.makeText(TermsActivity.this, "가입이 완료되었습니다.", Toast.LENGTH_SHORT);
                         setResult(RESULT_OK);
@@ -191,6 +195,110 @@ public class TermsActivity extends AppCompatActivity implements View.OnClickList
                 return e.toString();
 
             }
+        }
+    }
+
+    public class UploadImage extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String[] params) {
+
+            String lineEnd = "\r\n";
+            String twoHyphens = "--";
+            String boundary = "*****";
+            int bytesRead, bytesAvailable, bufferSize;
+            byte[] buffer;
+            int maxBufferSize = 1 * 1024 * 1024;
+
+            try {
+
+                String id = params[0];
+                String path = params[1];
+
+                File imageFile = new File(path);
+
+                FileInputStream fileInputStream = new FileInputStream(imageFile);
+                URL url = new URL(Links.uploadImageURL);
+
+
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+                conn.setReadTimeout(10000);
+                conn.setConnectTimeout(15000);
+
+                conn.setDoOutput(true);
+                conn.setDoInput(true);
+                conn.setUseCaches(false);
+
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Connection", "Keep-Alive");
+                conn.setRequestProperty("ENCTYPE", "multipart/form-data");
+                conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
+                conn.setRequestProperty("uploaded_file", path);
+                Log.d("UploadImage", "fileName : " + path);
+
+                DataOutputStream dos = new DataOutputStream(conn.getOutputStream());
+
+                dos.writeBytes(twoHyphens + boundary + lineEnd);
+                dos.writeBytes("Content-Disposition: form-data; name=\"imageName\"" + lineEnd);
+
+                dos.writeBytes(lineEnd);
+                dos.writeBytes(id);
+                dos.writeBytes(lineEnd);
+
+
+                dos.writeBytes(twoHyphens + boundary + lineEnd);
+                dos.writeBytes("Content-Disposition: form-data; name=\"uploaded_file\";filename=\""
+                        + path + "\"" + lineEnd);
+                dos.writeBytes(lineEnd);
+
+
+                bytesAvailable = fileInputStream.available();
+
+                bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                buffer = new byte[bufferSize];
+
+                bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+
+                while (bytesRead > 0) {
+
+                    Log.d("uploadImage", "size > 0");
+                    dos.write(buffer, 0, bufferSize);
+                    bytesAvailable = fileInputStream.available();
+                    bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                    bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+                }
+
+                dos.writeBytes(lineEnd);
+                dos.writeBytes(twoHyphens + boundary + lineEnd);
+
+                //String serverResponseMessage = conn.getResponseMessage();
+
+                int serverResponseCode = conn.getResponseCode();
+                Log.d("uploadImage", "responseCode + " + Integer.toString(serverResponseCode));
+
+                fileInputStream.close();
+                dos.flush();
+                dos.close();
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+                String line = reader.readLine();
+
+                return line;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("UploadImage", e.getMessage());
+                return e.getMessage();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            Log.d("uploadImage", "message : " + s);
         }
     }
 }

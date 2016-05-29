@@ -13,4 +13,5 @@ public class FamilyViewHolder
     public TextView loca;
     public TextView gps;
     public TextView battery;
+    public ImageView profileImage;
 }

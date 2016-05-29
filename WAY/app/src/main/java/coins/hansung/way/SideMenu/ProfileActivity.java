@@ -3,11 +3,14 @@ package coins.hansung.way.SideMenu;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,6 +19,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -36,6 +42,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     TextView id;
     Button fixProfile;
     MyInfo myinfo;
+
+    String imagePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +66,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         myinfo = MyInfo.getInstance();
         name.setText(myinfo.getName());
         id.setText(myinfo.getID());
+        if (myinfo.getProfileImage() != null) {
+            profileView.setImageBitmap(myinfo.getProfileImage());
+        }
     }
 
     @Override
@@ -75,20 +86,34 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
             case R.id.fixCancelImage: // 프로필 사진 취소
                 profileView.setImageResource(R.drawable.profile);
+                imagePath = null;
                 break;
 
             case R.id.fixProfileButton: // 프로필 수정
                 String strName = name.getText().toString();
-                String str;
+
 
                 if (strName.equals("")) {
                     Toast.makeText(getApplicationContext(), "이름을 입력해 주세요.", Toast.LENGTH_SHORT).show();
                 } else if (strName.equals(myinfo.getName())) {
+                    if (imagePath != null) {
+
+                        UploadImage uploadImage = new UploadImage();
+                        uploadImage.execute(myinfo.getID(), imagePath);
+
+                    }
                     finish();
                 } else {
 
                     NameTask nameTask = new NameTask();
                     nameTask.execute(myinfo.getID(), strName);
+
+                    if (imagePath != null) {
+
+                        UploadImage uploadImage = new UploadImage();
+                        uploadImage.execute(myinfo.getID(), imagePath);
+
+                    }
 
                 }
 
@@ -104,11 +129,22 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 try {
                     Bitmap profileBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
                     profileView.setImageBitmap(profileBitmap);
+                    imagePath = imageUriToString(data.getData());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }
+    }
+
+    String imageUriToString(Uri uri) {
+        String[] projection = {MediaStore.Images.Media.DATA};
+
+        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+
+        return cursor.getString(column_index);
     }
 
     class NameTask extends AsyncTask<String, Void, String> {
@@ -158,15 +194,124 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
 
-            if(s.equals("success")) {
+            if (s.equals("success")) {
                 Toast.makeText(getApplicationContext(), "이름을 변경했습니다.", Toast.LENGTH_SHORT).show();
                 SharedPreferences pref = getSharedPreferences("Login", 0);
                 SharedPreferences.Editor prefEdit = pref.edit();
                 prefEdit.putString("Name", name);
                 prefEdit.commit();
                 finish();
+            } else
+                Toast.makeText(getApplicationContext(), "이름 변경에 실패했습니다.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public class UploadImage extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String[] params) {
+
+            String lineEnd = "\r\n";
+            String twoHyphens = "--";
+            String boundary = "*****";
+            int bytesRead, bytesAvailable, bufferSize;
+            byte[] buffer;
+            int maxBufferSize = 1 * 1024 * 1024;
+
+            try {
+
+                String id = params[0];
+                String path = params[1];
+
+                File imageFile = new File(path);
+
+                FileInputStream fileInputStream = new FileInputStream(imageFile);
+                URL url = new URL(Links.uploadImageURL);
+
+
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+                conn.setReadTimeout(10000);
+                conn.setConnectTimeout(15000);
+
+                conn.setDoOutput(true);
+                conn.setDoInput(true);
+                conn.setUseCaches(false);
+
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Connection", "Keep-Alive");
+                conn.setRequestProperty("ENCTYPE", "multipart/form-data");
+                conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
+                conn.setRequestProperty("uploaded_file", path);
+                Log.d("UploadImage", "fileName : " + path);
+
+                DataOutputStream dos = new DataOutputStream(conn.getOutputStream());
+
+                dos.writeBytes(twoHyphens + boundary + lineEnd);
+                dos.writeBytes("Content-Disposition: form-data; name=\"imageName\"" + lineEnd);
+
+                dos.writeBytes(lineEnd);
+                dos.writeBytes(id);
+                dos.writeBytes(lineEnd);
+
+
+                dos.writeBytes(twoHyphens + boundary + lineEnd);
+                dos.writeBytes("Content-Disposition: form-data; name=\"uploaded_file\";filename=\""
+                        + path + "\"" + lineEnd);
+                dos.writeBytes(lineEnd);
+
+
+                bytesAvailable = fileInputStream.available();
+
+                bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                buffer = new byte[bufferSize];
+
+                bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+
+                while (bytesRead > 0) {
+
+                    Log.d("uploadImage", "size > 0");
+                    dos.write(buffer, 0, bufferSize);
+                    bytesAvailable = fileInputStream.available();
+                    bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                    bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+                }
+
+                dos.writeBytes(lineEnd);
+                dos.writeBytes(twoHyphens + boundary + lineEnd);
+
+                //String serverResponseMessage = conn.getResponseMessage();
+
+                int serverResponseCode = conn.getResponseCode();
+                Log.d("uploadImage", "responseCode + " + Integer.toString(serverResponseCode));
+
+                fileInputStream.close();
+                dos.flush();
+                dos.close();
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+                String line = reader.readLine();
+
+                return line;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("UploadImage", e.getMessage());
+                return e.getMessage();
             }
-            else Toast.makeText(getApplicationContext(), "이름 변경에 실패했습니다.", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            Log.d("uploadImage", "message : " + s);
+
+            if (s.equals("upload success")) {
+                Toast.makeText(getApplicationContext(), "프로필 사진을 변경하였습니다", Toast.LENGTH_SHORT).show();
+            } else
+                Toast.makeText(getApplicationContext(), "프로필 사진을 변경에 실패하였습니다.", Toast.LENGTH_SHORT).show();
         }
     }
 }
