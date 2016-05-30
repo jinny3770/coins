@@ -518,15 +518,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (!loginPref.getBoolean("autoLoginSet", false)) {
 
             if (id == R.id.nav_arrive) {
-                intent = new Intent(getApplicationContext(), DestinationListActivity.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.fade, R.anim.hold);
+                if(!myinfo.getGroupCode().equals("000000")) {
+                    intent = new Intent(getApplicationContext(), DestinationListActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.fade, R.anim.hold);
+                }
+                else Toast.makeText(getApplicationContext(), "그룹에 가입 후 사용할 수 있습니다.", Toast.LENGTH_SHORT).show();
 
             } else if (id == R.id.nav_chat) {
-                intent = new Intent(getApplicationContext(), ChattingActivity.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.fade, R.anim.hold);
 
+                if(!myinfo.getGroupCode().equals("000000")) {
+                    intent = new Intent(getApplicationContext(), ChattingActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.fade, R.anim.hold);
+                }
+                else Toast.makeText(getApplicationContext(), "그룹에 가입 후 사용할 수 있습니다.", Toast.LENGTH_SHORT).show();
 
             } else if (id == R.id.nav_group) {
                 intent = new Intent(getApplicationContext(), GroupManageActivity.class);

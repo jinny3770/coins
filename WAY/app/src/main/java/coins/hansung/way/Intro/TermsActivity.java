@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
 
 import coins.hansung.way.R;
 import coins.hansung.way.etc.Links;
-import coins.hansung.way.etc.UploadImage;
+
 
 /**
  * Created by Administrator on 2016-05-25.

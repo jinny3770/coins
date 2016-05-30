@@ -28,4 +28,6 @@ public class Links {
 
     public static final String uploadImageURL = serverURL + "/uploadImage.php";
     public static final String deleteImageURL = serverURL + "/deleteImage.php";
+
+    public static final String groupJoinURL = serverURL + "/joinGroup.php";
 }
