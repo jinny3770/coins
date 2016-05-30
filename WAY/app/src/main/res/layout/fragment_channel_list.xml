@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical" >
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="54dp"
-        android:background="#5e6472"
+        android:background="#2d80c6"
         android:paddingLeft="12dp"
         android:paddingRight="12dp"
         android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        >
+        android:paddingBottom="8dp">
+
         <EditText
             android:id="@+id/etxt_search"
             android:layout_width="match_parent"
@@ -27,9 +26,9 @@
             android:singleLine="true"
             android:hint="채널 찾기"
             android:gravity="center_vertical"
-            android:textSize="14sp"
-            />
+            android:textSize="14sp"/>
     </RelativeLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -37,7 +36,6 @@
         <ListView
             android:id="@+id/list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
+            android:layout_height="match_parent" />
     </RelativeLayout>
 </LinearLayout>

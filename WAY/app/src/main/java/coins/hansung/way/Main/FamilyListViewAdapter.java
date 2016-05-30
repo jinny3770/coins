@@ -86,7 +86,6 @@ public class FamilyListViewAdapter extends BaseAdapter{
     }
 
     public void addItem(Drawable icon, String name, String loca, Boolean signal, int battery, Bitmap profileImage) {
-
         FamilyListData addInfo = new FamilyListData();
         addInfo.icon = icon;
         addInfo.name = name;

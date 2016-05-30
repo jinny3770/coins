@@ -24,11 +24,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import coins.hansung.way.R;
+import coins.hansung.way.SideMenu.SendReceiver;
+import coins.hansung.way.etc.MyInfo;
 
 /**
  * Created by sora on 2016-05-21.
  */
-public class LockScreenActivity extends AppCompatActivity implements View.OnTouchListener{
+public class LockScreenActivity extends AppCompatActivity implements View.OnTouchListener {
+    MyInfo myInfo = MyInfo.getInstance();
     private Thread thread;
     private String numbers[];
     private int initX, offsetX;
@@ -99,14 +102,23 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnTouc
         unlock.setAlpha(0);
         select.setOnTouchListener(this);
 
-        SharedPreferences pref = getSharedPreferences("pref", 0);
-        String phone = pref.getString("phone", null);
+        try
+        {
+            SharedPreferences pref = getSharedPreferences("pref", 0);
+            String phone = pref.getString("phone", null);
 
-        if (phone != null) {
-            phone = phone.replace("[", "");
-            phone = phone.replace("]", "");
-            phone = phone.replace("\"", "");
-            numbers = phone.split(",");
+            if (phone != null) {
+                phone = phone.replace("[", "");
+                phone = phone.replace("]", "");
+                phone = phone.replace("\"", "");
+                numbers = phone.split(",");
+                Log.e("Phone", phone);
+            }
+        }
+
+        catch (NullPointerException ne)
+        {
+            Toast.makeText(getApplicationContext(), "비상연락망을 등록해주세요.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -160,7 +172,7 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnTouc
         if (select.getX() < 55.0)
         {
             alertPlayer.start();
-            sendSMS(numbers, "<WAY> 위급상황입니다.");
+            sendSMS(numbers, "<WAY> " + myInfo.getName() + "님이 위급상황입니다.");
             select.setTranslationX(initX);
             finish();
         } else if (select.getX() > 1135.0) {
@@ -188,9 +200,13 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnTouc
 
             SmsManager sms = SmsManager.getDefault();
 
-            for (int i = 0; i < numbers.length; i++) {
+
+            for (int i = 0; i < numbers.length; i++)
+            {
                 sms.sendTextMessage(numbers[i], null, message, sentPI, deliveredPI);
             }
+
+            Toast.makeText(getApplicationContext(), "문자 전송완료", Toast.LENGTH_SHORT).show();
 
             unregisterReceiver(send);
             unregisterReceiver(deliver);

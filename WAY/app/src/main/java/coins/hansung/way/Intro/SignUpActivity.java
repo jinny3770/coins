@@ -19,7 +19,6 @@ import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 
-
 import coins.hansung.way.R;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener
@@ -29,7 +28,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     ImageView profileView, cancelView;
     EditText name, id, password, passwordRepeat;
     Button createProfile;
-
     String imagePath;
 
     @Override
@@ -65,7 +63,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 intent = new Intent(Intent.ACTION_PICK);
                 intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
                 intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
                 startActivityForResult(intent, REQ);
                 overridePendingTransition(R.anim.fade, R.anim.hold);
                 break;

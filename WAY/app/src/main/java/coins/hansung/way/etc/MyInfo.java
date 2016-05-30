@@ -25,6 +25,5 @@ public class MyInfo extends PersonInfo {
         info.setName(null);
         info.setGroupCode(null);
         info.setPoint(null);
-
     }
 }

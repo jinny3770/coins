@@ -8,7 +8,6 @@ import com.skp.Tmap.TMapPoint;
  * Created by sora on 2016-03-23.
  */
 public class PersonInfo {
-
     private String ID;
     private String name;
     private String groupCode;

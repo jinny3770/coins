@@ -32,17 +32,16 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.pref_settings);
+
         myInfo = MyInfo.getInstance();
 
         setOnPreferenceChange(findPreference("gps"));
-
         pref = PreferenceManager.getDefaultSharedPreferences(this);
-
         Log.d("gpsSettings", Boolean.toString(pref.getBoolean("gps", true)));
-
         Preference pAppName = (Preference)findPreference("warning");
-
         pAppName.setOnPreferenceClickListener(this);
+
+        Log.e("lock", String.valueOf(pref.getBoolean("lock", true)));
     }
 
     @Override
@@ -50,6 +49,8 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         super.onPause();
         UpdateGpsSignal updateGpsSignal= new UpdateGpsSignal();
         updateGpsSignal.execute(pref.getBoolean("gps", true));
+        Log.e("lock", String.valueOf(pref.getBoolean("lock", true)));
+        //pref.edit().putBoolean();
     }
 
     @Override
@@ -116,6 +117,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         // 도움말 선택시
         if(preference.getKey().equals("warning"))
         {
+            Log.d("saldkfjlew", "warningstart");
             Intent intent = new Intent(this, WarningActivity.class);
             startActivityForResult(intent, 0);
         }

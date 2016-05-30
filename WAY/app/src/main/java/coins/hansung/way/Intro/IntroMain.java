@@ -14,7 +14,7 @@ import coins.hansung.way.R;
  */
 public class IntroMain extends AppCompatActivity implements View.OnClickListener
 {
-    private final long FINSH_INTERVAL_TIME = 2000;
+    private final long FINISH_INTERVAL_TIME = 2000;
     private long backPressedTime = 0;
 
     @Override
@@ -58,7 +58,7 @@ public class IntroMain extends AppCompatActivity implements View.OnClickListener
         long tempTime = System.currentTimeMillis();
         long intervalTime = tempTime - backPressedTime;
 
-        if (intervalTime >= 0 && FINSH_INTERVAL_TIME >= intervalTime)
+        if (intervalTime >= 0 && FINISH_INTERVAL_TIME >= intervalTime)
         {
             moveTaskToBack(true);
             finish();

@@ -202,7 +202,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
 
-            if (s.equals("success")) {
+            if(s.equals("success")) {
                 Toast.makeText(getApplicationContext(), "이름을 변경했습니다.", Toast.LENGTH_SHORT).show();
                 SharedPreferences pref = getSharedPreferences("Login", 0);
                 SharedPreferences.Editor prefEdit = pref.edit();

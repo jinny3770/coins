@@ -26,6 +26,8 @@ import java.util.regex.Pattern;
 
 import coins.hansung.way.R;
 import coins.hansung.way.etc.Links;
+import coins.hansung.way.etc.UploadImage;
+
 /**
  * Created by Administrator on 2016-05-25.
  */
@@ -67,10 +69,8 @@ public class TermsActivity extends AppCompatActivity implements View.OnClickList
         Log.d("resultTerm", "imagePath : " + imagePath);
         Log.d("resultTerm", name + ", " + id + ", " + password);
 
-
         check1text.setOnClickListener(this);
         check2text.setOnClickListener(this);
-
     }
 
     @Override
@@ -88,7 +88,6 @@ public class TermsActivity extends AppCompatActivity implements View.OnClickList
                     Toast.makeText(getApplicationContext(), "이용약관 및 개인정보 취급방침에 동의해주세요.", Toast.LENGTH_SHORT).show();
                 } else {
                     SendInfoTask task = new SendInfoTask(name, id, password, phone);
-
                     try {
                         str = task.execute().get().toString();
                     } catch (Exception e) {
@@ -184,9 +183,7 @@ public class TermsActivity extends AppCompatActivity implements View.OnClickList
                 Log.e("result", "S");
 
                 reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-
                 String line = reader.readLine();
-
                 return line;
 
             } catch (Exception e) {

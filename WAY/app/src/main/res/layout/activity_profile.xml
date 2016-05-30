@@ -16,8 +16,8 @@
             android:id="@+id/fixTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
             android:text="@string/strProfile"
+            android:textAlignment="center"
             android:textColor="#ffffff"
             android:textSize="16dp" />
 
@@ -42,7 +42,6 @@
                 android:layout_alignTop="@+id/fixProfileImage"
                 android:layout_toEndOf="@+id/fixProfileImage"
                 android:background="@drawable/profile_cancel" />
-
         </RelativeLayout>
 
         <EditText
@@ -51,6 +50,7 @@
             android:layout_height="@dimen/profile_height"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
+            android:layout_marginTop="20dp"
             android:background="@drawable/textview"
             android:hint="이름"
             android:paddingLeft="10dp"
@@ -93,7 +93,5 @@
             android:textColorHighlight="@drawable/button_click"
             android:textColorLink="@drawable/button_click"
             android:textSize="16dp" />
-
     </LinearLayout>
-
 </RelativeLayout>

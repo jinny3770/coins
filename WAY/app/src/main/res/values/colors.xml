@@ -13,12 +13,8 @@
 
     <color name="colorPrimaryOpacity">#652d80c6</color>
     <color name="colorPrimaryOpacity2">#802d80c6</color>
-    <color name="colorPrimaryOpacity3">#bd2d80c6</color>
     <color name="mapButton">#88ffffff</color>
     <color name="enableFalseButton">#88848484</color>
-
     <color name="textColor">#55575c</color>
     <color name="beige">#f3f3f3</color>
-
-
 </resources>

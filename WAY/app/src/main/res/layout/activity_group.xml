@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f3f3f3"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:gravity="center_horizontal"
+        android:text="나의 그룹 코드는"
+        android:textColor="#000000"
+        android:textSize="18dp" />
+
+    <TextView
+        android:id="@+id/groupcode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textView2"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
+        android:textColor="#000000"
+        android:textSize="18dp" />
+
+
+    <ListView
+        android:id="@+id/alertList"
+        android:layout_width="match_parent"
+        android:layout_height="310dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/groupcode"
+        android:layout_gravity="start"
+        android:layout_marginTop="20dp"
+        android:layout_weight="1"
+        android:divider="#00000000"
+        android:dividerHeight="1dip" />
+
+    <!-- 그룹코드 없을 때 -->
+    <Button
+        android:id="@+id/createGroup"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_below="@+id/alertList"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/button_warning"
+        android:text="그룹 생성하기"
+        android:textColor="#ffffff"
+        android:textSize="16dp" />
+
+    <Button
+        android:id="@+id/checkInvite"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_below="@+id/createGroup"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/button_warning"
+        android:text="초대받은 그룹이 있나요?"
+        android:textColor="#ffffff"
+        android:textSize="16dp" />
+
+    <!-- 그룹코드 없을 때 -->
+
+    <!-- 그룹코드 있을 때 -->
+    <Button
+        android:id="@+id/inviteUser"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="10dp"
+        android:layout_weight="4"
+        android:background="@drawable/button_warning"
+        android:text="나의 그룹에 초대하기"
+        android:textColor="#ffffff"
+        android:textSize="16dp"
+        android:layout_below="@+id/alertList"
+        android:layout_centerHorizontal="true" />
+</RelativeLayout>

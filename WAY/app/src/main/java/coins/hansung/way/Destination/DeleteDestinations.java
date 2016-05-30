@@ -16,7 +16,6 @@ import coins.hansung.way.etc.Links;
  * Created by sora on 2016-05-08.
  */
 public class DeleteDestinations extends AsyncTask<String, Void, String> {
-
     String data, result;
     BufferedReader reader = null;
 

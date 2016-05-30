@@ -1,5 +1,6 @@
 package coins.hansung.way.Intro;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
+import coins.hansung.way.Main.MainActivity;
 import coins.hansung.way.R;
 import coins.hansung.way.etc.Links;
 import coins.hansung.way.etc.MyInfo;

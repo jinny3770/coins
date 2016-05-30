@@ -29,12 +29,12 @@
     </PreferenceCategory>
     <PreferenceCategory
         android:key="warningCategory"
-        android:title="비상 연락망 설정">
+        android:title="비상연락망 설정">
 
         <Preference
             android:key="warning"
-            android:title="비상 연락망 설정"
-            android:summary="비상 연락망 연락처를 추가/제거할 수 있습니다.">
+            android:title="비상연락망 설정"
+            android:summary="비상연락망 연락처를 추가 / 제거할 수 있습니다.">
         </Preference>
 
     </PreferenceCategory>

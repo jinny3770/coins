@@ -16,7 +16,6 @@ import coins.hansung.way.etc.Links;
  */
 public class LoadFamilyList extends AsyncTask<String, Void, String>
 {
-
     private String code, data, result;
     private BufferedReader reader = null;
 

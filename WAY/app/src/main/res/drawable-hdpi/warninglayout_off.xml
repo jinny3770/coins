@@ -3,16 +3,16 @@
     <!-- 평상시 -->
     <item android:state_focused="false" android:state_pressed="false">
         <shape>
+            <solid android:color="#66393C44" />
+            <corners android:radius="10dp" />
+        </shape>
+    </item>
+<!--
+    &lt;!&ndash; 클릭했을 때 &ndash;&gt;
+    <item android:state_focused="false" android:state_pressed="true">
+        <shape>
             <solid android:color="#2d80c6" />
             <corners android:radius="10dp" />
         </shape>
-    </item>
-
-    <!-- 클릭했을 때 -->
-    <item android:state_focused="false" android:state_pressed="true">
-        <shape>
-            <solid android:color="#ffffff" />
-            <corners android:radius="10dp" />
-        </shape>
-    </item>
+    </item>-->
 </selector>

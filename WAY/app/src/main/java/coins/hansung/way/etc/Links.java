@@ -16,7 +16,6 @@ public class Links {
     public static final String resistURL = serverURL + "/destinationsResist.php";
     public static final String signupURL = serverURL + "/signup.php";
 
-
     public static final String myPointResistURL = serverURL + "/myPointResist.php";
     public static final String loadFamilyURL = serverURL + "/loadFamilyList.php";
     public static final String updateLocationURL = serverURL + "/updateLocation.php";

@@ -8,11 +8,12 @@
         </shape>
     </item>
 
-    <!-- 클릭했을 때 -->
+<!--
+    &lt;!&ndash; 클릭했을 때 &ndash;&gt;
     <item android:state_focused="false" android:state_pressed="true">
         <shape>
-            <solid android:color="#ffffff" />
             <corners android:radius="10dp" />
         </shape>
     </item>
+-->
 </selector>
