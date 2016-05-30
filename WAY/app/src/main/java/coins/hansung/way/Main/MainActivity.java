@@ -112,7 +112,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     MyInfo myinfo;
 
     // family list
-    Boolean flag = true;
     Boolean familyCheck = false;
     ListView familyList;
     Family familyInstance;
@@ -678,8 +677,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         family = familyInstance.getFamilyArray();
 
         // family List Load
-        // flag = ??????????...ㅎㅎ
-        flag = false;
         familyList.setAdapter(familyAdapter);
         familyList.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
@@ -720,6 +717,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     if (str.equals("1")) pInfo.setGpsSig(true);
                     else pInfo.setGpsSig(false);
 
+                    Log.d("familyInfo", pInfo.getID() + ", " + pInfo.getName() + ", " + pInfo.getPhoneNumber());
                     Log.d("GPSSignal", pInfo.getGpsSig().toString());
 
                     LoadImage loadImage = new LoadImage();
@@ -728,7 +726,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     if (bitmap == null)
                         bitmap = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.person);
 
-                    //pInfo
 
                     // 가족 위치 설정
                     TMapPoint pPoint = new TMapPoint(jsonObject.getDouble("latitude"), jsonObject.getDouble("longitude"));

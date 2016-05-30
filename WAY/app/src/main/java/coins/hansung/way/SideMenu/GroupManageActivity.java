@@ -2,6 +2,7 @@ package coins.hansung.way.SideMenu;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -9,16 +10,25 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Random;
 
 import coins.hansung.way.Main.LoadFamilyList;
 import coins.hansung.way.R;
 import coins.hansung.way.etc.Family;
+import coins.hansung.way.etc.Links;
 import coins.hansung.way.etc.MyInfo;
 import coins.hansung.way.etc.PersonInfo;
 
@@ -27,6 +37,8 @@ public class GroupManageActivity extends AppCompatActivity implements View.OnCli
     TextView groupCode;
     Button btnInvite, btncheckInvite, btnCreateGroup;
     MyInfo myinfo = MyInfo.getInstance();
+
+    Family family = Family.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -58,7 +70,6 @@ public class GroupManageActivity extends AppCompatActivity implements View.OnCli
 
         try
         {
-            Family family = Family.getInstance();
             Log.e("size", String.valueOf(family.getFamilyArray().size()));
 
 
@@ -84,6 +95,11 @@ public class GroupManageActivity extends AppCompatActivity implements View.OnCli
     }
 
     @Override
+    protected void onPostResume() {
+        super.onPostResume();
+    }
+
+    @Override
     public void onClick(View v)
     {
         Intent intent;
@@ -101,9 +117,8 @@ public class GroupManageActivity extends AppCompatActivity implements View.OnCli
                 break;
 
             case R.id.createGroup :
-                String group = makeRandomString();
-                myinfo.setGroupCode(group);
-                groupCode.setText(myinfo.getGroupCode());
+                MakeGroupTask makeGroupTask = new MakeGroupTask();
+                makeGroupTask.execute(myinfo.getID());
 
                 btnInvite.setVisibility(View.VISIBLE);
                 btncheckInvite.setVisibility(View.GONE);
@@ -122,18 +137,54 @@ public class GroupManageActivity extends AppCompatActivity implements View.OnCli
         editor.commit();
     }
 
-    private String makeRandomString()
-    {
-        StringBuffer buffer = new StringBuffer();
-        Random random = new Random();
 
-        String chars[] = "A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,0,1,2,3,4,5,6,7,8,9".split(",");
+    class MakeGroupTask extends AsyncTask<String, Void, String> {
 
-        for (int i = 0 ; i <  6 ; i++)
-        {
-            buffer.append(chars[random.nextInt(chars.length)]);
+        @Override
+        protected String doInBackground(String... params) {
+
+            String id = params[0];
+
+            try {
+                URL url = new URL(Links.groupMakingURL);
+
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("POST");
+
+                conn.setReadTimeout(10000);
+                conn.setConnectTimeout(15000);
+
+                conn.setDoOutput(true);
+                conn.setDoInput(true);
+
+                String data = URLEncoder.encode("ID", "UTF-8") + "=" + URLEncoder.encode(myinfo.getID(), "UTF-8");
+
+                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+                wr.write(data);
+                wr.flush();
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                String str = reader.readLine();
+
+                return str;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return e.getMessage();
+            }
         }
 
-        return buffer.toString();
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            if(s.equals("fail")) {
+                Toast.makeText(getApplication(), "그룹 생성에 실패하였습니다.", Toast.LENGTH_SHORT).show();
+            } else {
+                myinfo.setGroupCode(s);
+                groupCode.setText(s);
+                Toast.makeText(getApplication(), "그룹을 생성하였습니다.", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
