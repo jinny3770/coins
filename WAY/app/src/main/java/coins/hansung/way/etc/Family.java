@@ -26,4 +26,8 @@ public class Family {
     public ArrayList getFamilyArray() {
         return familyArray;
     }
+
+    public void setFamilyArray(ArrayList familyArray) {
+        this.familyArray = familyArray;
+    }
 }

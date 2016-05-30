@@ -739,6 +739,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 }
             }
+
+            familyInstance.setFamilyArray(family);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
