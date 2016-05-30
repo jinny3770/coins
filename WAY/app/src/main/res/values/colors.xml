@@ -14,5 +14,8 @@
     <color name="mapButton">#88ffffff</color>
     <color name="enableFalseButton">#88848484</color>
 
+    <color name="textColor">#55575c</color>
+    <color name="beige">#f3f3f3</color>
+
 
 </resources>

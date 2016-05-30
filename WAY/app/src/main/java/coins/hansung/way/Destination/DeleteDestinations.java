@@ -10,11 +10,13 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
+import coins.hansung.way.etc.Links;
+
 /**
  * Created by sora on 2016-05-08.
  */
 public class DeleteDestinations extends AsyncTask<String, Void, String> {
-    static final String deleteURL = "http://52.79.124.54/deleteDestinations.php";
+
     String data, result;
     BufferedReader reader = null;
 
@@ -24,7 +26,7 @@ public class DeleteDestinations extends AsyncTask<String, Void, String> {
         Log.d("deleteDetinations", "excute Delete");
 
         try {
-            URL url = new URL(deleteURL);
+            URL url = new URL(Links.deleteURL);
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");

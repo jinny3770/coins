@@ -432,7 +432,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         Bitmap bitmap = loadImage.execute(myinfo.getID()).get();
 
                         myinfo.setProfileImage(bitmap);
-                        profileImage.setImageBitmap(bitmap);
+                        if (bitmap != null)
+                            profileImage.setImageBitmap(bitmap);
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -707,7 +708,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     LoadImage loadImage = new LoadImage();
                     Bitmap bitmap = loadImage.execute(pInfo.getID()).get();
 
-                    if(bitmap == null)
+                    if (bitmap == null)
                         bitmap = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.person);
 
                     //pInfo

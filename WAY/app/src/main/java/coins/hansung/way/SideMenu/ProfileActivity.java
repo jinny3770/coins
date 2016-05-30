@@ -22,10 +22,13 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.concurrent.ExecutionException;
@@ -100,8 +103,11 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
                         UploadImage uploadImage = new UploadImage();
                         uploadImage.execute(myinfo.getID(), imagePath);
-
+                    } else {
+                        DeleteImage deleteImage = new DeleteImage();
+                        deleteImage.execute(myinfo.getID());
                     }
+
                     finish();
                 } else {
 
@@ -112,7 +118,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
                         UploadImage uploadImage = new UploadImage();
                         uploadImage.execute(myinfo.getID(), imagePath);
-
+                    } else {
+                        DeleteImage deleteImage = new DeleteImage();
+                        deleteImage.execute(myinfo.getID());
                     }
 
                 }
@@ -312,6 +320,37 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 Toast.makeText(getApplicationContext(), "프로필 사진을 변경하였습니다", Toast.LENGTH_SHORT).show();
             } else
                 Toast.makeText(getApplicationContext(), "프로필 사진을 변경에 실패하였습니다.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    class DeleteImage extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected Void doInBackground(String... params) {
+            try {
+                URL url = new URL(Links.deleteImageURL);
+
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("POST");
+
+                conn.setReadTimeout(10000);
+                conn.setConnectTimeout(15000);
+
+                conn.setDoOutput(true);
+                conn.setDoInput(true);
+
+                String data = URLEncoder.encode("id", "UTF-8") + "=" + URLEncoder.encode(myinfo.getID(), "UTF-8");
+
+                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+                wr.write(data);
+                wr.flush();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("DeleteImage", e.getMessage());
+            }
+
+            return null;
         }
     }
 }

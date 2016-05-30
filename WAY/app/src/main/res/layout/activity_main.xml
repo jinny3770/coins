@@ -25,14 +25,17 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="top"
-            app:menu="@menu/activity_main_drawer"/>
+            android:background="@color/beige"
+            app:itemTextColor="@color/textColor"
+            app:menu="@menu/activity_main_drawer" />
 
         <android.support.design.widget.NavigationView
             android:id="@+id/nav_view_footer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            app:menu="@menu/activity_main_drawer_footer"/>
+            app:itemTextColor="@color/textColor"
+            app:menu="@menu/activity_main_drawer_footer" />
 
     </android.support.design.widget.NavigationView>
 
