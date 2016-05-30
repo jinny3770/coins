@@ -32,17 +32,18 @@ import coins.hansung.way.etc.Links;
 import coins.hansung.way.etc.MyInfo;
 import coins.hansung.way.etc.PersonInfo;
 
-public class GroupManageActivity extends AppCompatActivity implements View.OnClickListener
-{
+public class GroupManageActivity extends AppCompatActivity implements View.OnClickListener {
     TextView groupCode;
     Button btnInvite, btncheckInvite, btnCreateGroup;
     MyInfo myinfo = MyInfo.getInstance();
 
+    ListView alertView;
+    GroupListAdapter adapter;
+
     Family family = Family.getInstance();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group);
 
@@ -51,38 +52,18 @@ public class GroupManageActivity extends AppCompatActivity implements View.OnCli
         btncheckInvite = (Button) findViewById(R.id.checkInvite); // 없
         btnCreateGroup = (Button) findViewById(R.id.createGroup); // 없
 
-        ListView alertView = (ListView) findViewById(R.id.alertList);
-        GroupListAdapter adapter = new GroupListAdapter();
-        alertView.setAdapter(adapter);
-
         if (!myinfo.getGroupCode().equals("000000")) // 그룹코드가 있을 때
         {
             groupCode.setText(myinfo.getGroupCode());
             btncheckInvite.setVisibility(View.GONE);
             btnCreateGroup.setVisibility(View.GONE);
-        }
 
-        else // 그룹코드가 없을 때
+        } else // 그룹코드가 없을 때
         {
             groupCode.setText("000000");
             btnInvite.setVisibility(View.GONE);
         }
 
-        try
-        {
-            Log.e("size", String.valueOf(family.getFamilyArray().size()));
-
-
-            for (int i = 0; i < family.getFamilyArray().size(); i++) {
-                PersonInfo p = (PersonInfo) family.getFamilyArray().get(i);
-                adapter.addItem(p.getName(), p.getPhoneNumber());
-            }
-        }
-
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
 
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setTitle("그룹관리");
@@ -97,26 +78,41 @@ public class GroupManageActivity extends AppCompatActivity implements View.OnCli
     @Override
     protected void onPostResume() {
         super.onPostResume();
+
+        alertView = null;
+        alertView = (ListView) findViewById(R.id.alertList);
+        adapter = new GroupListAdapter();
+        alertView.setAdapter(adapter);
+
+
+        try {
+            Log.e("size", String.valueOf(family.getFamilyArray().size()));
+
+            for (int i = 0; i < family.getFamilyArray().size(); i++) {
+                PersonInfo p = (PersonInfo) family.getFamilyArray().get(i);
+                adapter.addItem(p.getName(), p.getPhoneNumber());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public void onClick(View v)
-    {
+    public void onClick(View v) {
         Intent intent;
-        switch (v.getId())
-        {
-            case R.id.inviteUser :
+        switch (v.getId()) {
+            case R.id.inviteUser:
                 intent = new Intent(getApplicationContext(), InviteActivity.class);
                 intent.putExtra("code", myinfo.getGroupCode());
                 startActivity(intent);
                 break;
 
-            case R.id.checkInvite :
+            case R.id.checkInvite:
                 intent = new Intent(getApplicationContext(), JoinActivity.class);
                 startActivity(intent);
                 break;
 
-            case R.id.createGroup :
+            case R.id.createGroup:
                 MakeGroupTask makeGroupTask = new MakeGroupTask();
                 makeGroupTask.execute(myinfo.getID());
 
@@ -128,8 +124,7 @@ public class GroupManageActivity extends AppCompatActivity implements View.OnCli
     }
 
     @Override
-    protected void onPause()
-    {
+    protected void onPause() {
         super.onPause();
         SharedPreferences pref = getSharedPreferences("pref", 0);
         SharedPreferences.Editor editor = pref.edit();
@@ -178,7 +173,7 @@ public class GroupManageActivity extends AppCompatActivity implements View.OnCli
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
 
-            if(s.equals("fail")) {
+            if (s.equals("fail")) {
                 Toast.makeText(getApplication(), "그룹 생성에 실패하였습니다.", Toast.LENGTH_SHORT).show();
             } else {
                 myinfo.setGroupCode(s);

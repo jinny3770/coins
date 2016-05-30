@@ -674,7 +674,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         familyAdapter = new FamilyListViewAdapter(this);
         familyMarker = new ArrayList<TMapMarkerItem>();
         familyInstance = Family.getInstance();
-        family = familyInstance.getFamilyArray();
+        family = new ArrayList<PersonInfo>();
 
         // family List Load
         familyList.setAdapter(familyAdapter);
@@ -718,6 +718,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     else pInfo.setGpsSig(false);
 
                     Log.d("familyInfo", pInfo.getID() + ", " + pInfo.getName() + ", " + pInfo.getPhoneNumber());
+                    Log.d("familyInfo", "size = " + family.size());
                     Log.d("GPSSignal", pInfo.getGpsSig().toString());
 
                     LoadImage loadImage = new LoadImage();
