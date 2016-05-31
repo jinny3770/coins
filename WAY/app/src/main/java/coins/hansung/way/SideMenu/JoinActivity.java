@@ -1,5 +1,7 @@
 package coins.hansung.way.SideMenu;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +29,7 @@ import coins.hansung.way.etc.MyInfo;
  */
 
 public class JoinActivity extends AppCompatActivity {
+
     EditText joinCode;
 
     @Override
@@ -36,6 +39,7 @@ public class JoinActivity extends AppCompatActivity {
 
         joinCode = (EditText) findViewById(R.id.joinCode);
         Button joinButton = (Button) findViewById(R.id.joinButton);
+
 
         joinButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,22 +55,8 @@ public class JoinActivity extends AppCompatActivity {
                 } else {
                     JoinTask joinTask = new JoinTask();
                     joinTask.execute(MyInfo.getInstance().getID(), joinCode.getText().toString());
-
-                    finish();
                 }
 
-                /*else if (makePhoneNumber(phone) == null) // 전화번호 정규식 체크
-                {
-                    inviteNumber.setText(null);
-                    Toast.makeText(getApplicationContext(), "전화번호 방식이 올바르지 않습니다.", Toast.LENGTH_SHORT).show();
-                }
-
-                else
-                {
-                    inviteNumber.setText(null);
-                    phone = makePhoneNumber(phone);
-                    inviteSMS(phone);
-                }*/
             }
         });
 
@@ -99,7 +89,7 @@ public class JoinActivity extends AppCompatActivity {
                 conn.setDoInput(true);
 
                 String data = URLEncoder.encode("ID", "UTF-8") + "=" + URLEncoder.encode(id, "UTF-8") +
-                        "&" + URLEncoder.encode("code", "UTF-8") + "=" + URLEncoder.encode(code, "UTF-8");
+                        "&" + URLEncoder.encode("CODE", "UTF-8") + "=" + URLEncoder.encode(code, "UTF-8");
 
                 OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
                 wr.write(data);
@@ -122,7 +112,19 @@ public class JoinActivity extends AppCompatActivity {
 
             if (s.equals(code)) {
                 Toast.makeText(getApplicationContext(), "그룹에 가입되었습니다.", Toast.LENGTH_SHORT).show();
+                MyInfo myInfo = MyInfo.getInstance();
+                myInfo.setGroupCode(code);
+
+                SharedPreferences pref = getSharedPreferences("Login", 0);
+                SharedPreferences.Editor prefEdit = pref.edit();
+
+                prefEdit.putString("Code", code);
+                prefEdit.commit();
+
+                finish();
+
             }
+            else Toast.makeText(getApplicationContext(), "그룹에 가입에 실패하였습니다.", Toast.LENGTH_SHORT).show();
         }
     }
 }

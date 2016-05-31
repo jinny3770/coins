@@ -136,6 +136,7 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
         mapView.setTMapPathIcon(departure, arrival);
 
         spinner = (Spinner) findViewById(R.id.selectSpinner);
+        //spinner.setAdapter();
 
         searchText = (EditText) findViewById(R.id.searchText);
         searchButton = (TextView) findViewById(R.id.searchButton);

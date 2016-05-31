@@ -25,6 +25,7 @@ dependencies {
     repositories {
         mavenCentral()
     }
+
     compile 'com.sothree.slidinguppanel:library:3.3.0'
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'

@@ -4,18 +4,20 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import coins.hansung.way.Intro.IntroMain;
 import coins.hansung.way.R;
 
 public class SplashActivity extends AppCompatActivity {
 
-    final int splashTime = 3000;
+    final int splashTime = 500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
 
         try
         {
@@ -31,4 +33,5 @@ public class SplashActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.fade, R.anim.hold);
         finish();
     }
+
 }

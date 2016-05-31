@@ -55,7 +55,7 @@ public class LocationService extends Service implements Runnable {
     RegID regID;
     private Result result;
     private Message message;
-    private final Sender sender = new Sender("AIzaSyAfClZJckVp_ZFNWWdl_kVOJFX2qzoP18s");
+    private final Sender sender = new Sender("AIzaSyCyvyFq1XJmhaCZlN128jCdPtSkCNwL-O8");
 
     public void onCreate() {
         Log.d("111111Service", "onCreate() Call.");
@@ -236,8 +236,8 @@ public class LocationService extends Service implements Runnable {
 
                         if (code != null && code != regID.getRegID())
                         {
-                            result = sender.send(message, "APA91bFjKgqnbLnTIPI2Y9-BR0Spx_6j3zLHsRokrV8CeGqR6jjOQgnX8XUPJRCevMf-BxWyD--bDO2IxAAuUPj_eupqKl5QmplO3rFbuStB4QelZh5Vt8PAZo4nEh8iZs5gCKpc490y", 5);
-                            //result = sender.send(message, code, 5);
+                            //result = sender.send(message, "APA91bFjKgqnbLnTIPI2Y9-BR0Spx_6j3zLHsRokrV8CeGqR6jjOQgnX8XUPJRCevMf-BxWyD--bDO2IxAAuUPj_eupqKl5QmplO3rFbuStB4QelZh5Vt8PAZo4nEh8iZs5gCKpc490y", 5);
+                            result = sender.send(message, code,  5);
                             Log.e("result", result.toString());
 
                         }

@@ -39,6 +39,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gcm.GCMRegistrar;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.skp.Tmap.TMapAddressInfo;
 import com.skp.Tmap.TMapData;
 import com.skp.Tmap.TMapGpsManager;
@@ -81,6 +83,7 @@ import coins.hansung.way.etc.FamilyMarkerResource;
 import coins.hansung.way.etc.Links;
 import coins.hansung.way.etc.MyInfo;
 import coins.hansung.way.etc.PersonInfo;
+import coins.hansung.way.etc.RegID;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, TMapGpsManager.onLocationChangedCallback {
@@ -159,6 +162,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static final int TYPE_URI = 2;
     public static final String CHARS = "0123456789ABCDEF";
 
+
+    //GCM 변수
+    String SENDER_ID = "386569608668";
+    RegID regID;
+
     // 종료 관련 변수
     private final long FINSH_INTERVAL_TIME = 2000;
     private long backPressedTime = 0;
@@ -168,6 +176,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         startService(new Intent(this, ReadNFC.class));
+
+        //GCM
+        GCMRegistrar.checkDevice(this);
+        GCMRegistrar.checkManifest(this);
+        regID = RegID.getInstance();
+
+        final String id = GCMRegistrar.getRegistrationId(this);
+
+        if ("".equals(id))
+        {
+            GCMRegistrar.register(this, SENDER_ID);
+        }
+
+        regID.setRegID(id);
+
 
         // NFC
         adapter = NfcAdapter.getDefaultAdapter(this);
@@ -678,8 +701,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // family List Load
         familyList.setAdapter(familyAdapter);
-        familyList.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
+        familyList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mapView.setCenterPoint(family.get(position).getPoint().getLongitude(), family.get(position).getPoint().getLatitude());
@@ -789,6 +811,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         float batteryPct = level / (float) scale;
         return (int) (batteryPct * 100);
     }
+
 
     class LoadLocationString extends AsyncTask<TMapPoint, Void, String> {
         @Override

@@ -42,6 +42,8 @@ public class GroupManageActivity extends AppCompatActivity implements View.OnCli
 
     Family family = Family.getInstance();
 
+    final int REQ_CODE = 100;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,31 +57,18 @@ public class GroupManageActivity extends AppCompatActivity implements View.OnCli
         if (!myinfo.getGroupCode().equals("000000")) // 그룹코드가 있을 때
         {
             groupCode.setText(myinfo.getGroupCode());
-            btncheckInvite.setVisibility(View.GONE);
-            btnCreateGroup.setVisibility(View.GONE);
+            btncheckInvite.setVisibility(View.INVISIBLE);
+            btnCreateGroup.setVisibility(View.INVISIBLE);
+            btnInvite.setVisibility(View.VISIBLE);
 
         } else // 그룹코드가 없을 때
         {
             groupCode.setText("000000");
-            btnInvite.setVisibility(View.GONE);
+            btnInvite.setVisibility(View.INVISIBLE);
+            btncheckInvite.setVisibility(View.VISIBLE);
+            btnCreateGroup.setVisibility(View.VISIBLE);
         }
 
-
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setTitle("그룹관리");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-
-        btnInvite.setOnClickListener(this);
-        btncheckInvite.setOnClickListener(this);
-        btnCreateGroup.setOnClickListener(this);
-    }
-
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-
-        alertView = null;
         alertView = (ListView) findViewById(R.id.alertList);
         adapter = new GroupListAdapter();
         alertView.setAdapter(adapter);
@@ -95,7 +84,17 @@ public class GroupManageActivity extends AppCompatActivity implements View.OnCli
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setTitle("그룹관리");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+        btnInvite.setOnClickListener(this);
+        btncheckInvite.setOnClickListener(this);
+        btnCreateGroup.setOnClickListener(this);
     }
+
 
     @Override
     public void onClick(View v) {
@@ -108,8 +107,9 @@ public class GroupManageActivity extends AppCompatActivity implements View.OnCli
                 break;
 
             case R.id.checkInvite:
+                Log.d("GroupManageActivity", "joinClick");
                 intent = new Intent(getApplicationContext(), JoinActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, REQ_CODE);
                 break;
 
             case R.id.createGroup:

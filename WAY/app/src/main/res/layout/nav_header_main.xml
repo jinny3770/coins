@@ -22,6 +22,7 @@
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:id="@+id/mainProfileImage"
+            android:src="@drawable/person"
             android:layout_margin="@dimen/default_margin"/>
 
 
