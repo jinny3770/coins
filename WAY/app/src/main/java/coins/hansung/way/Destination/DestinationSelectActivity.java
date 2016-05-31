@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.PointF;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDialog;
 import android.text.StaticLayout;
@@ -17,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -71,7 +73,7 @@ import android.os.Handler;
 /**
  * Created by sora on 2016-04-21.
  */
-public class DestinationSelectActivity extends AppCompatActivity implements View.OnClickListener {
+public class DestinationSelectActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
     LinearLayout mapLayout;
     TMapView mapView;
@@ -81,7 +83,9 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
 
     EditText searchText;
     TextView searchButton;
+
     Spinner spinner;
+    SpinnerAdapter spinnerAdapter;
 
     Integer[] spinnerImages = {R.drawable.ic_directions_walk_white_24dp, R.drawable.ic_directions_bike_white_24dp,
             R.drawable.ic_local_taxi_white_24dp};
@@ -136,7 +140,11 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
         mapView.setTMapPathIcon(departure, arrival);
 
         spinner = (Spinner) findViewById(R.id.selectSpinner);
-        //spinner.setAdapter();
+        spinnerAdapter = new SpinnerAdapter(this, spinnerImages);
+        spinner.setAdapter(spinnerAdapter);
+        spinner.setSelection(0);
+
+
 
         searchText = (EditText) findViewById(R.id.searchText);
         searchButton = (TextView) findViewById(R.id.searchButton);
@@ -395,6 +403,11 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
             npe.printStackTrace();
             return null;
         }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
     }
 
 

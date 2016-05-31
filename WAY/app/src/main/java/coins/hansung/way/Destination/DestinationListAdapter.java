@@ -2,6 +2,7 @@ package coins.hansung.way.Destination;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.v4.content.res.ResourcesCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -109,15 +110,16 @@ public class DestinationListAdapter extends BaseAdapter {
 
         switch (type) {
             case "walk" :
-                data.icon = this.myContext.getResources().getDrawable(R.drawable.ic_directions_walk_white_24dp);
+                data.icon = ResourcesCompat.getDrawable(myContext.getResources(), R.drawable.ic_directions_walk_black_24dp, null);
                 break;
 
             case "bicycle" :
-                data.icon = this.myContext.getResources().getDrawable(R.drawable.ic_directions_bike_white_24dp);
+                data.icon = ResourcesCompat.getDrawable(myContext.getResources(), R.drawable.ic_directions_bike_black_24dp, null);
                 break;
 
             case "car" :
-                data.icon = this.myContext.getResources().getDrawable(R.drawable.ic_local_taxi_white_24dp);
+                data.icon = ResourcesCompat.getDrawable(myContext.getResources(), R.drawable.ic_local_taxi_black_24dp, null);
+                //data.icon = this.myContext.getResources().getDrawable(R.drawable.ic_local_taxi_white_24dp);
                 break;
         }
 

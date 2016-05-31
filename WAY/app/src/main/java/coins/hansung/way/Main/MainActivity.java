@@ -21,6 +21,7 @@ import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -184,8 +185,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         final String id = GCMRegistrar.getRegistrationId(this);
 
-        if ("".equals(id))
-        {
+        if ("".equals(id)) {
             GCMRegistrar.register(this, SENDER_ID);
         }
 
@@ -298,7 +298,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         LayoutInflater inflater = getLayoutInflater();
 
 
-
         myinfo = MyInfo.getInstance();
         myinfo.setID(loginPref.getString("ID", null));
         myinfo.setGroupCode(loginPref.getString("Code", "000000"));
@@ -328,6 +327,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 familyCheck = false;
                 mapView.setTrackingMode(true);
                 mapView.setLocationPoint(myMarker.longitude, myMarker.latitude);
+                mapView.bringMarkerToFront(myMarker);
+
             }
         });
 
@@ -493,7 +494,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 });
 
-                if(service != null)
+                if (service != null)
                     stopService(service);
             }
 
@@ -514,18 +515,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        }
-        else if (intervalTime >= 0 && FINSH_INTERVAL_TIME >= intervalTime)
-        {
+        } else if (intervalTime >= 0 && FINSH_INTERVAL_TIME >= intervalTime) {
             super.onBackPressed();
             Log.d("press back twice time.", "exit the process");
             finish();
 
-        }
-        else
-        {
+        } else {
             backPressedTime = tempTime;
-            Toast.makeText(getApplicationContext(),"'뒤로'버튼을 한 번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "'뒤로'버튼을 한 번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -540,21 +537,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (!loginPref.getBoolean("autoLoginSet", false)) {
 
             if (id == R.id.nav_arrive) {
-                if(!myinfo.getGroupCode().equals("000000")) {
+                if (!myinfo.getGroupCode().equals("000000")) {
                     intent = new Intent(getApplicationContext(), DestinationListActivity.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.fade, R.anim.hold);
-                }
-                else Toast.makeText(getApplicationContext(), "그룹에 가입 후 사용할 수 있습니다.", Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(getApplicationContext(), "그룹에 가입 후 사용할 수 있습니다.", Toast.LENGTH_SHORT).show();
 
             } else if (id == R.id.nav_chat) {
 
-                if(!myinfo.getGroupCode().equals("000000")) {
+                if (!myinfo.getGroupCode().equals("000000")) {
                     intent = new Intent(getApplicationContext(), ChattingActivity.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.fade, R.anim.hold);
-                }
-                else Toast.makeText(getApplicationContext(), "그룹에 가입 후 사용할 수 있습니다.", Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(getApplicationContext(), "그룹에 가입 후 사용할 수 있습니다.", Toast.LENGTH_SHORT).show();
 
             } else if (id == R.id.nav_group) {
                 intent = new Intent(getApplicationContext(), GroupManageActivity.class);
@@ -597,12 +594,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    private void processTag(Intent passedIntent)
-    {
+    private void processTag(Intent passedIntent) {
         Parcelable rawMessage[] = passedIntent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
 
-        if (rawMessage == null)
-        {
+        if (rawMessage == null) {
             return;
         }
 
@@ -611,12 +606,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NdefMessage message[];
 
-        if (rawMessage != null)
-        {
+        if (rawMessage != null) {
             message = new NdefMessage[rawMessage.length];
 
-            for (int i = 0; i < rawMessage.length; i++)
-            {
+            for (int i = 0; i < rawMessage.length; i++) {
                 message[i] = (NdefMessage) rawMessage[i];
                 showTag(message[i]);
             }
@@ -624,12 +617,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    public static String toHexString(byte data[])
-    {
+    public static String toHexString(byte data[]) {
         StringBuilder stringBuilder = new StringBuilder();
 
-        for (int i = 0; i < data.length; ++i)
-        {
+        for (int i = 0; i < data.length; ++i) {
             stringBuilder.append(CHARS.charAt((data[i] >> 4) & 0x0F)).append(CHARS.charAt(data[i] & 0x0F));
         }
 
@@ -637,20 +628,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    private int showTag(NdefMessage message)
-    {
+    private int showTag(NdefMessage message) {
         List<ParsingRecord> records = NdefMessageParsing.parse(message);
         final int size = records.size();
 
-        for (int i = 0; i < size; i++)
-        {
+        for (int i = 0; i < size; i++) {
             ParsingRecord record = records.get(i);
 
             int recordType = record.getType();
             String recordString = "";
 
-            if (recordType == ParsingRecord.TYPE_TEXT)
-            {
+            if (recordType == ParsingRecord.TYPE_TEXT) {
                 recordString = ((TextRecord) record).getText();
             }
 
@@ -766,8 +754,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                     LoadLocationString loadLocationString = new LoadLocationString();
                     familyLocationString = loadLocationString.execute(family.get(familyIndex).getPoint()).get();
-                    familyAdapter.addItem(getResources().getDrawable(familyMarkerResourceList.get(j)),
-                    family.get(familyIndex).getName(), familyLocationString, family.get(familyIndex).getGpsSig(), family.get(familyIndex).getBattery(), bitmap);
+                    familyAdapter.addItem(ResourcesCompat.getDrawable(getResources(), familyMarkerResourceList.get(j), null),
+                            family.get(familyIndex).getName(), familyLocationString, family.get(familyIndex).getGpsSig(), family.get(familyIndex).getBattery(), bitmap);
 
                     j++;
                 } else {

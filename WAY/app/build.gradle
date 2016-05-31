@@ -26,6 +26,8 @@ dependencies {
         mavenCentral()
     }
 
+    compile 'com.google.android.gms:play-services-analytics:8.4.0'
+    compile 'de.hdodenhof:circleimageview:2.0.0'
     compile 'com.sothree.slidinguppanel:library:3.3.0'
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
