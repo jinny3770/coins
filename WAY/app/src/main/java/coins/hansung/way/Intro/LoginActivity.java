@@ -58,8 +58,10 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        intent = new Intent();
-        intent.getStringExtra("gcmCode");
+        intent = getIntent();
+        gcmCode = intent.getStringExtra("gcmCode");
+
+        Log.w("gcmCode", gcmCode);
 
         mEmailView = (EditText) findViewById(R.id.id);
         mPasswordView = (EditText) findViewById(R.id.password);
@@ -128,6 +130,8 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
+
+
             mAuthTask = new UserLoginTask(email, password, gcmCode);
             mAuthTask.execute((Void) null);
         }
@@ -164,7 +168,7 @@ public class LoginActivity extends AppCompatActivity {
             // TODO: attempt authentication against a network service.
 
             try {
-                URL url = new URL(Links.loginURL);
+                URL url = new URL(Links.login2URL);
 
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");

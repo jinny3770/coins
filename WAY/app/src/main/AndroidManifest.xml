@@ -91,6 +91,10 @@
             android:parentActivityName=".Intro.IntroMain"
             android:theme="@style/AppTheme.NoActionBar" />
 
+        <service android:name=".GCMIntentService"
+            android:exported="true"
+            android:enabled="true"/>
+
         <activity
             android:name=".Chat.ChattingActivity"
             android:configChanges="orientation|screenSize"

@@ -15,6 +15,7 @@ public class PersonInfo {
     private Boolean gpsSig;
     private int battery;
     private Bitmap profileImage;
+    private String GCMCode;
 
     private String phoneNumber;
 
@@ -52,7 +53,13 @@ public class PersonInfo {
         this.battery = battery;
     }
 
-    public void setProfileImage(Bitmap profileImage) { this.profileImage = profileImage; }
+    public void setProfileImage(Bitmap profileImage) {
+        this.profileImage = profileImage;
+    }
+
+    public void setGCMCode(String GCMCode) {
+        this.GCMCode = GCMCode;
+    }
 
     public String getID() {
         return ID;
@@ -82,5 +89,11 @@ public class PersonInfo {
         return battery;
     }
 
-    public Bitmap getProfileImage() { return profileImage; }
+    public Bitmap getProfileImage() {
+        return profileImage;
+    }
+
+    public String getGCMCode() {
+        return GCMCode;
+    }
 }

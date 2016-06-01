@@ -3,6 +3,7 @@ package coins.hansung.way.Intro;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -25,11 +26,15 @@ public class IntroMain extends AppCompatActivity implements View.OnClickListener
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
+        Log.w("Intro", "IntroActivity");
+
         Button account = (Button) findViewById(R.id.btn_account);
         Button login = (Button) findViewById(R.id.btn_login);
 
-        BIntent = new Intent();
+        BIntent = getIntent();
         gcmCode = BIntent.getStringExtra("gcmCode");
+
+        Log.w("gcmCode_Intro", gcmCode);
 
         account.setOnClickListener(this);
         login.setOnClickListener(this);
@@ -51,6 +56,7 @@ public class IntroMain extends AppCompatActivity implements View.OnClickListener
             case R.id.btn_login :
                 intent = new Intent(getApplicationContext(), LoginActivity.class);
                 intent.putExtra("gcmCode", gcmCode);
+                Log.e("IntroMain_gcmCode", gcmCode);
                 startActivity(intent);
                 overridePendingTransition(R.anim.fade, R.anim.hold);
                 break;

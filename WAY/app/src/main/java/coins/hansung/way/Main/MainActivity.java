@@ -18,11 +18,10 @@ import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
-import android.os.*;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -42,7 +41,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gcm.GCMRegistrar;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.skp.Tmap.TMapAddressInfo;
 import com.skp.Tmap.TMapData;
 import com.skp.Tmap.TMapGpsManager;
@@ -85,7 +83,6 @@ import coins.hansung.way.etc.FamilyMarkerResource;
 import coins.hansung.way.etc.Links;
 import coins.hansung.way.etc.MyInfo;
 import coins.hansung.way.etc.PersonInfo;
-import coins.hansung.way.etc.RegID;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, TMapGpsManager.onLocationChangedCallback {
@@ -117,6 +114,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     MyInfo myinfo;
 
     // family list
+    Boolean flag = true;
     Boolean familyCheck = false;
     ListView familyList;
     Family familyInstance;
@@ -155,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     SharedPreferences defaultPref;
 
 
-    // GCM
+    //GCM
     String regID;
 
     // NFC 관련 변수
@@ -167,9 +165,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static final int TYPE_URI = 2;
     public static final String CHARS = "0123456789ABCDEF";
 
-
     // 종료 관련 변수
-    private final long FINISH_INTERVAL_TIME = 2000;
+    private final long FINSH_INTERVAL_TIME = 2000;
     private long backPressedTime = 0;
 
     @Override
@@ -182,25 +179,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         startService(new Intent(this, ReadNFC.class));
 
-
-
-        //GCM
-        GCMRegistrar.checkDevice(this);
-        GCMRegistrar.checkManifest(this);
-
-         regID = GCMRegistrar.getRegistrationId(this);
-        //Log.d("MainActivity, regID", id);
-
-
-        if ("".equals(regID)) {
-            Log.e("id is nothing", "id is nothing");
-            GCMRegistrar.register(this, "72919729951");
-        }else {
-            Log.e("id is", regID);
-        }
-
-
-        myinfo = MyInfo.getInstance();
         // NFC
         adapter = NfcAdapter.getDefaultAdapter(this);
         Intent targetIntent = new Intent(this, ReadNFC.class);
@@ -214,6 +192,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } catch (IntentFilter.MalformedMimeTypeException e) {
             throw new RuntimeException("fail", e);
         }
+
+
+        GCMRegistrar.checkDevice(this);
+        GCMRegistrar.checkManifest(this);
+
+        regID = GCMRegistrar.getRegistrationId(this);
+
+
+        if ("".equals(regID))
+        {
+            GCMRegistrar.register(this, "72919729951");
+        }
+        else {
+            Log.e("id is", regID);
+        }
+
+        myinfo = MyInfo.getInstance();
 
         intentFilters = new IntentFilter[]{ndefFilter,};
         techLists = new String[][]{new String[]{NfcF.class.getName()}};
@@ -307,6 +302,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         LayoutInflater inflater = getLayoutInflater();
 
 
+
         myinfo.setID(loginPref.getString("ID", null));
         myinfo.setGroupCode(loginPref.getString("Code", "000000"));
         myinfo.setName(loginPref.getString("Name", null));
@@ -335,8 +331,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 familyCheck = false;
                 mapView.setTrackingMode(true);
                 mapView.setLocationPoint(myMarker.longitude, myMarker.latitude);
-                mapView.bringMarkerToFront(myMarker);
-
             }
         });
 
@@ -502,7 +496,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 });
 
-                if (service != null)
+                if(service != null)
                     stopService(service);
             }
 
@@ -510,8 +504,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         /* 자동 로그인이 되어 있지 않으면*/
         else {
             Intent intro = new Intent(getApplicationContext(), IntroMain.class);
-            intent.putExtra("gcmCode", regID);
-            startActivityForResult(intro, 10);
+            intro.putExtra("gcmCode", regID);
+            Log.e("Main to Intro", regID);
+            startActivity(intro);
             overridePendingTransition(R.anim.fade, R.anim.hold);
         }
     }
@@ -524,14 +519,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else if (intervalTime >= 0 && FINISH_INTERVAL_TIME >= intervalTime) {
+        }
+        else if (intervalTime >= 0 && FINSH_INTERVAL_TIME >= intervalTime)
+        {
             super.onBackPressed();
             Log.d("press back twice time.", "exit the process");
             finish();
 
-        } else {
+        }
+        else
+        {
             backPressedTime = tempTime;
-            Toast.makeText(getApplicationContext(), "'뒤로'버튼을 한 번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),"'뒤로'버튼을 한 번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -546,21 +545,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (!loginPref.getBoolean("autoLoginSet", false)) {
 
             if (id == R.id.nav_arrive) {
-                if (!myinfo.getGroupCode().equals("000000")) {
-                    intent = new Intent(getApplicationContext(), DestinationListActivity.class);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.fade, R.anim.hold);
-                } else
-                    Toast.makeText(getApplicationContext(), "그룹에 가입 후 사용할 수 있습니다.", Toast.LENGTH_SHORT).show();
+                intent = new Intent(getApplicationContext(), DestinationListActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.fade, R.anim.hold);
 
             } else if (id == R.id.nav_chat) {
+                intent = new Intent(getApplicationContext(), ChattingActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.fade, R.anim.hold);
 
-                if (!myinfo.getGroupCode().equals("000000")) {
-                    intent = new Intent(getApplicationContext(), ChattingActivity.class);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.fade, R.anim.hold);
-                } else
-                    Toast.makeText(getApplicationContext(), "그룹에 가입 후 사용할 수 있습니다.", Toast.LENGTH_SHORT).show();
 
             } else if (id == R.id.nav_group) {
                 intent = new Intent(getApplicationContext(), GroupManageActivity.class);
@@ -603,10 +596,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    private void processTag(Intent passedIntent) {
+    private void processTag(Intent passedIntent)
+    {
         Parcelable rawMessage[] = passedIntent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
 
-        if (rawMessage == null) {
+        if (rawMessage == null)
+        {
             return;
         }
 
@@ -615,10 +610,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NdefMessage message[];
 
-        if (rawMessage != null) {
+        if (rawMessage != null)
+        {
             message = new NdefMessage[rawMessage.length];
 
-            for (int i = 0; i < rawMessage.length; i++) {
+            for (int i = 0; i < rawMessage.length; i++)
+            {
                 message[i] = (NdefMessage) rawMessage[i];
                 showTag(message[i]);
             }
@@ -626,10 +623,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    public static String toHexString(byte data[]) {
+    public static String toHexString(byte data[])
+    {
         StringBuilder stringBuilder = new StringBuilder();
 
-        for (int i = 0; i < data.length; ++i) {
+        for (int i = 0; i < data.length; ++i)
+        {
             stringBuilder.append(CHARS.charAt((data[i] >> 4) & 0x0F)).append(CHARS.charAt(data[i] & 0x0F));
         }
 
@@ -637,17 +636,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    private int showTag(NdefMessage message) {
+    private int showTag(NdefMessage message)
+    {
         List<ParsingRecord> records = NdefMessageParsing.parse(message);
         final int size = records.size();
 
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++)
+        {
             ParsingRecord record = records.get(i);
 
             int recordType = record.getType();
             String recordString = "";
 
-            if (recordType == ParsingRecord.TYPE_TEXT) {
+            if (recordType == ParsingRecord.TYPE_TEXT)
+            {
                 recordString = ((TextRecord) record).getText();
             }
 
@@ -694,11 +696,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         familyAdapter = new FamilyListViewAdapter(this);
         familyMarker = new ArrayList<TMapMarkerItem>();
         familyInstance = Family.getInstance();
-        family = new ArrayList<PersonInfo>();
+        family = familyInstance.getFamilyArray();
 
         // family List Load
+        // flag = ??????????...ㅎㅎ
+        flag = false;
         familyList.setAdapter(familyAdapter);
-        familyList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        familyList.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mapView.setCenterPoint(family.get(position).getPoint().getLongitude(), family.get(position).getPoint().getLatitude());
@@ -731,14 +736,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     pInfo.setName(jsonObject.getString("name"));
                     pInfo.setPhoneNumber(jsonObject.getString("phoneNumber"));
                     pInfo.setBattery(jsonObject.getInt("battery"));
+                    pInfo.setGCMCode(jsonObject.getString("GCMCode"));
 
                     String str = jsonObject.getString("gps");
                     if (str.equals("1")) pInfo.setGpsSig(true);
                     else pInfo.setGpsSig(false);
 
-                    Log.d("familyInfo", pInfo.getID() + ", " + pInfo.getName() + ", " + pInfo.getPhoneNumber());
-                    Log.d("familyInfo", "size = " + family.size());
-                    Log.d("GPSSignal", pInfo.getGpsSig().toString());
+                    Log.d("Family_GCMCode", pInfo.getGCMCode());
 
                     LoadImage loadImage = new LoadImage();
                     Bitmap bitmap = loadImage.execute(pInfo.getID()).get();
@@ -746,6 +750,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     if (bitmap == null)
                         bitmap = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.person);
 
+                    //pInfo
 
                     // 가족 위치 설정
                     TMapPoint pPoint = new TMapPoint(jsonObject.getDouble("latitude"), jsonObject.getDouble("longitude"));
@@ -763,7 +768,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                     LoadLocationString loadLocationString = new LoadLocationString();
                     familyLocationString = loadLocationString.execute(family.get(familyIndex).getPoint()).get();
-                    familyAdapter.addItem(ResourcesCompat.getDrawable(getResources(), familyMarkerResourceList.get(j), null),
+                    familyAdapter.addItem(getResources().getDrawable(familyMarkerResourceList.get(j)),
                             family.get(familyIndex).getName(), familyLocationString, family.get(familyIndex).getGpsSig(), family.get(familyIndex).getBattery(), bitmap);
 
                     j++;
@@ -808,7 +813,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         float batteryPct = level / (float) scale;
         return (int) (batteryPct * 100);
     }
-
 
     class LoadLocationString extends AsyncTask<TMapPoint, Void, String> {
         @Override

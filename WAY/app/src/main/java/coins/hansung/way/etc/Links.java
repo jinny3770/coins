@@ -8,6 +8,7 @@ public class Links {
     public final static String serverURL = "http://52.79.124.54";
 
     public final static String loginURL = serverURL + "/login.php";
+    public final static String login2URL = serverURL + "/login2.php";
     public final static String deleteURL = serverURL + "/deleteDestinations.php";
     public final static String loadURL = serverURL + "/loadDestinationsList.php";
     public static final String walkURL = "https://apis.skplanetx.com/tmap/routes/pedestrian?version=1";

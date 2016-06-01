@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -54,6 +55,20 @@ public class GroupManageActivity extends AppCompatActivity implements View.OnCli
         btncheckInvite = (Button) findViewById(R.id.checkInvite); // 없
         btnCreateGroup = (Button) findViewById(R.id.createGroup); // 없
 
+        initActivity();
+
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setTitle("그룹관리");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+        btnInvite.setOnClickListener(this);
+        btncheckInvite.setOnClickListener(this);
+        btnCreateGroup.setOnClickListener(this);
+    }
+
+
+    void initActivity() {
         if (!myinfo.getGroupCode().equals("000000")) // 그룹코드가 있을 때
         {
             groupCode.setText(myinfo.getGroupCode());
@@ -84,17 +99,7 @@ public class GroupManageActivity extends AppCompatActivity implements View.OnCli
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setTitle("그룹관리");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-
-        btnInvite.setOnClickListener(this);
-        btncheckInvite.setOnClickListener(this);
-        btnCreateGroup.setOnClickListener(this);
     }
-
 
     @Override
     public void onClick(View v) {
@@ -110,9 +115,11 @@ public class GroupManageActivity extends AppCompatActivity implements View.OnCli
                 Log.d("GroupManageActivity", "joinClick");
                 intent = new Intent(getApplicationContext(), JoinActivity.class);
                 startActivityForResult(intent, REQ_CODE);
+
                 break;
 
             case R.id.createGroup:
+                Log.w("createGroup", "createGroup");
                 MakeGroupTask makeGroupTask = new MakeGroupTask();
                 makeGroupTask.execute(myinfo.getID());
 
@@ -120,6 +127,23 @@ public class GroupManageActivity extends AppCompatActivity implements View.OnCli
                 btncheckInvite.setVisibility(View.GONE);
                 btnCreateGroup.setVisibility(View.GONE);
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == REQ_CODE && resultCode == RESULT_OK) {
+
+            new Handler().post(new Runnable() {
+                @Override
+                public void run() {
+                    Log.w("initActivity", "initActivity");
+                    initActivity();
+                }
+            });
+
         }
     }
 

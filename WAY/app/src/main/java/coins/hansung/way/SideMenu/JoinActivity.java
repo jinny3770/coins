@@ -31,6 +31,7 @@ import coins.hansung.way.etc.MyInfo;
 public class JoinActivity extends AppCompatActivity {
 
     EditText joinCode;
+    Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +40,7 @@ public class JoinActivity extends AppCompatActivity {
 
         joinCode = (EditText) findViewById(R.id.joinCode);
         Button joinButton = (Button) findViewById(R.id.joinButton);
-
+        intent = getIntent();
 
         joinButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,6 +121,8 @@ public class JoinActivity extends AppCompatActivity {
 
                 prefEdit.putString("Code", code);
                 prefEdit.commit();
+
+                setResult(RESULT_OK);
 
                 finish();
 

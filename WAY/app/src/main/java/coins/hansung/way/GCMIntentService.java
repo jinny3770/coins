@@ -10,6 +10,7 @@ import android.util.Log;
 import com.google.android.gcm.GCMBaseIntentService;
 
 import coins.hansung.way.Main.MainActivity;
+import coins.hansung.way.etc.Family;
 
 /**
  * Created by Administrator on 2016-04-23.
@@ -59,6 +60,7 @@ public class GCMIntentService extends GCMBaseIntentService
     protected void onMessage(Context context, Intent intent)
     {
         Log.d(tag, " 메시지 수신.");
+
         generateNotification(context, "이새끼 20초 늦음");
     }
 
