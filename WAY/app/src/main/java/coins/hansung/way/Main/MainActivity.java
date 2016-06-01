@@ -696,7 +696,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         familyAdapter = new FamilyListViewAdapter(this);
         familyMarker = new ArrayList<TMapMarkerItem>();
         familyInstance = Family.getInstance();
-        family = familyInstance.getFamilyArray();
+        family = new ArrayList<PersonInfo>();
 
         // family List Load
         // flag = ??????????...ㅎㅎ
