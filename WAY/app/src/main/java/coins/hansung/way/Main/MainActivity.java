@@ -18,6 +18,7 @@ import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
+import android.os.*;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -154,6 +155,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     SharedPreferences defaultPref;
 
 
+    // GCM
+    String regID;
+
     // NFC 관련 변수
     NfcAdapter adapter;
     PendingIntent pendingIntent;
@@ -164,34 +168,39 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static final String CHARS = "0123456789ABCDEF";
 
 
-    //GCM 변수
-    String SENDER_ID = "386569608668";
-    RegID regID;
-
     // 종료 관련 변수
-    private final long FINSH_INTERVAL_TIME = 2000;
+    private final long FINISH_INTERVAL_TIME = 2000;
     private long backPressedTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
         setContentView(R.layout.activity_main);
         startService(new Intent(this, ReadNFC.class));
+
+
 
         //GCM
         GCMRegistrar.checkDevice(this);
         GCMRegistrar.checkManifest(this);
-        regID = RegID.getInstance();
 
-        final String id = GCMRegistrar.getRegistrationId(this);
+         regID = GCMRegistrar.getRegistrationId(this);
+        //Log.d("MainActivity, regID", id);
 
-        if ("".equals(id)) {
-            GCMRegistrar.register(this, SENDER_ID);
+
+        if ("".equals(regID)) {
+            Log.e("id is nothing", "id is nothing");
+            GCMRegistrar.register(this, "72919729951");
+        }else {
+            Log.e("id is", regID);
         }
 
-        regID.setRegID(id);
 
-
+        myinfo = MyInfo.getInstance();
         // NFC
         adapter = NfcAdapter.getDefaultAdapter(this);
         Intent targetIntent = new Intent(this, ReadNFC.class);
@@ -298,7 +307,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         LayoutInflater inflater = getLayoutInflater();
 
 
-        myinfo = MyInfo.getInstance();
         myinfo.setID(loginPref.getString("ID", null));
         myinfo.setGroupCode(loginPref.getString("Code", "000000"));
         myinfo.setName(loginPref.getString("Name", null));
@@ -502,6 +510,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         /* 자동 로그인이 되어 있지 않으면*/
         else {
             Intent intro = new Intent(getApplicationContext(), IntroMain.class);
+            intent.putExtra("gcmCode", regID);
             startActivityForResult(intro, 10);
             overridePendingTransition(R.anim.fade, R.anim.hold);
         }
@@ -515,7 +524,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else if (intervalTime >= 0 && FINSH_INTERVAL_TIME >= intervalTime) {
+        } else if (intervalTime >= 0 && FINISH_INTERVAL_TIME >= intervalTime) {
             super.onBackPressed();
             Log.d("press back twice time.", "exit the process");
             finish();

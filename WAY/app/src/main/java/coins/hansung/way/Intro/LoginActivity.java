@@ -34,10 +34,13 @@ import coins.hansung.way.etc.MyInfo;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity{
+public class LoginActivity extends AppCompatActivity {
     /**
      * Id to identity READ_CONTACTS permission request.
      */
+
+    Intent intent;
+    String gcmCode;
 
     MyInfo myInfo;
 
@@ -54,6 +57,9 @@ public class LoginActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        intent = new Intent();
+        intent.getStringExtra("gcmCode");
 
         mEmailView = (EditText) findViewById(R.id.id);
         mPasswordView = (EditText) findViewById(R.id.password);
@@ -122,7 +128,7 @@ public class LoginActivity extends AppCompatActivity{
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            mAuthTask = new UserLoginTask(email, password);
+            mAuthTask = new UserLoginTask(email, password, gcmCode);
             mAuthTask.execute((Void) null);
         }
     }
@@ -142,13 +148,15 @@ public class LoginActivity extends AppCompatActivity{
 
         private final String mEmail;
         private final String mPassword;
+        private final String mGcmCode;
 
         String data;
         BufferedReader reader = null;
 
-        UserLoginTask(String email, String password) {
+        UserLoginTask(String email, String password, String gcmCode) {
             mEmail = email;
             mPassword = password;
+            mGcmCode = gcmCode;
         }
 
         @Override
@@ -168,7 +176,8 @@ public class LoginActivity extends AppCompatActivity{
                 conn.setDoInput(true);
 
                 data = URLEncoder.encode("ID", "UTF-8") + "=" + URLEncoder.encode(mEmail, "UTF-8")
-                        + "&" + URLEncoder.encode("PW", "UTF-8") + "=" + URLEncoder.encode(mPassword, "UTF-8");
+                        + "&" + URLEncoder.encode("PW", "UTF-8") + "=" + URLEncoder.encode(mPassword, "UTF-8")
+                        + "&" + URLEncoder.encode("GCM", "UTF-8") + "=" + URLEncoder.encode(mGcmCode, "UTF-8");
 
                 OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
                 wr.write(data);
@@ -196,10 +205,10 @@ public class LoginActivity extends AppCompatActivity{
 
             Log.d("Login", str);
 
-            if(str.equals("fail")) {
+            if (str.equals("fail")) {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
-            }else if( str.equals("not exist")) {
+            } else if (str.equals("not exist")) {
                 mEmailView.setError(getString(R.string.error_incorrect_email));
                 mEmailView.requestFocus();
             } else {

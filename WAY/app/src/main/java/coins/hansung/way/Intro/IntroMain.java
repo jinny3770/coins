@@ -17,6 +17,9 @@ public class IntroMain extends AppCompatActivity implements View.OnClickListener
     private final long FINISH_INTERVAL_TIME = 2000;
     private long backPressedTime = 0;
 
+    Intent BIntent;
+    String gcmCode;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -24,6 +27,9 @@ public class IntroMain extends AppCompatActivity implements View.OnClickListener
         setContentView(R.layout.activity_intro);
         Button account = (Button) findViewById(R.id.btn_account);
         Button login = (Button) findViewById(R.id.btn_login);
+
+        BIntent = new Intent();
+        gcmCode = BIntent.getStringExtra("gcmCode");
 
         account.setOnClickListener(this);
         login.setOnClickListener(this);
@@ -44,6 +50,7 @@ public class IntroMain extends AppCompatActivity implements View.OnClickListener
 
             case R.id.btn_login :
                 intent = new Intent(getApplicationContext(), LoginActivity.class);
+                intent.putExtra("gcmCode", gcmCode);
                 startActivity(intent);
                 overridePendingTransition(R.anim.fade, R.anim.hold);
                 break;
