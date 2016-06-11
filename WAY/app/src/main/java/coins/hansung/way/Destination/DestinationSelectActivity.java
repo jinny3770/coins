@@ -145,7 +145,6 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
         spinner.setSelection(0);
 
 
-
         searchText = (EditText) findViewById(R.id.searchText);
         searchButton = (TextView) findViewById(R.id.searchButton);
         searchButton.setOnClickListener(this);
@@ -273,9 +272,7 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
 
                                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                                 imm.hideSoftInputFromWindow(searchText.getWindowToken(), 0);
-                            }
-
-                            else{
+                            } else {
                                 ToastTask toastTask = new ToastTask();
                                 toastTask.execute();
 
@@ -363,7 +360,7 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
             distance = (TextView) dialogView.findViewById(R.id.distanceView);
 
             time.setText("소요 시간은 " + transformTime(destinationInfo.getTime()) + " 이며,");
-            distance.setText("예상 이동거리는 " + transformDistance(destinationInfo.getDistance()) + "km 입니다.");
+            distance.setText("예상 이동거리는 " + transformDistance(destinationInfo.getDistance()) + " 입니다.");
 
             long timet = System.currentTimeMillis();
             DateFormat df = new SimpleDateFormat("HHmmss", Locale.KOREA); // HH=24h, hh=12h
@@ -373,8 +370,6 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
 
 
             Dochack = destinationInfo.getTime() + Integer.parseInt(str);
-            Intent service = new Intent(this, LocationService.class);           //추가!!
-            startService(service);
 
             builder.setPositiveButton("등록합니다.", new DialogInterface.OnClickListener() {
                 @Override
@@ -386,6 +381,10 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
 
                         ResistDestination resistDestination = new ResistDestination();
                         resistDestination.execute(destinationInfo);
+
+                        Intent service = new Intent(getApplicationContext(), LocationService.class);           //추가!!
+                        service.putExtra("destinationCheck", true);
+                        startService(service);
 
                     } else {
                         Log.d("destinationSet", Boolean.toString(pref.getBoolean("destinationSet", false)));
@@ -510,7 +509,13 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
     String transformDistance(int distance) {
 
         double kmDis = distance / 1000.0;
-        String str = String.format("%.1f", kmDis);
+        String str;
+
+        if (kmDis < 1)
+            str = Double.toString(distance % 1000) + "m";
+
+        else
+            str = String.format("%.1fkm", kmDis);
 
         return str;
     }
@@ -519,13 +524,18 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
 
         int hour = time / 3600;
         int minute = time / 60;
+        int second = time % 60;
 
         String str = "";
 
         if (hour != 0)
             str += Integer.toString(hour) + "시간 ";
 
-        str += Integer.toString(minute) + "분";
+        if (minute != 0)
+            str += Integer.toString(minute) + "분";
+
+        else
+            str += Integer.toString(second) + "초";
 
         return str;
     }
@@ -543,3 +553,4 @@ public class DestinationSelectActivity extends AppCompatActivity implements View
         }
     }
 }
+

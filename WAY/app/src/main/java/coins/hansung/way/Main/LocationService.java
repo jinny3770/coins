@@ -8,6 +8,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.google.android.gcm.GCMRegistrar;
 import com.google.android.gcm.server.Constants;
 import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.Result;
@@ -37,6 +38,8 @@ public class LocationService extends Service implements Runnable {
 
     MyInfo myInfo;
 
+
+    public static String whowhowho;
     private int mStartId;
     private Handler mHandler;
     private boolean mIsRunning = false;
@@ -55,7 +58,9 @@ public class LocationService extends Service implements Runnable {
     RegID regID;
     private Result result;
     private Message message;
-    private final Sender sender = new Sender("AIzaSyCyvyFq1XJmhaCZlN128jCdPtSkCNwL-O8");
+    private final Sender sender = new Sender("AIzaSyB2XTCAUUYfCMNCSyd4Xwvr9gqYr65e1no");
+
+    boolean destinationCheck;
 
     public void onCreate() {
         Log.d("111111Service", "onCreate() Call.");
@@ -75,6 +80,8 @@ public class LocationService extends Service implements Runnable {
             mHandler.postDelayed(this, TIMER_PERIOD);
             mIsRunning = true;
         }
+
+        destinationCheck = service.getBooleanExtra("destinationCheck", false);
 
         myInfo = MyInfo.getInstance();
 
@@ -203,76 +210,78 @@ public class LocationService extends Service implements Runnable {
             Log.d("111111Lati", String.valueOf(lat));
 
 
-            long time = System.currentTimeMillis();
-            DateFormat df = new SimpleDateFormat("HHmmss", Locale.KOREA); // HH=24h, hh=12h
-            String str = df.format(time);
-            Integer Now, Duration;
-            Now = Integer.parseInt(str);
-            Duration = Now;
-            Log.e("Current Time : ", str);
-            try {
-                Duration = DestinationSelectActivity.Dochack - Now;
-                Log.d("Duration!!!!!!! Result ", ""+Duration);
-            }catch (NullPointerException e) {
-            }
+            if(destinationCheck) {
 
-            Log.d("Duration!!!!!!! Fail ", ""+Duration);
-            Log.d("111111Service", "" + mCounter);
-            if (Duration < -20 && check==1) {
-                check=0;
-                message = new Message.Builder().addData("message", "pupupupu").build();
+                long time = System.currentTimeMillis();
+                DateFormat df = new SimpleDateFormat("HHmmss", Locale.KOREA); // HH=24h, hh=12h
+                String str = df.format(time);
+                Integer Now, Duration;
+                Now = Integer.parseInt(str);
+                Duration = Now;
+                Log.e("Current Time : ", str);
+                try {
+                    Duration = DestinationSelectActivity.Dochack - Now;
+                    Log.d("Duration!!!!!!! Result ", "" + Duration);
+                } catch (NullPointerException e) {
+                }
 
-                regID = RegID.getInstance();
-                myInfo = MyInfo.getInstance();
-                try
-                {
-                    String returnString = new LoadFamilyList().execute(myInfo.getGroupCode()).get();
-                    JSONArray jsonArray = new JSONArray(returnString);
+                Log.d("Duration!!!!!!! Fail ", "" + Duration);
+                Log.d("111111Service", "" + mCounter);
+                if (Duration < -20 && check == 1) {
+                    check=0;
+                    Log.e("Send", sender.toString());
 
-                    for (int i = 0; i < jsonArray.length(); i++)
-                    {
-                        JSONObject jsonObject = jsonArray.getJSONObject(i);
-                        String code = jsonObject.getString("GCMCode");
+                    regID = RegID.getInstance();
+                    myInfo = MyInfo.getInstance();
+                    try {
+                        String returnString = new LoadFamilyList().execute(myInfo.getGroupCode()).get();
+                        JSONArray jsonArray = new JSONArray(returnString);
 
-                        if (code != null && code != regID.getRegID())
-                        {
-                            //result = sender.send(message, "APA91bFjKgqnbLnTIPI2Y9-BR0Spx_6j3zLHsRokrV8CeGqR6jjOQgnX8XUPJRCevMf-BxWyD--bDO2IxAAuUPj_eupqKl5QmplO3rFbuStB4QelZh5Vt8PAZo4nEh8iZs5gCKpc490y", 5);
-                            result = sender.send(message, code,  5);
-                            Log.e("result", result.toString());
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+                            message = new Message.Builder().addData("message", myInfo.getName()).build();
+                            String code = jsonObject.getString("GCMCode");
+                            Log.e("-------------","---------------");
+                            Log.e("groupcode", myInfo.getGroupCode());
+                            Log.e("jsonobject", jsonObject.getString("GCMCode"));
+                            Log.e("who?", jsonObject.getString("id"));
+                            Log.e("returnstring", returnString);
+                            Log.e("gcmcode", code);
+                            Log.e("message", message.toString());
+                            Log.e("regID", GCMRegistrar.getRegistrationId(this));
+                            Log.e("myInfo", myInfo.toString());
+                            Log.e("sender", sender.send(message, code, 5).toString());
 
+
+                            if (code != null) {
+                                Log.e("result", "213123123");
+                                result = sender.send(message, code, 5);
+
+                            }
+                        }
+                    } catch (Exception e) {
+                        result = null;
+                        e.printStackTrace();
+                    }
+
+                    if (result.getMessageId() != null) {
+                        try {
+                            System.out.println("푸쉬 테스트");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        String error = result.getErrorCodeName();
+                        System.out.println(error);
+
+                        if (Constants.ERROR_INTERNAL_SERVER_ERROR.equals(error)) {
+                            System.out.println("구글 서버 에러");
                         }
                     }
                 }
 
-                catch (Exception e)
-                {
-                }
-
-                if (result.getMessageId() != null)
-                {
-                    try
-                    {
-                        System.out.println("푸쉬 테스트");
-                    }
-
-                    catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
-
-                else
-                {
-                    String error = result.getErrorCodeName();
-                    System.out.println(error);
-
-                    if (Constants.ERROR_INTERNAL_SERVER_ERROR.equals(error))
-                    {
-                        System.out.println("구글 서버 에러");
-                    }
-                }
             }
-            mCounter++;
+
             mHandler.postDelayed(this, TIMER_PERIOD);
         }
     }

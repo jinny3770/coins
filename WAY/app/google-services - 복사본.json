@@ -1,0 +1,35 @@
+{
+  "project_info": {
+    "project_number": "386569608668",
+    "project_id": "coins-b5469"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:386569608668:android:ee0169e763ede075",
+        "android_client_info": {
+          "package_name": "coins.hansung.way"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAfClZJckVp_ZFNWWdl_kVOJFX2qzoP18s"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

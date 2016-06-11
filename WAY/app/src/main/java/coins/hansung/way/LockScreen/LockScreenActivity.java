@@ -2,12 +2,14 @@ package coins.hansung.way.LockScreen;
 
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.SmsManager;
 import android.util.Log;
@@ -133,7 +135,6 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnTouc
 
             case MotionEvent.ACTION_MOVE:
                 select.setTranslationX(x - offsetX);
-                check(select);
                 x_bang = (Math.abs((int)(select_x - select.getX())))/2;
                 x2_bang = (Math.abs((int)(select_x - select.getX())))/2;
                 Log.d("Asdfsadfdsf", "x_bang : " + x_bang);
@@ -146,6 +147,7 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnTouc
                 break;
 
             case MotionEvent.ACTION_UP:
+                check(select);
                 alert.setAlpha(0);
                 unlock.setAlpha(0);
                 Log.d("adsdlfsflje", "ddem");
@@ -167,15 +169,32 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnTouc
         return super.onKeyDown(keyCode, event);
     }
 
-    public void check(View select)
+    public void check(final View select)
     {
         if (select.getX() < 55.0)
         {
-            alertPlayer.start();
-            sendSMS(numbers, "<WAY> " + myInfo.getName() + "님이 위급상황입니다.");
-            select.setTranslationX(initX);
-            finish();
-        } else if (select.getX() > 1135.0) {
+            new AlertDialog.Builder(LockScreenActivity.this)
+                .setTitle("긴급 알람")
+                .setMessage("긴급 메세지를 등록된 모든 사용자에게 전송하시겠습니까?")
+                .setCancelable(false)
+                .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        select.setTranslationX(initX);
+                    }
+                })
+                .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        alertPlayer.start();
+                        sendSMS(numbers, "<WAY> " + myInfo.getName() + "님이 위급상황입니다.");
+                        select.setTranslationX(initX);
+                        Toast.makeText(getApplicationContext(), "긴급 메세지가 발송되었습니다.", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                }).create().show();
+        }
+
+        else if (select.getX() > 1135.0) {
             select.setTranslationX(initX);
             finish();
         }

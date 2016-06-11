@@ -40,4 +40,15 @@
     </PreferenceCategory>
 
 
+<!--    <PreferenceCategory
+            android:key="testCategory"
+            android:title="GCM 설정">
+        <Preference
+            android:key="testgcm"
+            android:title="좆같은 GCM 설정"
+            android:summary="프로그램을 폭파시킵니다?">
+        </Preference>
+    </PreferenceCategory>-->
+
+
 </PreferenceScreen>

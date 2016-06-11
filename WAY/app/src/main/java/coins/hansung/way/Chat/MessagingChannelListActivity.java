@@ -186,19 +186,6 @@ public class MessagingChannelListActivity extends FragmentActivity {
             }
         });
 
-        mBtnSettings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new AlertDialog.Builder(MessagingChannelListActivity.this)
-                        .setTitle("SendBird")
-                        .setMessage("SendBird In App version " + SendBird.VERSION)
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                            }
-                        }).create().show();
-            }
-        });
 
         resizeMenubar();
     }
@@ -261,7 +248,7 @@ public class MessagingChannelListActivity extends FragmentActivity {
                     new AlertDialog.Builder(getActivity())
                             .setTitle("나가기")
                             .setMessage("채팅방을 나갈래요?")
-                            .setPositiveButton("나감", new DialogInterface.OnClickListener() {
+                            .setPositiveButton("예", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     mAdapter.remove(position);
@@ -269,7 +256,7 @@ public class MessagingChannelListActivity extends FragmentActivity {
                                     SendBird.endMessaging(channel.getUrl());
                                 }
                             })
-                            .setNeutralButton("숨김", new DialogInterface.OnClickListener() {
+                            .setNeutralButton("취소", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     mAdapter.remove(position);
@@ -277,7 +264,7 @@ public class MessagingChannelListActivity extends FragmentActivity {
                                     SendBird.hideMessaging(channel.getUrl());
                                 }
                             })
-                            .setNegativeButton("놉", new DialogInterface.OnClickListener() {
+                            .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                 }

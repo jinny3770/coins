@@ -13,8 +13,7 @@ import coins.hansung.way.R;
 /**
  * Created by Administrator on 2016-05-23.
  */
-public class IntroMain extends AppCompatActivity implements View.OnClickListener
-{
+public class IntroMain extends AppCompatActivity implements View.OnClickListener {
     private final long FINISH_INTERVAL_TIME = 2000;
     private long backPressedTime = 0;
 
@@ -22,8 +21,7 @@ public class IntroMain extends AppCompatActivity implements View.OnClickListener
     String gcmCode;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
         Log.w("Intro", "IntroActivity");
@@ -38,22 +36,21 @@ public class IntroMain extends AppCompatActivity implements View.OnClickListener
 
         account.setOnClickListener(this);
         login.setOnClickListener(this);
+
     }
 
     @Override
-    public void onClick(View v)
-    {
+    public void onClick(View v) {
         Intent intent;
 
-        switch (v.getId())
-        {
-            case R.id.btn_account :
+        switch (v.getId()) {
+            case R.id.btn_account:
                 intent = new Intent(getApplicationContext(), SignUpActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.fade, R.anim.hold);
                 break;
 
-            case R.id.btn_login :
+            case R.id.btn_login:
                 intent = new Intent(getApplicationContext(), LoginActivity.class);
                 intent.putExtra("gcmCode", gcmCode);
                 Log.e("IntroMain_gcmCode", gcmCode);
@@ -66,24 +63,19 @@ public class IntroMain extends AppCompatActivity implements View.OnClickListener
     }
 
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
         long tempTime = System.currentTimeMillis();
         long intervalTime = tempTime - backPressedTime;
 
-        if (intervalTime >= 0 && FINISH_INTERVAL_TIME >= intervalTime)
-        {
+        if (intervalTime >= 0 && FINISH_INTERVAL_TIME >= intervalTime) {
             moveTaskToBack(true);
             finish();
             android.os.Process.killProcess(android.os.Process.myPid());
 
             super.onBackPressed();
-        }
-
-        else
-        {
+        } else {
             backPressedTime = tempTime;
-            Toast.makeText(getApplicationContext(),"'뒤로'버튼을 한 번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "'뒤로'버튼을 한 번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT).show();
         }
     }
 }

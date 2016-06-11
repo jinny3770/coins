@@ -35,4 +35,21 @@
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+
+    <string name="copyRightStart">This application is Copyright ⓒ 2016 TEAM COINS All Rights Reserved.</string>
+    <string name="copyRightContent">This application use Open Source Software(OSS). You can find the source code of these open source project, along with applicable license information, below. We are deeply grateful to these developers for their work and contributions.</string>
+    <string name="copyRightEnd">Any questions about our use of licensed work can be sent to</string>
+    <string name="githubAddress">https://github.com/jinny3770/coins</string>
+
+    <string name="slidingAddress">https://github.com/umano/AndroidSlidingUpPanel/</string>
+    <string name="circleImageAddress">https://github.com/hdodenhof/CircleImageView/</string>
+    <string name="gcmAddress">https://github.com/google/gcm</string>
+    <string name="jsonAddress">https://github.com/douglascrockford/JSON-java/</string>
+    <string name="sendbirdAddress">https://sendbird.com/</string>
+    <string name="tmapAddress">https://developers.skplanetx.com/develop/doc/sdk/tmap-sdk-android/</string>
+
+    <string name="Apache2.0">Apache License 2.0</string>
+    <string name="MIT">MIT License</string>
+
 </resources>

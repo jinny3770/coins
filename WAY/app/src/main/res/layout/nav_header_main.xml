@@ -24,12 +24,10 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:id="@+id/mainProfileImage"
-            android:src="@drawable/person"
             android:layout_margin="@dimen/default_margin"
             android:gravity="center_horizontal"
             app:civ_border_width="2dp"
             app:civ_border_color="@color/white"/>
-
 
 
         <TextView

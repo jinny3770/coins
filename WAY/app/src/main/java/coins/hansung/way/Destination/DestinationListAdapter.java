@@ -2,14 +2,13 @@ package coins.hansung.way.Destination;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.v4.content.res.ResourcesCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import android.support.v4.content.res.ResourcesCompat;
 import com.skp.Tmap.TMapAddressInfo;
 import com.skp.Tmap.TMapData;
 import com.skp.Tmap.TMapPoint;

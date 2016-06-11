@@ -1,12 +1,414 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
     tools:context=".SideMenu.AppInfoActivity">
 
-</RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_margin"
+            android:text="@string/copyRightStart"
+            android:textColor="@color/textColor"
+            android:textSize="@dimen/appInfo_text_size" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_margin"
+            android:text="@string/copyRightContent"
+            android:textColor="@color/textColor"
+            android:textSize="@dimen/appInfo_text_size" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin"
+            android:text="@string/copyRightEnd"
+            android:textColor="@color/textColor"
+            android:textSize="@dimen/appInfo_text_size" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginRight="@dimen/default_margin"
+            android:autoLink="web"
+            android:text="@string/githubAddress"
+            android:textSize="@dimen/appInfo_text_size" />
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin"
+            android:background="@color/enableFalseButton" />
+
+        <!-- Sliding UP -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_margin_small"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin"
+            android:text="AndroidSlidingUpPanel"
+            android:textColor="@color/textColor"
+            android:textStyle="bold"
+            android:textSize="@dimen/default_text_size_small"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/appInfo_margin_large"
+            android:layout_marginRight="@dimen/default_margin"
+            android:autoLink="web"
+            android:textSize="@dimen/appInfo_text_size"
+            android:text="@string/slidingAddress" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/textColor"
+            android:layout_marginLeft="@dimen/appInfo_margin_large"
+            android:layout_marginRight="@dimen/default_margin"
+            android:textSize="@dimen/appInfo_text_size"
+            android:text="Copyright ⓒ 2015 Andton Lopyrev" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Apache2.0"
+            android:textColor="@color/textColor"
+            android:textSize="@dimen/appInfo_text_size"
+            android:layout_marginLeft="@dimen/appInfo_margin_large"
+            android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginBottom="@dimen/default_margin"/>
+
+
+        <!-- Circle Image View -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_margin_small"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin"
+            android:text="CircleImageView"
+            android:textColor="@color/textColor"
+            android:textStyle="bold"
+            android:textSize="@dimen/default_text_size_small"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/appInfo_margin_large"
+            android:layout_marginRight="@dimen/default_margin"
+            android:autoLink="web"
+            android:textSize="@dimen/appInfo_text_size"
+            android:text="@string/circleImageAddress" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/textColor"
+            android:layout_marginLeft="@dimen/appInfo_margin_large"
+            android:layout_marginRight="@dimen/default_margin"
+            android:textSize="@dimen/appInfo_text_size"
+            android:text="Copyright ⓒ 2014 - 2015 Henning Dodenhof" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Apache2.0"
+            android:textColor="@color/textColor"
+            android:textSize="@dimen/appInfo_text_size"
+            android:layout_marginLeft="@dimen/appInfo_margin_large"
+            android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginBottom="@dimen/default_margin"/>
+
+
+        <!-- GCM -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_margin_small"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin"
+            android:text="Google Cloud Messaging (gcm)"
+            android:textColor="@color/textColor"
+            android:textStyle="bold"
+            android:textSize="@dimen/default_text_size_small"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/appInfo_margin_large"
+            android:layout_marginRight="@dimen/default_margin"
+            android:autoLink="web"
+            android:textSize="@dimen/appInfo_text_size"
+            android:text="@string/gcmAddress" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/textColor"
+            android:layout_marginLeft="@dimen/appInfo_margin_large"
+            android:layout_marginRight="@dimen/default_margin"
+            android:textSize="@dimen/appInfo_text_size"
+            android:text="Copyright ⓒ 2015 Google, Inc" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Apache2.0"
+            android:textColor="@color/textColor"
+            android:textSize="@dimen/appInfo_text_size"
+            android:layout_marginLeft="@dimen/appInfo_margin_large"
+            android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginBottom="@dimen/default_margin"/>
+
+
+        <!-- Json-java -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_margin_small"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin"
+            android:text="JSON-java"
+            android:textColor="@color/textColor"
+            android:textStyle="bold"
+            android:textSize="@dimen/default_text_size_small"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/appInfo_margin_large"
+            android:layout_marginRight="@dimen/default_margin"
+            android:autoLink="web"
+            android:textSize="@dimen/appInfo_text_size"
+            android:text="@string/jsonAddress" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/textColor"
+            android:layout_marginLeft="@dimen/appInfo_margin_large"
+            android:layout_marginRight="@dimen/default_margin"
+            android:textSize="@dimen/appInfo_text_size"
+            android:text="Copyright ⓒ 2015 Douglas Crockford" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/MIT"
+            android:textColor="@color/textColor"
+            android:textSize="@dimen/appInfo_text_size"
+            android:layout_marginLeft="@dimen/appInfo_margin_large"
+            android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginBottom="@dimen/default_margin"/>
+
+
+        <!-- sendbird -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_margin_small"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin"
+            android:text="SendBird"
+            android:textColor="@color/textColor"
+            android:textStyle="bold"
+            android:textSize="@dimen/default_text_size_small"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/appInfo_margin_large"
+            android:layout_marginRight="@dimen/default_margin"
+            android:autoLink="web"
+            android:textSize="@dimen/appInfo_text_size"
+            android:text="@string/sendbirdAddress" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/textColor"
+            android:layout_marginLeft="@dimen/appInfo_margin_large"
+            android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:textSize="@dimen/appInfo_text_size"
+            android:text="Copyright ⓒ 2015 Douglas Crockford" />
+
+
+
+        <!-- T map-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_margin_small"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin"
+            android:text="T map SDK(Android)"
+            android:textColor="@color/textColor"
+            android:textStyle="bold"
+            android:textSize="@dimen/default_text_size_small"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/appInfo_margin_large"
+            android:layout_marginRight="@dimen/default_margin"
+            android:autoLink="web"
+            android:textSize="@dimen/appInfo_text_size"
+            android:text="@string/tmapAddress" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/textColor"
+            android:layout_marginLeft="@dimen/appInfo_margin_large"
+            android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:textSize="@dimen/appInfo_text_size"
+            android:text="Copyright ⓒ 2012 - 2015 SK Planet" />
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin"
+            android:background="@color/enableFalseButton" />
+
+
+        <!-- Apache License 2.0 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_margin_small"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin"
+            android:text="@string/Apache2.0"
+            android:textColor="@color/textColor"
+            android:textStyle="bold"
+            android:textSize="@dimen/default_text_size"/>
+
+        <TextView
+            android:id="@+id/apache"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="test"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginBottom="@dimen/default_margin"/>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin"
+            android:background="@color/enableFalseButton" />
+
+        <!-- MIT License -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_margin_small"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin"
+            android:text="@string/MIT"
+            android:textColor="@color/textColor"
+            android:textStyle="bold"
+            android:textSize="@dimen/default_text_size"/>
+
+        <TextView
+            android:id="@+id/mit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="test"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginBottom="@dimen/default_margin"/>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin"
+            android:background="@color/enableFalseButton" />
+
+
+        <!-- Team Info-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_margin_small"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin"
+            android:text="TEAM COINS"
+            android:textColor="@color/textColor"
+            android:textStyle="bold"
+            android:textSize="@dimen/default_text_size"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/textColor"
+            android:layout_marginTop="@dimen/default_margin_small"
+            android:layout_marginLeft="@dimen/appInfo_margin_large"
+            android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginBottom="@dimen/default_margin_small"
+            android:textSize="@dimen/appInfo_text_size"
+            android:text="권순일, 박예림, 이소라, 최현규 with prof. 정인상" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2016. 01 ~ 2016. 06"
+            android:textColor="@color/textColor"
+            android:textSize="@dimen/appInfo_text_size"
+            android:layout_marginLeft="@dimen/appInfo_margin_large"
+            android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginBottom="@dimen/default_margin"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Special thanks to IHateFlyingBugs ♥"
+            android:textColor="@color/textColor"
+            android:textStyle="bold"
+            android:textSize="@dimen/appInfo_text_size"
+            android:layout_marginLeft="@dimen/appInfo_margin_large"
+            android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginBottom="@dimen/default_margin"/>
+
+    </LinearLayout>
+</ScrollView>
+
+

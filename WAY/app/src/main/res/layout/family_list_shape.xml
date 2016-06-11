@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent"
     android:orientation="horizontal">
 
@@ -18,7 +18,7 @@
             android:src="@drawable/person"
             android:layout_margin="@dimen/default_margin"
             app:civ_border_width="1dp"
-            app:civ_border_color="@color/white"/>
+            app:civ_border_color="@color/white"/> />
 
         <ImageView
             android:id="@+id/familyMarker"

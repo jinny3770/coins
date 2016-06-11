@@ -7,6 +7,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/spinnerImage"
-        android:layout_margin="@dimen/default_margin_small"/>
+        android:layout_margin="@dimen/default_margin"/>
 
 </LinearLayout>

@@ -2,22 +2,29 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="coins.hansung.way">
 
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="17" />
+
     <!-- To auto-complete the email text field in the login form with the user's emails -->
-    <uses-permission android:name="android.permission.READ_PROFILE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="coins.hansung.way.permission.C2D_MESSAGE" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.NFC" />
+
+
 
     <permission
         android:name="coins.hansung.way.permission.C2D_MESSAGE"
@@ -32,8 +39,8 @@
         <activity
             android:name=".Main.MainActivity"
             android:label="@string/app_name"
-            android:parentActivityName=".Main.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".Main.MainActivity" />
 
         <activity
             android:name=".SideMenu.ProfileActivity"
@@ -91,31 +98,23 @@
             android:parentActivityName=".Intro.IntroMain"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <service android:name=".GCMIntentService"
-            android:exported="true"
-            android:enabled="true"/>
-
         <activity
             android:name=".Chat.ChattingActivity"
-            android:configChanges="orientation|screenSize"
-            android:parentActivityName=".Main.MainActivity"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
+            android:configChanges="orientation|screenSize"
+            android:parentActivityName=".Main.MainActivity">
 
             <intent-filter>
-                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="text/plain" />
+                <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="text/plain"/>
             </intent-filter>
 
-            <service android:name=".GCMIntentService"
-                android:exported="true"
-                android:enabled="true"/>
-
             <intent-filter>
-                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:scheme="http" />
+                <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:scheme="http"/>
             </intent-filter>
         </activity>
 
@@ -144,6 +143,9 @@
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar" />
 
+        <service android:name=".GCMIntentService"
+            android:exported="true"
+            android:enabled="true"/>
         <service
             android:name=".LockScreen.LockScreenService"
             android:enabled="true"
@@ -173,7 +175,7 @@
             android:name=".SideMenu.WarningActivity"
             android:parentActivityName=".SideMenu.SettingsActivity"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"/>
 
         <activity
             android:name=".Intro.TermsOfUse"
@@ -188,14 +190,11 @@
         <activity
             android:name=".SideMenu.ProfileIntroActivity"
             android:parentActivityName=".Main.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"/>
 
-        <activity
-            android:name=".SideMenu.PasswordActivity"
+        <activity android:name=".SideMenu.PasswordActivity"
             android:parentActivityName=".SideMenu.ProfileIntroActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-
+            android:theme="@style/AppTheme.NoActionBar"/>
         <receiver
             android:name="com.google.android.gcm.GCMBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND">
@@ -207,6 +206,5 @@
         </receiver>
 
     </application>
-
 
 </manifest>

@@ -279,6 +279,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         linearLayout.addView(mapView);
 
         service = new Intent(this, LocationService.class);
+        service.putExtra("destinationCheck", false);
         startService(service);
 
 
@@ -344,10 +345,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         .setTitle("위치 공유")
                         .setMessage("내 위치를 채팅방에 공유하시겠습니까?")
                         .setCancelable(false)
-                        .setNegativeButton("공유합니다.", new DialogInterface.OnClickListener() {
+                        .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
+                            }
+                        })
+                        .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
                                 mapView.setLocationPoint(myLocation.getLongitude(), myLocation.getLatitude());
                                 //myMarker.setTMapPoint(myLocation);
 
@@ -363,7 +369,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                     e.printStackTrace();
                                 }
 
-                                Toast.makeText(getApplicationContext(), address, Toast.LENGTH_SHORT).show(); // 테스트
+                                //Toast.makeText(getApplicationContext(), address, Toast.LENGTH_SHORT).show(); // 테스트
                                 intent.putExtra("Latitude", lat);
                                 intent.putExtra("Longitude", lon);
                                 intent.putExtra("address", address);
@@ -371,11 +377,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 //intent.putExtra("message", message);
                                 startActivity(intent);
                                 overridePendingTransition(R.anim.fade, R.anim.hold);
-                            }
-                        })
-                        .setPositiveButton("공유하지 않습니다.", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
                             }
                         })
                         .create()
@@ -585,7 +586,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 });
 
-                startActivity(new Intent(this, IntroMain.class));
+                intent = new Intent(getApplicationContext(), IntroMain.class);
+                intent.putExtra("gcmCode", regID);
+                startActivity(intent);
                 overridePendingTransition(R.anim.fade, R.anim.hold);
             }
         }

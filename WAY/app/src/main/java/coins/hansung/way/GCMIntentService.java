@@ -5,12 +5,15 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 
-import com.google.android.gcm.GCMBaseIntentService;
-
 import coins.hansung.way.Main.MainActivity;
-import coins.hansung.way.etc.Family;
+import coins.hansung.way.etc.MyInfo;
+
+import com.google.android.gcm.GCMBaseIntentService;
+import com.sendbird.android.SendBird;
+import coins.hansung.way.Main.LocationService;
 
 /**
  * Created by Administrator on 2016-04-23.
@@ -19,13 +22,13 @@ import coins.hansung.way.etc.Family;
 public class GCMIntentService extends GCMBaseIntentService
 {
     private static final String tag = "GCMIntentService";
-    private static final String projectID = "massive-dynamo-127407";
-
+    private static final String projectID = "coins-b5469";
     public static void generateNotification(Context context, String message)
     {
-        int icon = R.drawable.ic_sync_black_24dp;
+        int icon = R.drawable.waylogo_white;
         long time = System.currentTimeMillis();
         String title = "WAY";
+
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
@@ -59,9 +62,10 @@ public class GCMIntentService extends GCMBaseIntentService
     @Override
     protected void onMessage(Context context, Intent intent)
     {
-        Log.d(tag, " 메시지 수신.");
-
-        generateNotification(context, "이새끼 20초 늦음");
+        String who;
+        who = intent.getStringExtra("message");
+        Log.e("message recived", who);
+        generateNotification(context, who + "님이 도착하지 못했습니다.");
     }
 
     /* 에러 발생시 */

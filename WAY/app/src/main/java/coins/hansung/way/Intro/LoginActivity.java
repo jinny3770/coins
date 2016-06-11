@@ -161,6 +161,7 @@ public class LoginActivity extends AppCompatActivity {
             mEmail = email;
             mPassword = password;
             mGcmCode = gcmCode;
+
         }
 
         @Override
@@ -182,6 +183,8 @@ public class LoginActivity extends AppCompatActivity {
                 data = URLEncoder.encode("ID", "UTF-8") + "=" + URLEncoder.encode(mEmail, "UTF-8")
                         + "&" + URLEncoder.encode("PW", "UTF-8") + "=" + URLEncoder.encode(mPassword, "UTF-8")
                         + "&" + URLEncoder.encode("GCM", "UTF-8") + "=" + URLEncoder.encode(mGcmCode, "UTF-8");
+
+                Log.d("Login", data);
 
                 OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
                 wr.write(data);
@@ -206,8 +209,6 @@ public class LoginActivity extends AppCompatActivity {
             JSONArray jsonArray;
 
             mAuthTask = null;
-
-            Log.d("Login", str);
 
             if (str.equals("fail")) {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));

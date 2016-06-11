@@ -20,11 +20,15 @@ import com.skp.Tmap.TMapView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
+import coins.hansung.way.Main.LocationService;
 import coins.hansung.way.R;
 import coins.hansung.way.etc.APIKey;
+import coins.hansung.way.etc.Family;
 import coins.hansung.way.etc.MyInfo;
+import coins.hansung.way.etc.PersonInfo;
 
 /**
  * Created by sora on 2016-04-26.
@@ -45,12 +49,15 @@ public class DestinationListActivity extends AppCompatActivity
     FloatingActionButton addFloating;
     String group_code;
 
+    Family family;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_destination_list);
 
+        family = Family.getInstance();
         myInfo = MyInfo.getInstance();
 
         mapView = new TMapView(this);
@@ -93,6 +100,8 @@ public class DestinationListActivity extends AppCompatActivity
 
                 JSONObject obj = jsonArray.getJSONObject(i);
 
+                String name = "null";
+
                 String id = obj.getString("id");
                 String type = obj.getString("type");
                 int time = obj.getInt("time");
@@ -100,8 +109,20 @@ public class DestinationListActivity extends AppCompatActivity
                 int distance = obj.getInt("distance");
                 String resist = obj.getString("resist");
 
+                ArrayList<PersonInfo> famInfo = family.getFamilyArray();
 
-                info = new DestinationListInfo(id, time, distance, type, resist);
+                for(int j =0; j<famInfo.size(); j++) {
+                    Log.d("DestinationSelect ID", famInfo.get(j).getID());
+                    Log.d("DestinationSelect Name", famInfo.get(j).getName());
+                    if(famInfo.get(j).getID().equals(id)) {
+                        name = famInfo.get(j).getName();
+                        Log.d("DestinationSelect", id);
+                        break;
+                    }else if(myInfo.getID().equals(id))
+                        name = myInfo.getName();
+                }
+
+                info = new DestinationListInfo(name, time, distance, type, resist);
 
                 String lineString = obj.getString("points");
                 info.setLineString(lineString);
@@ -123,7 +144,7 @@ public class DestinationListActivity extends AppCompatActivity
                     info.addLinePoint(p);
                 }
 
-                listAdapter.addItem(type, startP, endP, id);
+                listAdapter.addItem(type, startP, endP, name);
                 destinationListInfos.add(info);
             }
 
@@ -161,13 +182,13 @@ public class DestinationListActivity extends AppCompatActivity
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
 
-                if (myInfo.getID().equals(destinationListInfos.get(position).getID())) {
+                if (myInfo.getName() .equals(destinationListInfos.get(position).getID())) {
 
                     new AlertDialog.Builder(DestinationListActivity.this)
                             .setTitle("삭제 확인")
                             .setMessage("목적지를 삭제하시겠습니까?")
                             .setCancelable(false)
-                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            .setPositiveButton("예", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     DeleteDestinations deleteDestinations = new DeleteDestinations();
@@ -177,6 +198,10 @@ public class DestinationListActivity extends AppCompatActivity
                                     SharedPreferences pref = getSharedPreferences("pref", 0);
                                     SharedPreferences.Editor prefEditor = pref.edit();
 
+                                    Intent service = new Intent(getApplicationContext(), LocationService.class);
+                                    service.putExtra("destinationCheck", false);
+                                    startService(service);
+
                                     prefEditor.putBoolean("destinationSet", false);
                                     prefEditor.remove("desCode");
                                     prefEditor.remove("pointOrder");
@@ -185,7 +210,7 @@ public class DestinationListActivity extends AppCompatActivity
                                     prefEditor.commit();
                                 }
                             })
-                            .setNegativeButton("No", null).create().show();
+                            .setNegativeButton("아니오", null).create().show();
 
                     return true;
                 }

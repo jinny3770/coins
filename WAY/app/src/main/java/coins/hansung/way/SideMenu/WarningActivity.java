@@ -83,18 +83,18 @@ public class WarningActivity extends AppCompatActivity
                 builder.setTitle("전화번호 삭제");
                 builder.setMessage("삭제하시겠습니까?");
 
-                builder.setNegativeButton("네", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        adapter.removeItem(position);
-                        adapter.notifyDataSetChanged();
                         dialog.dismiss();
                     }
                 });
 
-                builder.setPositiveButton("아니오", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        adapter.removeItem(position);
+                        adapter.notifyDataSetChanged();
                         dialog.dismiss();
                     }
                 });

@@ -96,6 +96,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import coins.hansung.way.GCMIntentService;
 import coins.hansung.way.R;
 
 public class MessagingActivity extends FragmentActivity {
@@ -605,7 +606,7 @@ public class MessagingActivity extends FragmentActivity {
             {
                 //Toast.makeText(MessagingActivity.this, "MessagingActivity : "+ Long + ", " + Lati+", "+Check, Toast.LENGTH_SHORT).show();
 
-                mEtxtMessage.setText("내 위치 공유!!!!\n"+Long+", "+Lati + "\n" + address);
+                mEtxtMessage.setText("저의 현재 위치는" + "\n" + address + "입니다.");
                 Log.d("id", "11111111111111" + mEtxtMessage.getText().toString());
                 SendBird.send(mEtxtMessage.getText().toString());
                 mEtxtMessage.setText("");
@@ -613,7 +614,7 @@ public class MessagingActivity extends FragmentActivity {
 
             else if (Check == 2)
             {
-                mEtxtMessage.setText("<택시정보>\n" + message);
+                mEtxtMessage.setText(message);
                 Log.d("Taxi", "11111111111111" + mEtxtMessage.getText().toString());
                 SendBird.send(mEtxtMessage.getText().toString());
                 mEtxtMessage.setText("");
@@ -1061,7 +1062,7 @@ public class MessagingActivity extends FragmentActivity {
                                                 }
                                             }
                                         })
-                                        .setNegativeButton("놉", new DialogInterface.OnClickListener() {
+                                        .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                             }
@@ -1142,7 +1143,7 @@ public class MessagingActivity extends FragmentActivity {
                                                 });
                                             }
                                         })
-                                        .setNegativeButton("놉", new DialogInterface.OnClickListener() {
+                                        .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                             }

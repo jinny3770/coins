@@ -15,16 +15,13 @@ public class FamilyMarkerResource {
 
         familyMarkerBitmap = new ArrayList<>();
 
-
-
         familyMarkerBitmap.add(R.drawable.red);
+        familyMarkerBitmap.add(R.drawable.blue);
         familyMarkerBitmap.add(R.drawable.yellow);
         familyMarkerBitmap.add(R.drawable.purple);
         familyMarkerBitmap.add(R.drawable.pink);
-        familyMarkerBitmap.add(R.drawable.orange);
         familyMarkerBitmap.add(R.drawable.green);
-        familyMarkerBitmap.add(R.drawable.blue);
-
+        familyMarkerBitmap.add(R.drawable.orange);
     }
 
     public ArrayList<Integer> getFamilyMarkerBitmap() {
