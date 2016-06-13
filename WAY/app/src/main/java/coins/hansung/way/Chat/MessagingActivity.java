@@ -159,14 +159,6 @@ public class MessagingActivity extends FragmentActivity {
         setContentView(R.layout.activity_messaging);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-//        activity = this.getApplicationContext();
-//        switch(getIntent().getExtras().getInt(CALL_ACTIVITY)){
-//            case ACTIVITY_SHARE:
-//                break;
-//            default:
-//                break;
-//        };
-
         initFragment();
 
         initUIComponents();
@@ -545,10 +537,9 @@ public class MessagingActivity extends FragmentActivity {
     }
 
     public class SendBirdChatFragment extends Fragment {
+
+
         private static final int REQUEST_PICK_IMAGE = 100;
-
-
-
         private ListView mListView;
         private SendBirdMessagingAdapter mAdapter;
         private EditText mEtxtMessage;
@@ -588,26 +579,10 @@ public class MessagingActivity extends FragmentActivity {
             String message = intent.getStringExtra("message");
             TMapData tmapData = new TMapData();
 
-            /*tmapData.findAllPOI(address, new TMapData.FindAllPOIListenerCallback() // 비트맵 뽑아내기
-            {
-                @Override
-                public void onFindAllPOI(ArrayList<TMapPOIItem> arrayList)
-                {
-                    TMapPOIItem item0 = arrayList.get(0);
-
-                    mapView.setCenterPoint(item0.getPOIPoint().getLongitude(), item0.getPOIPoint().getLatitude());
-
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(searchText.getWindowToken(), 0);
-                }
-            });
-*/
             if (Check == 1)
             {
-                //Toast.makeText(MessagingActivity.this, "MessagingActivity : "+ Long + ", " + Lati+", "+Check, Toast.LENGTH_SHORT).show();
-
                 mEtxtMessage.setText("저의 현재 위치는" + "\n" + address + "입니다.");
-                Log.d("id", "11111111111111" + mEtxtMessage.getText().toString());
+                Log.d("id", mEtxtMessage.getText().toString());
                 SendBird.send(mEtxtMessage.getText().toString());
                 mEtxtMessage.setText("");
             }
@@ -615,7 +590,7 @@ public class MessagingActivity extends FragmentActivity {
             else if (Check == 2)
             {
                 mEtxtMessage.setText(message);
-                Log.d("Taxi", "11111111111111" + mEtxtMessage.getText().toString());
+                Log.d("Taxi",  mEtxtMessage.getText().toString());
                 SendBird.send(mEtxtMessage.getText().toString());
                 mEtxtMessage.setText("");
             }

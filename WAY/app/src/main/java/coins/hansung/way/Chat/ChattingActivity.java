@@ -70,32 +70,7 @@ public class ChattingActivity extends FragmentActivity{
                 userName = s.toString();
             }
         });
-/*
-오픈챗 버튼 액티비티
-        findViewById(R.id.btn_start_open_chat).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startChannelList();
-            }
-        });
-/*
-        findViewById(R.id.main_container).setVisibility(View.VISIBLE);
-        findViewById(R.id.messaging_container).setVisibility(View.GONE);
-        findViewById(R.id.btn_start_messaging).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                findViewById(R.id.main_container).setVisibility(View.GONE);
-                findViewById(R.id.messaging_container).setVisibility(View.VISIBLE);
-            }
-        });
 
-        findViewById(R.id.btn_messaging_back).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                findViewById(R.id.main_container).setVisibility(View.VISIBLE);
-                findViewById(R.id.messaging_container).setVisibility(View.GONE);
-            }
-        });*/
         startMessagingChannelList(Long, Lati, Check, address);
         finish();
     }

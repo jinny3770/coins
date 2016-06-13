@@ -63,7 +63,7 @@ public class LocationService extends Service implements Runnable {
     boolean destinationCheck;
 
     public void onCreate() {
-        Log.d("111111Service", "onCreate() Call.");
+
         super.onCreate();
         mHandler = new Handler();
         mIsRunning = false;
@@ -73,7 +73,6 @@ public class LocationService extends Service implements Runnable {
 
     public int onStartCommand(Intent service, int flags, int startId) {
 
-        Log.d("111111Service", "onStartCommand() Call.");
         mStartId = startId;
         mCounter = COUNT;
         if (!mIsRunning) {
@@ -89,7 +88,6 @@ public class LocationService extends Service implements Runnable {
     }
 
     public void onDestroy() {
-        Log.d("111111Service", "onDestroy() Call.");
         mIsRunning = false;
         super.onDestroy();
     }
@@ -99,7 +97,6 @@ public class LocationService extends Service implements Runnable {
     @Override
     public void run() {
         if (!mIsRunning) {
-            Log.d("111111Service", "run after destroy");
             return;
         } else
 
@@ -206,9 +203,6 @@ public class LocationService extends Service implements Runnable {
                 }
             }
 
-            Log.d("111111Long", String.valueOf(lon));
-            Log.d("111111Lati", String.valueOf(lat));
-
 
             if(destinationCheck) {
 
@@ -221,12 +215,10 @@ public class LocationService extends Service implements Runnable {
                 Log.e("Current Time : ", str);
                 try {
                     Duration = DestinationSelectActivity.Dochack - Now;
-                    Log.d("Duration!!!!!!! Result ", "" + Duration);
+                    Log.d("Duration ", Duration.toString());
                 } catch (NullPointerException e) {
                 }
 
-                Log.d("Duration!!!!!!! Fail ", "" + Duration);
-                Log.d("111111Service", "" + mCounter);
                 if (Duration < -20 && check == 1) {
                     check=0;
                     Log.e("Send", sender.toString());
@@ -254,7 +246,6 @@ public class LocationService extends Service implements Runnable {
 
 
                             if (code != null) {
-                                Log.e("result", "213123123");
                                 result = sender.send(message, code, 5);
 
                             }

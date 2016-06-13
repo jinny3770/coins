@@ -137,7 +137,6 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnTouc
                 select.setTranslationX(x - offsetX);
                 x_bang = (Math.abs((int)(select_x - select.getX())))/2;
                 x2_bang = (Math.abs((int)(select_x - select.getX())))/2;
-                Log.d("Asdfsadfdsf", "x_bang : " + x_bang);
                 if (x_bang>255) x_bang=255;
                 alert.setAlpha(255-x_bang);
                 if (x2_bang<255) x2_bang=255;
@@ -150,7 +149,6 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnTouc
                 check(select);
                 alert.setAlpha(0);
                 unlock.setAlpha(0);
-                Log.d("adsdlfsflje", "ddem");
                 select.setTranslationX(initX);
                 break;
         }

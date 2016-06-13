@@ -54,9 +54,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         pref = PreferenceManager.getDefaultSharedPreferences(this);
         Log.d("gpsSettings", Boolean.toString(pref.getBoolean("gps", true)));
         Preference pAppName = (Preference)findPreference("warning");
-        //Preference pAppName1 = (Preference)findPreference("testgcm");
         pAppName.setOnPreferenceClickListener(this);
-        //pAppName1.setOnPreferenceClickListener(this);
 
         Log.e("lock", String.valueOf(pref.getBoolean("lock", true)));
     }
@@ -67,7 +65,6 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         UpdateGpsSignal updateGpsSignal= new UpdateGpsSignal();
         updateGpsSignal.execute(pref.getBoolean("gps", true));
         Log.e("lock", String.valueOf(pref.getBoolean("lock", true)));
-        //pref.edit().putBoolean();
     }
 
     @Override
@@ -134,61 +131,9 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         // 도움말 선택시
         if(preference.getKey().equals("warning"))
         {
-            Log.d("saldkfjlew", "warningstart");
             Intent intent = new Intent(this, WarningActivity.class);
             startActivityForResult(intent, 0);
-        }/*
-        if (preference.getKey().equals("testgcm")) {
-            Log.e("Send", sender.toString());
-
-            regID = RegID.getInstance();
-            myInfo = MyInfo.getInstance();
-            try {
-                String returnString = new LoadFamilyList().execute(myInfo.getGroupCode()).get();
-                JSONArray jsonArray = new JSONArray(returnString);
-
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    message = new Message.Builder().addData("message", myInfo.getName()).build();
-                    String code = jsonObject.getString("GCMCode");
-                    Log.e("-------------","---------------");
-                    Log.e("groupcode", myInfo.getGroupCode());
-                    Log.e("jsonobject", jsonObject.getString("GCMCode"));
-                    Log.e("who?", jsonObject.getString("id"));
-                    Log.e("returnstring", returnString);
-                    Log.e("gcmcode", code);
-                    Log.e("message", message.toString());
-                    Log.e("regID", GCMRegistrar.getRegistrationId(this));
-                    Log.e("myInfo", myInfo.toString());
-                    Log.e("sender", sender.send(message, code, 5).toString());
-
-
-                    if (code != null) {
-                        Log.e("result", "213123123");
-                        result = sender.send(message, code, 5);
-
-                    }
-                }
-            } catch (Exception e) {
-                result = null;
-                e.printStackTrace();
-            }
-
-            if (result.getMessageId() != null) {
-                try {
-                    System.out.println("푸쉬 테스트");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } else {
-                String error = result.getErrorCodeName();
-                System.out.println(error);
-
-                if (Constants.ERROR_INTERNAL_SERVER_ERROR.equals(error)) {
-                    System.out.println("구글 서버 에러");
-                }
-            }
-        }*/
+        }
         return false;
     }
 }

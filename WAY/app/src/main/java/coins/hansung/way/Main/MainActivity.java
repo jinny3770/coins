@@ -702,7 +702,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         family = new ArrayList<PersonInfo>();
 
         // family List Load
-        // flag = ??????????...ㅎㅎ
         flag = false;
         familyList.setAdapter(familyAdapter);
         familyList.setOnItemClickListener(new AdapterView.OnItemClickListener()
@@ -752,8 +751,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                     if (bitmap == null)
                         bitmap = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.person);
-
-                    //pInfo
 
                     // 가족 위치 설정
                     TMapPoint pPoint = new TMapPoint(jsonObject.getDouble("latitude"), jsonObject.getDouble("longitude"));

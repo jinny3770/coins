@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.support.v4.content.res.ResourcesCompat;
+
 import com.skp.Tmap.TMapAddressInfo;
 import com.skp.Tmap.TMapData;
 import com.skp.Tmap.TMapPoint;
@@ -56,7 +57,7 @@ public class DestinationListAdapter extends BaseAdapter {
 
         DestinationHolder holder;
 
-        if(convertView == null) {
+        if (convertView == null) {
             holder = new DestinationHolder();
 
             LayoutInflater inflater = (LayoutInflater) myContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -68,21 +69,14 @@ public class DestinationListAdapter extends BaseAdapter {
             holder.name = (TextView) convertView.findViewById(R.id.nameText);
 
             convertView.setTag(holder);
-        }
-        else {
+        } else {
             holder = (DestinationHolder) convertView.getTag();
         }
 
         DestinationData myData = myListData.get(position);
 
-        if(myData.icon != null) {
-            holder.icon.setVisibility(View.VISIBLE);
-            holder.icon.setImageDrawable(myData.icon);
-        }
-
-        else {
-            //holder.icon.setVisibility();
-        }
+        holder.icon.setVisibility(View.VISIBLE);
+        holder.icon.setImageDrawable(myData.icon);
 
         holder.name.setText(myData.name);
         holder.departure.setText(myData.departure);
@@ -108,17 +102,16 @@ public class DestinationListAdapter extends BaseAdapter {
         data.arrive = loadLocationString2.execute(endP).get();
 
         switch (type) {
-            case "walk" :
+            case "walk":
                 data.icon = ResourcesCompat.getDrawable(myContext.getResources(), R.drawable.ic_directions_walk_black_24dp, null);
                 break;
 
-            case "bicycle" :
+            case "bicycle":
                 data.icon = ResourcesCompat.getDrawable(myContext.getResources(), R.drawable.ic_directions_bike_black_24dp, null);
                 break;
 
-            case "car" :
+            case "car":
                 data.icon = ResourcesCompat.getDrawable(myContext.getResources(), R.drawable.ic_local_taxi_black_24dp, null);
-                //data.icon = this.myContext.getResources().getDrawable(R.drawable.ic_local_taxi_white_24dp);
                 break;
         }
 
